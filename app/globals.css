@@ -22,3 +22,14 @@ main .wow {
 main .wow.animated {
   visibility: visible;
 }
+
+
+.dropdown-icon {
+  display: none !important;
+}
+
+@media (max-width: 991px) {
+  .dropdown-icon {
+    display: block !important;
+  }
+}

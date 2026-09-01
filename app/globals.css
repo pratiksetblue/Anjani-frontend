@@ -1,0 +1,24 @@
+@import url("/assets/css/bootstrap.min.css");
+@import url("/assets/css/bootstrap-icons.css");
+@import url("/assets/css/boxicons.min.css");
+@import url("/assets/css/animate.min.css");
+@import url("/assets/css/jquery-ui.css");
+@import url("/assets/css/swiper-bundle.min.css");
+@import url("/assets/css/slick.css");
+@import url("/assets/css/slick-theme.css");
+@import url("/assets/css/jquery.fancybox.min.css");
+@import url("/assets/css/style.css");
+
+/* Next.js compatibility helpers */
+html, body { margin: 0; padding: 0; }
+main { display: block; }
+
+
+/* WOW animation flicker fix */
+main .wow {
+  visibility: hidden;
+}
+
+main .wow.animated {
+  visibility: visible;
+}

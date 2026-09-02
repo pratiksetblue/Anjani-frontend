@@ -1,5 +1,4 @@
-// Next.js-compatible JSX converted from the supplied static page markup.
-
+"use client";
 export function Section1() {
   return (
     <>
@@ -229,6 +228,31 @@ export function Section4() {
 }
 
 export function Section5() {
+    const handleMouseEnter = (e) => {
+    const button = e.currentTarget;
+    const span = button.querySelector("span");
+
+    const rect = button.getBoundingClientRect();
+
+    const relX = e.clientX - rect.left;
+    const relY = e.clientY - rect.top;
+
+    span.style.top = `${relY}px`;
+    span.style.left = `${relX}px`;
+  };
+
+  const handleMouseLeave = (e) => {
+    const button = e.currentTarget;
+    const span = button.querySelector("span");
+
+    const rect = button.getBoundingClientRect();
+
+    const relX = e.clientX - rect.left;
+    const relY = e.clientY - rect.top;
+
+    span.style.top = `${relY}px`;
+    span.style.left = `${relX}px`;
+  };
   return (
     <>
       <div className="inner-contact-section two">
@@ -303,7 +327,8 @@ Fill out the form below, and our team will get back to you shortly.
                         </div>
                       </div>
                     </div>
-                    <button className="primary-btn4 btn-hover black-bg" type="submit">
+                    <button className="primary-btn4 btn-hover black-bg" type="submit" onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
                       Submit Now
                       <svg className="arrow" height="23" viewBox="0 0 23 23" width="23" xmlns="http://www.w3.org/2000/svg">
                         <g>

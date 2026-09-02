@@ -335,7 +335,6 @@ export function Section5() {
                 delay: 3000,
                 disableOnInteraction: false,
               }}
-              spaceBetween={20}
               slidesPerView={1}
               breakpoints={{
                 576: {

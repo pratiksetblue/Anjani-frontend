@@ -33,3 +33,19 @@ main .wow.animated {
     display: block !important;
   }
 }
+.menu-item-has-children:hover > .sub-menu {
+    opacity: 1;
+    visibility: visible;
+}@media (min-width: 992px) {
+  .menu-item-has-children > .sub-menu {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .menu-item-has-children.desktop-dropdown-open > .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}

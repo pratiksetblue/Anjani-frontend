@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
@@ -10,8 +9,7 @@ const products = [
     href: "/plc-based-low-liquor-ratio-eco-soft-flow-dyeing-machine",
   },
   {
-    title:
-      "PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine.",
+    title: "PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine.",
     href: "/plc-based-low-liquor-ratio-sample-eco-soft-flow-dyeing-machine",
   },
   {
@@ -47,8 +45,7 @@ const products = [
     href: "/plc-based-long-tube-sample-jet-dyeing-machine",
   },
   {
-    title:
-      "PLC Based Weight Reduction Machine with Caustic Recovery Unit",
+    title: "PLC Based Weight Reduction Machine with Caustic Recovery Unit",
     href: "/plc-based-weight-reduction-machine-with-caustic-recovery-unit",
   },
   {
@@ -130,7 +127,7 @@ const MenuIcon = () => (
 
 export default function Header() {
   const pathname = usePathname();
-
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [whoOpen, setWhoOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
@@ -146,8 +143,7 @@ export default function Header() {
   const isWhoActive = whoWeAre.some((item) => isActive(item.href));
 
   const isProductActive =
-  pathname === "/products" ||
-  products.some((item) => isActive(item.href));
+    pathname === "/products" || products.some((item) => isActive(item.href));
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -211,7 +207,17 @@ export default function Header() {
             <li
               className={`menu-item-has-children ${
                 isWhoActive ? "active" : ""
-              }`}
+              } ${activeDropdown === "who" ? "desktop-dropdown-open" : ""}`}
+              onMouseEnter={() => {
+                if (window.innerWidth >= 992) {
+                  setActiveDropdown("who");
+                }
+              }}
+              onMouseLeave={() => {
+                if (window.innerWidth >= 992) {
+                  setActiveDropdown(null);
+                }
+              }}
             >
               <Link
                 className="drop-down"
@@ -230,20 +236,33 @@ export default function Header() {
 
               <button
                 type="button"
-  className="dropdown-icon d-lg-none"
-  onClick={() => setWhoOpen((prev) => !prev)}
-  aria-label="Toggle Who We Are menu"
+                className="dropdown-icon d-lg-none"
+                onClick={() => setWhoOpen((prev) => !prev)}
+                aria-label="Toggle Who We Are menu"
               >
                 <i className={`bi ${whoOpen ? "bi-dash" : "bi-plus"}`} />
               </button>
 
-              <ul className={`sub-menu ${whoOpen ? "show-submenu" : ""}`}>
+              <ul
+                className={`sub-menu ${whoOpen ? "show-submenu" : ""} ${
+                  activeDropdown === "who" ? "desktop-submenu-open" : ""
+                }`}
+              >
                 {whoWeAre.map((item) => (
                   <li
                     key={item.href}
                     className={isActive(item.href) ? "active" : ""}
                   >
-                    <Link href={item.href} onClick={closeMobileMenu}>
+                    <Link
+                      href={item.href}
+                      onClick={() => {
+                        // Mobile + Desktop dono par dropdown close
+                        setActiveDropdown(null);
+                        setWhoOpen(false);
+                        setProductsOpen(false);
+                        setMobileMenuOpen(false);
+                      }}
+                    >
                       <span>{item.title}</span>
                     </Link>
                   </li>
@@ -251,61 +270,84 @@ export default function Header() {
               </ul>
             </li>
 
-          {/* Products */}
-<li
-  className={`menu-item-has-children ${
-    isProductActive ? "active" : ""
-  } ${productsOpen ? "open" : ""}`}
->
-  <Link
-    className="drop-down"
-    href="/products"
-    onClick={(e) => {
-      if (window.innerWidth < 992) {
-        e.preventDefault();
-        setProductsOpen((prev) => !prev);
-        setWhoOpen(false);
-      } else {
-        closeMobileMenu();
-      }
-    }}
-  >
-    Products
-    <ChevronIcon />
-  </Link>
+            {/* Products */}
+            <li
+              className={`menu-item-has-children ${
+                isProductActive ? "active" : ""
+              } ${
+                activeDropdown === "products" ? "desktop-dropdown-open" : ""
+              }`}
+              onMouseEnter={() => {
+                if (window.innerWidth >= 992) {
+                  setActiveDropdown("products");
+                }
+              }}
+              onMouseLeave={() => {
+                if (window.innerWidth >= 992) {
+                  setActiveDropdown(null);
+                }
+              }}
+            >
+              <Link
+                className="drop-down"
+                href="/products"
+                onClick={(e) => {
+                  if (window.innerWidth < 992) {
+                    e.preventDefault();
+                    setProductsOpen((prev) => !prev);
+                    setWhoOpen(false);
+                  } else {
+                    setProductsHover(false);
+                    setProductsOpen(false);
+                    setWhoOpen(false);
+                    setMobileMenuOpen(false);
+                  }
+                }}
+              >
+                Products
+                <ChevronIcon />
+              </Link>
 
-  <button
-    type="button"
-    className="dropdown-icon d-lg-none"
-    onClick={() => {
-      setProductsOpen((prev) => !prev);
-      setWhoOpen(false);
-    }}
-    aria-label="Toggle Products menu"
-  >
-    <i
-      className={`bi ${
-        productsOpen ? "bi-dash" : "bi-plus"
-      }`}
-    />
-  </button>
+              <button
+                type="button"
+                className="dropdown-icon d-lg-none"
+                onClick={() => {
+                  setProductsOpen((prev) => !prev);
+                  setWhoOpen(false);
+                }}
+                aria-label="Toggle Products menu"
+              >
+                <i className={`bi ${productsOpen ? "bi-dash" : "bi-plus"}`} />
+              </button>
 
-  <ul className="sub-menu menu-big">
-    {products.map((product) => (
-      <li
-        key={product.href}
-        className={isActive(product.href) ? "active" : ""}
-      >
-        <Link
-          href={product.href}
-          onClick={closeMobileMenu}
-        >
-          <span>{product.title}</span>
-        </Link>
-      </li>
-    ))}
-  </ul>
-</li>
+              <ul
+                className={`sub-menu menu-big ${
+                  productsOpen ? "show-submenu" : ""
+                } ${
+                  activeDropdown === "products" ? "desktop-submenu-open" : ""
+                }`}
+              >
+                {products.map((product) => (
+                  <li
+                    key={product.href}
+                    className={isActive(product.href) ? "active" : ""}
+                  >
+                    <Link
+                      href={product.href}
+                      onClick={() => {
+                        // Mobile + Desktop dono par dropdown close
+                        setProductsOpen(false);
+                        setProductsHover(false);
+                        setWhoOpen(false);
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <span>{product.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
 
             {/* Contact */}
             <li className={isActive("/contact-us") ? "active" : ""}>
@@ -338,9 +380,7 @@ export default function Header() {
 
             <div className="content">
               <span>Any Question</span>
-              <a href="tel:+918154888370">
-                +91 8154 888 370
-              </a>
+              <a href="tel:+918154888370">+91 8154 888 370</a>
             </div>
           </div>
 
@@ -369,5 +409,3 @@ export default function Header() {
     </header>
   );
 }
-
-

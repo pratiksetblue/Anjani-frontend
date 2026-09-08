@@ -31464,9 +31464,13 @@ li.single-contact {
     
 }
 
-span.red.fw-semibold {
-    padding: 0px 8px;
+
+.pr-1
+ {
+    padding-right: 5px;
+    padding-left: 5px;
 }
-span.green.fw-semibold {
-    padding-right: 7px;
+.pr-2
+ {
+    padding-right: 5px;
 }

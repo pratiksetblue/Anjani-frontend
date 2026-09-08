@@ -38,10 +38,10 @@ export function Section2() {
                 <div className="about-content">
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
-                    <span className="green fw-semibold">
+                    <span className="green fw-semibold pr-2">
                       ECO+
                     </span>
                     <span className="fw-semibold">

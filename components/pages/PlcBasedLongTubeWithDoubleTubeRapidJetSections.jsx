@@ -41,7 +41,7 @@ export function Section2() {
                   </h5>
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
                     Long Tube Double Tube Rapid Jet Dyeing Machine with

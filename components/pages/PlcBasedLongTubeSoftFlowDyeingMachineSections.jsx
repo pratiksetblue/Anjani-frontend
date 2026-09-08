@@ -41,7 +41,7 @@ export function Section2() {
                   </h5>
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
                     Long Tube Soft Flow Dyeing Machine is designed for very gentle fabric handling and low-tension processing. Its design is particularly suitable for knitted and stretch fabrics, including cotton-Lycra, rayon-Lycra, polyester-Lycra and nylon-Lycra fabrics.

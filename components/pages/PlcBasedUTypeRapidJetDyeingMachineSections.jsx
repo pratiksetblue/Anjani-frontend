@@ -38,7 +38,7 @@ export function Section2() {
                 <div className="about-content">
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
                     U Type Rapid Jet Dyeing Machines are designed for efficient fabric dyeing with rapid dye-liquor circulation, controlled fabric movement and reliable process performance. The U Type body incorporates a 9-segment construction, while dye-liquor-wetted components are manufactured in highly corrosion-resistant SS 316L stainless steel.

@@ -41,7 +41,7 @@ export function Section2() {
                   </h5>
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
                     Long Tube Rapid Jet Dyeing Machine is designed for high-speed and efficient processing of light to heavy-weight woven and knitted fabrics. Its flooded fabric transport system, adjustable nozzle and high-flow dye-liquor circulation enable smooth fabric movement at speeds of up to 500 m/min.

@@ -38,7 +38,7 @@ export function Section2() {
                 <div className="about-content">
                   <p>
                     The
-                    <span className="red fw-semibold">
+                    <span className="red fw-semibold pr-1">
                       ANJANI
                     </span>
                     U Type Soft Flow Dyeing Machine is designed for gentle and controlled fabric processing, combining soft fabric movement with efficient dye-liquor circulation for consistent dyeing performance.

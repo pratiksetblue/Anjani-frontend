@@ -31464,4 +31464,6 @@ li.single-contact {
     
 }
 
-sub-menu menu-big
+span.red.fw-semibold {
+    padding: 0px 8px;
+}

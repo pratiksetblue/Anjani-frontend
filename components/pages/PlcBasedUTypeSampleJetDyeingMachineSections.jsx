@@ -39,9 +39,8 @@ export function Section2() {
                   <p>
                     The
                     <span className="red fw-semibold">
-                      ANJANI
-                    </span>
-                    U Type Sample Jet Dyeing Machine is designed for accurate and efficient laboratory-scale fabric dyeing and sample development. With a compact capacity range of 5 kg to 100 kg, the machine enables textile processors to develop, test and optimize dyeing recipes before transferring them to production-scale machines.
+                      ANJANI</span>
+                     U Type Sample Jet Dyeing Machine is designed for accurate and efficient laboratory-scale fabric dyeing and sample development. With a compact capacity range of 5 kg to 100 kg, the machine enables textile processors to develop, test and optimize dyeing recipes before transferring them to production-scale machines.
                   </p>
                   <p>
                     The machine incorporates SS 316L corrosion-resistant construction, high-efficiency dye-liquor circulation and industrial PLC-based process control to provide controlled and repeatable sample dyeing operations.

@@ -1,9 +1,5 @@
 import "./globals.css";
-import RouteAnimations from "../components/RouteAnimations";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import BackToTop from "../components/BackToTop";
-import LegacyScripts from "../components/LegacyScripts";
+import ConditionalLayout from "../components/ConditionalLayout";
 
 export const metadata = {
   title: "Anjani Industries",
@@ -20,16 +16,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        
-        <BackToTop />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <LegacyScripts />
-        <RouteAnimations />
+        <ConditionalLayout>
+          {children}
+        </ConditionalLayout>
       </body>
     </html>
   );
 }
-
-

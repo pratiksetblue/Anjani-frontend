@@ -229,8 +229,8 @@ button.ecard-action {
 @media (max-width: 620px) {
   .ecard-page {
     padding: 20px 6px 28px;
-
-    justify-content: flex-start;
+    display: flex;
+    justify-content: center;
   }
 
   .ecard-page h1 {

@@ -15,6 +15,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="gzbGX_Ws9uHs_D0iP2jcKLR7rkKrX3C4iK5sgpa0nAM" />
+      </head>
       <body>
         {/* Google Analytics Script */}
         <Script

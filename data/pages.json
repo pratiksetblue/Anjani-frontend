@@ -1,0 +1,23 @@
+{
+  "aboutUs": {
+    "bannerTitle": "About ANJANI INDUSTRIES",
+    "bannerImage": "/assets/img/about-banner.jpg",
+    "headline": "Established in 1990, ANJANI INDUSTRIES is one of India’s leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
+    "paragraphs": [
+      "Since our inception, we have been committed to delivering innovative, reliable, and energy-efficient textile processing solutions that empower manufacturers to enhance productivity, improve dyeing quality, and reduce operating costs.",
+      "We specialize in the design, engineering, and manufacturing of technologically advanced textile dyeing machinery that combines precision engineering, robust construction, and intelligent automation to meet the evolving demands of the global textile industry."
+    ]
+  },
+  "ourStory": {
+    "bannerTitle": "Our Story & Journey",
+    "bannerImage": "/assets/img/about-banner.jpg",
+    "title": "Over 36 Years of Innovation in Textile Machinery",
+    "description": "From a modest workshop in 1990 to an internationally recognized manufacturing brand, Anjani Industries has consistently pushed the boundaries of textile engineering."
+  },
+  "valuesEthics": {
+    "bannerTitle": "Our Values & Ethics",
+    "bannerImage": "/assets/img/about-banner.jpg",
+    "title": "Committed to Quality, Integrity & Environmental Responsibility",
+    "description": "At Anjani Industries, our values define who we are and drive every machine we engineer."
+  }
+}

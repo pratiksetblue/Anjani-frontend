@@ -1,4 +1,6 @@
 "use client";
+import React, { useState } from "react";
+
 export function Section1() {
   return (
     <>
@@ -228,15 +230,24 @@ export function Section4() {
 }
 
 export function Section5() {
-    const handleMouseEnter = (e) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+    accepted: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState({ text: "", type: "" });
+
+  const handleMouseEnter = (e) => {
     const button = e.currentTarget;
     const span = button.querySelector("span");
-
+    if (!span) return;
     const rect = button.getBoundingClientRect();
-
     const relX = e.clientX - rect.left;
     const relY = e.clientY - rect.top;
-
     span.style.top = `${relY}px`;
     span.style.left = `${relX}px`;
   };
@@ -244,15 +255,54 @@ export function Section5() {
   const handleMouseLeave = (e) => {
     const button = e.currentTarget;
     const span = button.querySelector("span");
-
+    if (!span) return;
     const rect = button.getBoundingClientRect();
-
     const relX = e.clientX - rect.left;
     const relY = e.clientY - rect.top;
-
     span.style.top = `${relY}px`;
     span.style.left = `${relX}px`;
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFeedback({ text: "", type: "" });
+
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      setFeedback({ text: "Please fill in all required fields (*).", type: "error" });
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Submission failed");
+
+      setFeedback({
+        text: "Thank you! Your message has been sent successfully. Our team will contact you shortly.",
+        type: "success",
+      });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+        accepted: false,
+      });
+    } catch (err) {
+      setFeedback({ text: err.message || "Something went wrong. Please try again.", type: "error" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <>
       <div className="inner-contact-section two">
@@ -262,81 +312,133 @@ export function Section5() {
               <div className="col-lg-12 wow animate fadeInLeft" data-wow-delay="200ms" data-wow-duration="1500ms">
                 <div className="contact-content">
                   <div className="section-title">
-                    <h2>
-                      Connect With Us
-                    </h2>
+                    <h2>Connect With Us</h2>
                     <p className="pt-1 mb-4">
-                      We’re here to help.
-Fill out the form below, and our team will get back to you shortly.
+                      We’re here to help. Fill out the form below, and our team will get back to you shortly.
                     </p>
                   </div>
                 </div>
               </div>
+
               <div className="col-lg-12 wow animate fadeInRight" data-wow-delay="200ms" data-wow-duration="1500ms">
                 <div className="contact-form-wrap two">
-                  <form>
+                  {feedback.text && (
+                    <div
+                      style={{
+                        padding: "14px 18px",
+                        borderRadius: 8,
+                        marginBottom: 24,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        backgroundColor: feedback.type === "success" ? "#dcfce7" : "#fee2e2",
+                        color: feedback.type === "success" ? "#15803d" : "#b91c1c",
+                        border: `1px solid ${feedback.type === "success" ? "#bbf7d0" : "#fecaca"}`,
+                      }}
+                    >
+                      {feedback.text}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit}>
                     <div className="row g-4">
                       <div className="col-md-12">
                         <div className="form-inner">
-                          <label>
-                            Full Name *
-                          </label>
-                          <input type="text" />
+                          <label>Full Name *</label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            placeholder="Enter your full name"
+                          />
                         </div>
                       </div>
+
                       <div className="col-md-6">
                         <div className="form-inner">
-                          <label>
-                            Email *
-                          </label>
-                          <input type="email" />
+                          <label>Email *</label>
+                          <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="name@example.com"
+                          />
                         </div>
                       </div>
+
                       <div className="col-md-6">
                         <div className="form-inner">
-                          <label>
-                            Phone *
-                          </label>
-                          <input type="text" />
+                          <label>Phone *</label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="+91 98765 43210"
+                          />
                         </div>
                       </div>
+
                       <div className="col-md-12">
                         <div className="form-inner">
-                          <label>
-                            Subject
-                          </label>
-                          <input type="text" />
+                          <label>Subject</label>
+                          <input
+                            type="text"
+                            value={formData.subject}
+                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                            placeholder="e.g. Inquiring about Dyeing Machinery"
+                          />
                         </div>
                       </div>
+
                       <div className="col-md-12">
                         <div className="form-inner">
-                          <label>
-                            Message *
-                          </label>
-                          <textarea></textarea>
+                          <label>Message *</label>
+                          <textarea
+                            required
+                            rows={4}
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                            placeholder="Please provide specifications, capacity, fabric type..."
+                          />
                         </div>
                       </div>
+
                       <div className="col-lg-12">
                         <div className="form-inner2">
                           <div className="form-check">
-                            <input className="form-check-input" id="contactCheck" type="checkbox" value="" />
+                            <input
+                              className="form-check-input"
+                              id="contactCheck"
+                              type="checkbox"
+                              checked={formData.accepted}
+                              onChange={(e) => setFormData({ ...formData, accepted: e.target.checked })}
+                            />
                             <label className="form-check-label" htmlFor="contactCheck">
-                              I have read & accepted Terms & Conditions.
+                              I have read &amp; accepted Terms &amp; Conditions.
                             </label>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <button className="primary-btn4 btn-hover black-bg" type="submit" onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}>
-                      Submit Now
+
+                    <button
+                      className="primary-btn4 btn-hover black-bg"
+                      type="submit"
+                      disabled={submitting}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      style={{ marginTop: 20 }}
+                    >
+                      <span>{submitting ? "Submitting..." : "Submit Now"}</span>
                       <svg className="arrow" height="23" viewBox="0 0 23 23" width="23" xmlns="http://www.w3.org/2000/svg">
                         <g>
-                          <path d="M0.113861 0H22.9999V4.28425L4.32671 22.9997L0 18.7154L12.7524 6.08815L0.113861 6.20089V0Z"></path>
-                          <path d="M23 22.9996V8.56848L16.8516 14.6566V22.9996H23Z"></path>
+                          <path d="M0.113861 0H22.9999V4.28425L4.32671 22.9997L0 18.7154L12.7524 6.08815L0.113861 6.20089V0Z" />
+                          <path d="M23 22.9996V8.56848L16.8516 14.6566V22.9996H23Z" />
                         </g>
                       </svg>
-                      <span></span>
+                      <span />
                     </button>
                   </form>
                 </div>

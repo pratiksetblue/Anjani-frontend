@@ -1,5 +1,15 @@
 import PageSections from "../components/pages/IndexSections";
+import { getPageSeo } from "@/lib/db";
 
-export const metadata = { title: "Textile Dyeing Machine Manufacturer & Exporter | Anjani Industries" };
+export async function generateMetadata() {
+  const seo = await getPageSeo("/");
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
+  };
+}
 
-export default function Page() { return <PageSections />; }
+export default function Page() {
+  return <PageSections />;
+}

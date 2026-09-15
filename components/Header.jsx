@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -131,6 +131,39 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [whoOpen, setWhoOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [productList, setProductList] = useState(products);
+  const [logo, setLogo] = useState("/assets/img/logo.png");
+  const [callText, setCallText] = useState("Any Question");
+  const [phone, setPhone] = useState("+91 8154 888 370");
+  const [whatsapp, setWhatsapp] = useState("+91 7096 007 670");
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProductList(
+            data.map((p) => ({
+              title: p.title,
+              href: `/${p.slug}`,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/settings")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          if (data.logo) setLogo(data.logo);
+          if (data.headerCallText) setCallText(data.headerCallText);
+          if (data.phone) setPhone(data.phone);
+          if (data.whatsapp) setWhatsapp(data.whatsapp);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const isActive = (href) => {
     if (href === "/") {
@@ -143,7 +176,7 @@ export default function Header() {
   const isWhoActive = whoWeAre.some((item) => isActive(item.href));
 
   const isProductActive =
-    pathname === "/products" || products.some((item) => isActive(item.href));
+    pathname === "/products" || productList.some((item) => isActive(item.href));
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -158,9 +191,9 @@ export default function Header() {
         <div className="company-logo">
           <Link href="/" onClick={closeMobileMenu}>
             <img
-              alt="Company Logo"
+              alt="Anjani Industries Logo"
               className="img-fluid"
-              src="/assets/img/logo.png"
+              src={logo || "/assets/img/logo.png"}
             />
           </Link>
         </div>
@@ -175,9 +208,9 @@ export default function Header() {
               onClick={closeMobileMenu}
             >
               <img
-                alt="Company Logo"
+                alt="Anjani Industries Logo"
                 className="img-fluid"
-                src="/assets/img/logo.png"
+                src={logo || "/assets/img/logo.png"}
               />
             </Link>
 
@@ -297,7 +330,7 @@ export default function Header() {
                     setProductsOpen((prev) => !prev);
                     setWhoOpen(false);
                   } else {
-                    setProductsHover(false);
+                    setActiveDropdown(null);
                     setProductsOpen(false);
                     setWhoOpen(false);
                     setMobileMenuOpen(false);
@@ -327,7 +360,7 @@ export default function Header() {
                   activeDropdown === "products" ? "desktop-submenu-open" : ""
                 }`}
               >
-                {products.map((product) => (
+                {productList.map((product) => (
                   <li
                     key={product.href}
                     className={isActive(product.href) ? "active" : ""}
@@ -335,9 +368,8 @@ export default function Header() {
                     <Link
                       href={product.href}
                       onClick={() => {
-                        // Mobile + Desktop dono par dropdown close
+                        setActiveDropdown(null);
                         setProductsOpen(false);
-                        setProductsHover(false);
                         setWhoOpen(false);
                         setMobileMenuOpen(false);
                       }}
@@ -364,8 +396,8 @@ export default function Header() {
             </div>
 
             <div className="content">
-              <span>Any Question</span>
-              <a href="tel:+918154888370">+91 8154 888 370</a>
+              <span>{callText || "Any Question"}</span>
+              <a href={`tel:${phone.replace(/\s+/g, "")}`}>{phone}</a>
             </div>
           </div>
         </div>
@@ -379,15 +411,15 @@ export default function Header() {
             </div>
 
             <div className="content">
-              <span>Any Question</span>
-              <a href="tel:+918154888370">+91 8154 888 370</a>
+              <span>{callText || "Any Question"}</span>
+              <a href={`tel:${phone.replace(/\s+/g, "")}`}>{phone}</a>
             </div>
           </div>
 
           {/* WhatsApp */}
           <a
             className="right-sidebar-button"
-            href="https://wa.me/917096007670"
+            href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Contact us on WhatsApp"

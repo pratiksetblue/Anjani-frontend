@@ -1,21 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
 import "swiper/css";
 
-const products = [
+const defaultProducts = [
   {
     title: "PLC Based Low Liquor Ratio ECO+ Soft Flow Dyeing Machine",
     href: "/plc-based-low-liquor-ratio-eco-soft-flow-dyeing-machine",
     image: "/assets/img/product/product1.jpg",
   },
   {
-    title:
-      "PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine",
+    title: "PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine",
     href: "/plc-based-low-liquor-ratio-sample-eco-soft-flow-dyeing-machine",
     image: "/assets/img/product/product2.jpg",
   },
@@ -40,8 +39,7 @@ const products = [
     image: "/assets/img/product/product6.jpg",
   },
   {
-    title:
-      "Plc Based Long Tube Rapid Jet Dyeing - One Autoclave Two Tubes",
+    title: "Plc Based Long Tube Rapid Jet Dyeing - One Autoclave Two Tubes",
     href: "/plc-based-long-tube-double-tube-rapid-jet-dyeing-machine",
     image: "/assets/img/product/product7.jpg",
   },
@@ -51,8 +49,7 @@ const products = [
     image: "/assets/img/product/product8.jpg",
   },
   {
-    title:
-      "Plc Based Long Tube Rapid Jet Dyeing - Two Autoclave Two Tubes",
+    title: "Plc Based Long Tube Rapid Jet Dyeing - Two Autoclave Two Tubes",
     href: "/plc-based-long-tube-with-double-tube-rapid-jet",
     image: "/assets/img/product/product9.jpg",
   },
@@ -62,8 +59,7 @@ const products = [
     image: "/assets/img/product/product10.jpg",
   },
   {
-    title:
-      "PLC Based Weight Reduction Machine with Caustic Recovery Unit",
+    title: "PLC Based Weight Reduction Machine with Caustic Recovery Unit",
     href: "/plc-based-weight-reduction-machine-with-caustic-recovery-unit",
     image: "/assets/img/product/product11.jpg",
   },
@@ -73,6 +69,53 @@ const products = [
     image: "/assets/img/product/product12.jpg",
   },
 ];
+
+const defaultHome = {
+  hero: {
+    title: "Engineering the Future of Fabric Dyeing Machinery Since 1990",
+    subtitle: "Delivering advanced fabric dyeing machinery trusted by textile manufacturers worldwide for over 36 years.",
+    buttonText: "Learn More",
+    buttonLink: "/about-us",
+    videoDesktop: "/assets/video/main.mp4",
+    videoMobile: "/assets/video/mobile.mp4",
+  },
+  about: {
+    badge: "About Our Story",
+    title: "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery",
+    highlight: "Established in 1990, Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
+    productsHighlight: "Our comprehensive product portfolio includes Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants, and a wide range of customized textile processing machinery.",
+    description: "Every machine is precision-engineered to optimize water, steam, and power consumption while improving productivity, reducing processing time, and ensuring consistent performance for modern textile manufacturers worldwide.",
+    image: "/assets/img/home1/about-img.jpg",
+  },
+  counters: [
+    { number: "36", suffix: "+", label: "Years of Industry Excellence" },
+    { number: "45", suffix: "K", label: "Sq Ft Production Facility" },
+    { number: "270", suffix: "", label: "Pcs Annual Production Capacity" },
+  ],
+  bannerImage: "/assets/img/home1/singleimg.jpg",
+  certifications: [
+    {
+      image: "/assets/img/Certifications/gogreen.png",
+      title: "GO GREEN",
+      description: "Sustainable Manufacturing Commitment",
+    },
+    {
+      image: "/assets/img/Certifications/iso.png",
+      title: "ISO Certified",
+      description: "Commitment to Quality & Excellence",
+    },
+    {
+      image: "/assets/img/Certifications/year.png",
+      title: "36 Years",
+      description: "Decades of Manufacturing Excellence",
+    },
+    {
+      image: "/assets/img/Certifications/outlook.png",
+      title: "Industry Outlook",
+      description: "Recognized Textile Machinery Manufacturer",
+    },
+  ],
+};
 
 const ArrowIcon = () => (
   <svg
@@ -93,7 +136,7 @@ const ArrowIcon = () => (
    SECTION 1 - HERO
 ========================================================= */
 
-export function Section1() {
+export function Section1({ hero }) {
   return (
     <section className="home1-banner-section mb-80">
       <div className="container-full">
@@ -107,7 +150,7 @@ export function Section1() {
               loop
               muted
               playsInline
-              src="/assets/video/main.mp4"
+              src={hero?.videoDesktop || "/assets/video/main.mp4"}
             />
 
             <video
@@ -116,7 +159,7 @@ export function Section1() {
               loop
               muted
               playsInline
-              src="/assets/video/mobile.mp4"
+              src={hero?.videoMobile || "/assets/video/mobile.mp4"}
             />
 
             <div className="banner-content-wrap">
@@ -125,10 +168,7 @@ export function Section1() {
                 data-wow-delay="200ms"
                 data-wow-duration="1500ms"
               >
-                <h1>
-                  Engineering the Future of Fabric Dyeing Machinery Since
-                  1990
-                </h1>
+                <h1>{hero?.title || "Engineering the Future of Fabric Dyeing Machinery Since 1990"}</h1>
               </div>
             </div>
           </div>
@@ -139,15 +179,12 @@ export function Section1() {
               data-wow-delay="200ms"
               data-wow-duration="1500ms"
             >
-              <p>
-                Delivering advanced fabric dyeing machinery trusted by
-                textile manufacturers worldwide for over 36 years.
-              </p>
+              <p>{hero?.subtitle || "Delivering advanced fabric dyeing machinery trusted by textile manufacturers worldwide for over 36 years."}</p>
 
               <div className="btn-grp">
-                <Link className="primary-btn1 white-bg" href="/about-us">
-                  <span>Learn More</span>
-                  <span>Learn More</span>
+                <Link className="primary-btn1 white-bg" href={hero?.buttonLink || "/about-us"}>
+                  <span>{hero?.buttonText || "Learn More"}</span>
+                  <span>{hero?.buttonText || "Learn More"}</span>
                   <ArrowIcon />
                 </Link>
               </div>
@@ -163,7 +200,7 @@ export function Section1() {
    SECTION 2 - ABOUT
 ========================================================= */
 
-export function Section2() {
+export function Section2({ about }) {
   return (
     <section className="home1-about-section mb-80">
       <div className="container-fluid">
@@ -176,12 +213,9 @@ export function Section2() {
             <div className="about-full-box">
               <div className="about-title-area">
                 <div className="section-title">
-                  <span>About Our Story</span>
+                  <span>{about?.badge || "About Our Story"}</span>
 
-                  <h2>
-                    Anjani – A Leading Manufacturer of Fabric Dyeing
-                    Machinery
-                  </h2>
+                  <h2>{about?.title || "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery"}</h2>
                 </div>
               </div>
 
@@ -189,30 +223,19 @@ export function Section2() {
                 <ul>
                   <li>
                     <p className="red fw-semibold">
-                      Established in 1990, Anjani Industries is one of
-                      India&apos;s leading manufacturers of textile dyeing
-                      and processing machinery, backed by over 36 years of
-                      engineering excellence.
+                      {about?.highlight || "Established in 1990, Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence."}
                     </p>
 
                     <p>
                       Our comprehensive product portfolio includes{" "}
                       <span className="red fw-semibold">
-                        Low Liquor Ratio ECO+ Soft Flow Dyeing Machines,
-                        U-Type Jet Dyeing Machines, Long Tube Rapid Jet
-                        Dyeing Machines, Weight Reduction (Scouring)
-                        Machines, Caustic Recovery Plants,
+                        {about?.productsHighlight || "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,"}
                       </span>{" "}
-                      and a wide range of customized textile processing
-                      machinery.
+                      and a wide range of customized textile processing machinery.
                     </p>
 
                     <p>
-                      Every machine is precision-engineered to optimize
-                      water, steam, and power consumption while improving
-                      productivity, reducing processing time, and ensuring
-                      consistent performance for modern textile
-                      manufacturers worldwide.
+                      {about?.description || "Every machine is precision-engineered to optimize water, steam, and power consumption while improving productivity, reducing processing time, and ensuring consistent performance for modern textile manufacturers worldwide."}
                     </p>
                   </li>
                 </ul>
@@ -227,7 +250,7 @@ export function Section2() {
           >
             <div className="about-img">
               <img
-                src="/assets/img/home1/about-img.jpg"
+                src={about?.image || "/assets/img/home1/about-img.jpg"}
                 alt="Anjani Industries"
                 className="w-100"
               />
@@ -243,43 +266,33 @@ export function Section2() {
    SECTION 3 - COUNTER
 ========================================================= */
 
-export function Section3() {
+export function Section3({ counters }) {
+  const list = counters && counters.length > 0 ? counters : defaultHome.counters;
+
   return (
     <section className="home1-counter-section mb-80">
       <div className="container">
         <div className="counter-wrap">
           <div className="row gy-4">
-            <div className="col-lg-4 col-md-4 col-sm-6 col-12 divider">
-              <div className="single-countdown">
-                <div className="number">
-                  <h2 className="counter">36</h2>
-                  <span>+</span>
+            {list.map((item, idx) => (
+              <div
+                key={idx}
+                className={`col-lg-4 col-md-4 col-sm-6 col-12 ${
+                  idx < list.length - 1 ? "divider" : ""
+                } ${idx === 1 ? "d-flex justify-content-lg-center" : ""} ${
+                  idx === 2 ? "d-flex justify-content-lg-center justify-content-md-end" : ""
+                }`}
+              >
+                <div className="single-countdown">
+                  <div className="number">
+                    <h2 className="counter">{item.number}</h2>
+                    {item.suffix && <span>{item.suffix}</span>}
+                  </div>
+
+                  <span>{item.label}</span>
                 </div>
-
-                <span>Years of Industry Excellence</span>
               </div>
-            </div>
-
-            <div className="col-lg-4 col-md-4 col-sm-6 col-12 d-flex justify-content-lg-center divider">
-              <div className="single-countdown">
-                <div className="number">
-                  <h2 className="counter">45</h2>
-                  <span>K</span>
-                </div>
-
-                <span>Sq Ft Production Facility</span>
-              </div>
-            </div>
-
-            <div className="col-lg-4 col-md-4 col-sm-6 col-12 d-flex justify-content-lg-center justify-content-md-end">
-              <div className="single-countdown">
-                <div className="number">
-                  <h2 className="counter">270</h2>
-                </div>
-
-                <span>Pcs Annual Production Capacity</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -291,11 +304,11 @@ export function Section3() {
    SECTION 4 - IMAGE
 ========================================================= */
 
-export function Section4() {
+export function Section4({ bannerImage }) {
   return (
     <section className="product-box">
       <img
-        src="/assets/img/home1/singleimg.jpg"
+        src={bannerImage || "/assets/img/home1/singleimg.jpg"}
         alt="Anjani Industries"
       />
     </section>
@@ -306,7 +319,9 @@ export function Section4() {
    SECTION 5 - PRODUCTS
 ========================================================= */
 
-export function Section5() {
+export function Section5({ products }) {
+  const list = products && products.length > 0 ? products : defaultProducts;
+
   return (
     <section className="home1-project-section mb-80">
       <div className="container">
@@ -351,12 +366,12 @@ export function Section5() {
                 },
               }}
             >
-              {products.map((product) => (
-                <SwiperSlide key={product.href}>
+              {list.map((product) => (
+                <SwiperSlide key={product.href || product.slug}>
                   <div className="project-card-wrap">
                     <Link
                       className="project-card"
-                      href={product.href}
+                      href={product.href || `/${product.slug}`}
                     >
                       <div className="project-img">
                         <img
@@ -398,30 +413,9 @@ export function Section5() {
    SECTION 6 - CERTIFICATIONS
 ========================================================= */
 
-const certifications = [
-  {
-    image: "/assets/img/Certifications/gogreen.png",
-    title: "GO GREEN",
-    description: "Sustainable Manufacturing Commitment",
-  },
-  {
-    image: "/assets/img/Certifications/iso.png",
-    title: "ISO Certified",
-    description: "Commitment to Quality & Excellence",
-  },
-  {
-    image: "/assets/img/Certifications/year.png",
-    title: "36 Years",
-    description: "Decades of Manufacturing Excellence",
-  },
-  {
-    image: "/assets/img/Certifications/outlook.png",
-    title: "Industry Outlook",
-    description: "Recognized Textile Machinery Manufacturer",
-  },
-];
+export function Section6({ certifications }) {
+  const list = certifications && certifications.length > 0 ? certifications : defaultHome.certifications;
 
-export function Section6() {
   return (
     <section className="home2-certification-section mb-80">
       <div className="container">
@@ -434,9 +428,9 @@ export function Section6() {
         </div>
 
         <div className="row g-3">
-          {certifications.map((item, index) => (
+          {list.map((item, index) => (
             <div
-              key={item.title}
+              key={item.title || index}
               className="col-lg-3 col-sm-6 col-6 wow animate fadeInDown"
               data-wow-delay={`${(index + 1) * 200}ms`}
               data-wow-duration="1500ms"
@@ -471,14 +465,43 @@ export function Section6() {
 ========================================================= */
 
 export default function IndexSections() {
+  const [homeData, setHomeData] = useState(defaultHome);
+  const [products, setProducts] = useState(defaultProducts);
+
+  useEffect(() => {
+    fetch("/api/home")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.hero) {
+          setHomeData(data);
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/products")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(
+            data.map((p) => ({
+              title: p.title,
+              href: `/${p.slug}`,
+              image: p.image,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <>
-      <Section1 />
-      <Section2 />
-      <Section3 />
-      <Section4 />
-      <Section5 />
-      <Section6 />
+      <Section1 hero={homeData.hero} />
+      <Section2 about={homeData.about} />
+      <Section3 counters={homeData.counters} />
+      <Section4 bannerImage={homeData.bannerImage} />
+      <Section5 products={products} />
+      <Section6 certifications={homeData.certifications} />
     </>
   );
 }

@@ -1,0 +1,34 @@
+{
+  "companyName": "Anjani Industries",
+  "tagline": "Textile Dyeing Machine Manufacturer & Exporter",
+  "phone": "+91 8154 888 370",
+  "whatsapp": "+91 7096 007 670",
+  "email": "info@anjaniindustries.in",
+  "headquarters": {
+    "title": "HEADQUARTERS",
+    "address": "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat- 394 230, Gujarat, India.",
+    "phone": "+91 8154 888 370",
+    "mapUrl": "https://maps.app.goo.gl/WAXYaDPz3nCyyMnk9",
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d29780.700066562007!2d72.858335!3d21.089131!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be051ba4f3351b1%3A0x6989fdb5bd54742!2sAnjani%20Industries!5e0!3m2!1sen!2sin!4v1787140333015!5m2!1sen!2sin"
+  },
+  "salesOffices": [
+    {
+      "country": "India",
+      "cities": "Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara"
+    },
+    {
+      "country": "Global Presence",
+      "cities": "Bangladesh, Sri Lanka, Egypt, Turkey, Vietnam & Indonesia"
+    }
+  ],
+  "socialLinks": {
+    "facebook": "https://www.facebook.com/anjaniindustriess/",
+    "pinterest": "https://in.pinterest.com/Anjaniindustries/",
+    "youtube": "https://www.youtube.com/channel/UCQQSNOPZex4BUe7mN87DrIA",
+    "linkedin": "https://www.linkedin.com/company/anjaniindustries/"
+  },
+  "copyright": "© 2026 Anjani industries. | Privacy Policy",
+  "developerLink": "https://www.setblue.com/",
+  "developerName": "Setblue.com",
+  "updatedAt": "2026-09-15T04:53:24.787Z"
+}

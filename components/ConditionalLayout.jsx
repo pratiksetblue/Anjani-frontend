@@ -12,8 +12,9 @@ export default function ConditionalLayout({ children }) {
   const pathname = usePathname();
 
   const isEcardPage = pathname === "/ecard";
+  const isAdminPage = pathname?.startsWith("/admin");
 
-  if (isEcardPage) {
+  if (isEcardPage || isAdminPage) {
     return (
       <>
         {children}

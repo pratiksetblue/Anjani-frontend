@@ -1,0 +1,24 @@
+[
+  {
+    "id": "inq-1",
+    "name": "Rajesh Patel",
+    "email": "rajesh.patel@textilemill.com",
+    "phone": "+91 98250 12345",
+    "subject": "Inquiry for ECO+ Soft Flow Dyeing Machine",
+    "message": "We require technical specifications and quotation for 500 Kg capacity soft flow dyeing machine for our Surat processing unit.",
+    "productSlug": "plc-based-low-liquor-ratio-eco-soft-flow-dyeing-machine",
+    "status": "New",
+    "createdAt": "2026-09-14T04:53:24.788Z"
+  },
+  {
+    "id": "inq-2",
+    "name": "Mohammad Al-Hassan",
+    "email": "m.hassan@dhakatex.bd",
+    "phone": "+880 1712 345678",
+    "subject": "U-Type Rapid Jet Dyeing Machine Quotation",
+    "message": "We are expanding our dye house in Dhaka and looking for 4 units of U-Type Rapid Jet Dyeing Machines (400 Kg). Please send catalogue and FOB pricing.",
+    "productSlug": "plc-based-u-type-rapid-jet-dyeing-machine",
+    "status": "Contacted",
+    "createdAt": "2026-09-13T04:53:24.788Z"
+  }
+]

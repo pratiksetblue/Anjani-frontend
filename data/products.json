@@ -1,0 +1,607 @@
+[
+  {
+    "id": "prod-1",
+    "slug": "plc-based-low-liquor-ratio-eco-soft-flow-dyeing-machine",
+    "title": "PLC Based Low Liquor Ratio ECO+ Soft Flow Dyeing Machine",
+    "image": "/assets/img/product/product1.jpg",
+    "gallery": [
+      "/assets/img/product/product1.jpg"
+    ],
+    "highlights": [
+      "Low Liquor Ratio: Starting from 1:3.5*",
+      "Automatic Adjustable Nozzle",
+      "PLC Controlled",
+      "Reduced Water & Energy Consumption"
+    ],
+    "paragraphs": [
+      "The ANJANI ECO+ Soft Flow Dyeing Machine is designed to deliver efficient fabric dyeing with a low liquor ratio, reduced process time and optimized energy consumption. Developed with modern soft-flow technology, ECO+ combines controlled fabric movement, automatic nozzle adjustment and efficient dye-liquor circulation for consistent processing across a wide range of fabric types.",
+      "The machine is designed to process fabrics from low GSM to high GSM and incorporates Double Rope Dyeing Technology, providing flexibility for different fabric constructions and production requirements."
+    ],
+    "capacity": "From 100 Kg to 2000 Kg.",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/plc-based-low-liquor-ratio-soft-flow-dyeing-machine.pdf",
+    "keyAdvantages": [
+      "Liquor Ratio Starting from 1:3 to 4",
+      "Reduced Process Time & Energy Consumption",
+      "Automatic Adjustable Nozzle",
+      "Gentle Fabric Transport",
+      "Double Rope Dyeing Technology",
+      "Teflon Fabric Contact",
+      "Smooth Plaiter Motion",
+      "Smart Dosing",
+      "High-Speed Winch",
+      "Industrial PLC Control"
+    ],
+    "spaceModel": [
+      {
+        "model": "AI-HTHP-RTSF-25",
+        "capacity": "25 KG",
+        "length": "6'",
+        "breadth": "9'",
+        "height": "10'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-50",
+        "capacity": "50 KG",
+        "length": "6'",
+        "breadth": "9'",
+        "height": "10'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-1T-1C",
+        "capacity": "100 KG",
+        "length": "10'",
+        "breadth": "11'",
+        "height": "12'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-1T-3C",
+        "capacity": "300 KG",
+        "length": "12'",
+        "breadth": "17'",
+        "height": "15'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-2T-6C",
+        "capacity": "600 KG",
+        "length": "16'",
+        "breadth": "19'",
+        "height": "15'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-3T-7.5C",
+        "capacity": "750 KG",
+        "length": "18'",
+        "breadth": "20'",
+        "height": "15'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-4T-1.0C",
+        "capacity": "1000 KG",
+        "length": "24'",
+        "breadth": "22'",
+        "height": "15'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-6T-1.4C",
+        "capacity": "1400 KG",
+        "length": "28'",
+        "breadth": "26'",
+        "height": "15'"
+      },
+      {
+        "model": "AI-HTHP-RTSF-8T-1.8C",
+        "capacity": "1800 KG",
+        "length": "32'",
+        "breadth": "30'",
+        "height": "15'"
+      }
+    ],
+    "featured": true,
+    "order": 1,
+    "createdAt": "2026-09-15T04:53:24.780Z",
+    "updatedAt": "2026-09-15T04:53:24.781Z"
+  },
+  {
+    "id": "prod-2",
+    "slug": "plc-based-low-liquor-ratio-sample-eco-soft-flow-dyeing-machine",
+    "title": "PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine",
+    "image": "/assets/img/product/product2.jpg",
+    "gallery": [
+      "/assets/img/product/product2.jpg"
+    ],
+    "highlights": [
+      "Accurate Sample Development",
+      "Accurate Color Matching",
+      "Low-Tension Fabric Handling",
+      "Precise Process Control"
+    ],
+    "paragraphs": [
+      "The ANJANI PLC Based Low Liquor Ratio Sample ECO+ Soft Flow Dyeing Machine is designed for high efficiency fabric dyeing with precision engineering, reliable process performance, and optimized power and water consumption."
+    ],
+    "capacity": "Customized Capacity Available",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "Robust SS 316L construction",
+      "Short liquor ratio dyeing",
+      "Efficient heating & cooling heat exchanger",
+      "PLC-based process control",
+      "Smooth fabric transport"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 2,
+    "createdAt": "2026-09-15T04:53:24.781Z",
+    "updatedAt": "2026-09-15T04:53:24.781Z"
+  },
+  {
+    "id": "prod-3",
+    "slug": "plc-based-u-type-rapid-jet-dyeing-machine",
+    "title": "PLC Based U Type Rapid Jet Dyeing Machine",
+    "image": "/assets/img/product/product3.jpg",
+    "gallery": [
+      "/assets/img/product/product3.jpg"
+    ],
+    "highlights": [
+      "9 Segment U Type for smooth fabric dyeing",
+      "Short Liquor Ratio Dyeing",
+      "High-Speed Fabric Circulation — Up to 350-400 m/min",
+      "SS 316L Corrosion-Resistant Construction"
+    ],
+    "paragraphs": [
+      "The ANJANI U Type Rapid Jet Dyeing Machines are designed for efficient fabric dyeing with rapid dye-liquor circulation, controlled fabric movement and reliable process performance. The U Type body incorporates a 9-segment construction, while dye-liquor-wetted components are manufactured in highly corrosion-resistant SS 316L stainless steel.",
+      "The machine combines a heavy-duty stainless-steel centrifugal pump, inverter-controlled lifter reel, efficient heat exchanger and PLC-based control system to provide controlled and repeatable dyeing operations."
+    ],
+    "capacity": "From 150 Kg to 500 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "9 Segment U Type for smooth Fabric Movement",
+      "Short Liquor Ratio Dyeing",
+      "High-Speed Fabric Movement up to 350–450 m/min",
+      "Fast Dye-Liquor Circulation",
+      "SS 316L Corrosion-Resistant Construction",
+      "Efficient Heating & Cooling",
+      "PLC-Based Process Control",
+      "Automatic Fabric Seam Detection & Cycle Control"
+    ],
+    "spaceModel": [
+      {
+        "model": "UT-150",
+        "width": "1500 MM",
+        "length": "3500 MM",
+        "height": "4000 MM"
+      },
+      {
+        "model": "UT-200",
+        "width": "1650 MM",
+        "length": "4000 MM",
+        "height": "4200 MM"
+      },
+      {
+        "model": "UT-250",
+        "width": "1650 MM",
+        "length": "4300 MM",
+        "height": "4200 MM"
+      },
+      {
+        "model": "UT-300",
+        "width": "1750 MM",
+        "length": "4500 MM",
+        "height": "4400 MM"
+      },
+      {
+        "model": "UT-400",
+        "width": "2500 MM",
+        "length": "5050 MM",
+        "height": "4500 MM"
+      }
+    ],
+    "featured": true,
+    "order": 3,
+    "createdAt": "2026-09-15T04:53:24.782Z",
+    "updatedAt": "2026-09-15T04:53:24.782Z"
+  },
+  {
+    "id": "prod-4",
+    "slug": "plc-based-u-type-soft-flow-dyeing-machine",
+    "title": "PLC Based U Type Soft Flow Dyeing Machine",
+    "image": "/assets/img/product/product4.jpg",
+    "gallery": [
+      "/assets/img/product/product4.jpg"
+    ],
+    "highlights": [
+      "9 Segment U Type for smooth fabric dyeing",
+      "Low-Tension Fabric Processing",
+      "Uniform Dyeing Performance",
+      "Efficient Fabric Circulation"
+    ],
+    "paragraphs": [
+      "The ANJANI U Type Soft Flow Dyeing Machine is designed for gentle and controlled fabric processing, combining soft fabric movement with efficient dye-liquor circulation for consistent dyeing performance.",
+      "The machine is developed for textile processors looking for controlled fabric handling and reliable dyeing results across demanding production applications."
+    ],
+    "capacity": "From 150 Kg to 500 Kg.",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "9 Segment U Type for smooth Fabric Movement",
+      "Gentle Fabric Handling",
+      "Low-Tension Fabric Processing",
+      "Uniform Dyeing Performance",
+      "Efficient Dye-Liquor Circulation",
+      "Controlled Fabric Movement",
+      "Consistent Process Performance"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 4,
+    "createdAt": "2026-09-15T04:53:24.782Z",
+    "updatedAt": "2026-09-15T04:53:24.782Z"
+  },
+  {
+    "id": "prod-5",
+    "slug": "plc-based-u-type-sample-jet-dyeing-machine",
+    "title": "PLC Based U Type Sample Jet Dyeing Machine",
+    "image": "/assets/img/product/product5.jpg",
+    "gallery": [
+      "/assets/img/product/product5.jpg"
+    ],
+    "highlights": [
+      "Accurate Sample Development",
+      "Accurate Color Matching",
+      "Low-Tension Fabric Handling",
+      "Precise Process Control"
+    ],
+    "paragraphs": [
+      "The ANJANI U Type Sample Jet Dyeing Machine is designed for accurate and efficient laboratory-scale fabric dyeing and sample development. With a compact capacity range of 5 kg to 100 kg, the machine enables textile processors to develop, test and optimize dyeing recipes before transferring them to production-scale machines.",
+      "The machine incorporates SS 316L corrosion-resistant construction, high-efficiency dye-liquor circulation and industrial PLC-based process control to provide controlled and repeatable sample dyeing operations."
+    ],
+    "capacity": "From 5 Kg to 100 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "5–100 kg Sample Dyeing Capacity",
+      "SS 316L Corrosion-Resistant Construction",
+      "Fast Dye-Liquor Circulation",
+      "Accurate Sample Development",
+      "Accurate Colour Matching"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 5,
+    "createdAt": "2026-09-15T04:53:24.783Z",
+    "updatedAt": "2026-09-15T04:53:24.783Z"
+  },
+  {
+    "id": "prod-6",
+    "slug": "plc-based-long-tube-rapid-jet-dyeing-machine",
+    "title": "PLC Based Long Tube Rapid Jet Dyeing Machine",
+    "image": "/assets/img/product/product6.jpg",
+    "gallery": [
+      "/assets/img/product/product6.jpg"
+    ],
+    "highlights": [
+      "Fabric Speed Up to 500 m/min",
+      "High-Speed Fabric Circulation",
+      "Reduced Crease Formation",
+      "Single Chamber – Upto 300 Kg"
+    ],
+    "paragraphs": [
+      "The ANJANI Long Tube Rapid Jet Dyeing Machine is designed for high-speed and efficient processing of light to heavy-weight woven and knitted fabrics. Its flooded fabric transport system, adjustable nozzle and high-flow dye-liquor circulation enable smooth fabric movement at speeds of up to 500 m/min.",
+      "The machine is particularly suitable for crease-sensitive fabrics such as polyester and microfibers, while its large kier and controlled fabric transport help minimize fabric stacking and reduce the possibility of crease formation."
+    ],
+    "capacity": "From 50 Kg to 300 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/LONG-TUBE-CATALOGUE-ANJANI.pdf",
+    "keyAdvantages": [
+      "Fabric Speed up to 500 m/min",
+      "Flooded Fabric Transport System",
+      "Adjustable Nozzle for Controlled Fabric Movement",
+      "High-Flow Dye-Liquor Circulation",
+      "Reduced Crease Formation"
+    ],
+    "spaceModel": [
+      {
+        "model": "LTRD-50",
+        "width": "1000 MM",
+        "length": "9000 MM",
+        "height": "4000 MM"
+      },
+      {
+        "model": "LTRD-100",
+        "width": "1150 MM",
+        "length": "10500 MM",
+        "height": "3100 MM"
+      },
+      {
+        "model": "LTRD-150",
+        "width": "1200 MM",
+        "length": "11000 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "LTRD-200",
+        "width": "1250 MM",
+        "length": "12000 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "LTRD-250",
+        "width": "1300 MM",
+        "length": "12500 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "LTRD-300",
+        "width": "1350 MM",
+        "length": "13000 MM",
+        "height": "3200 MM"
+      }
+    ],
+    "featured": true,
+    "order": 6,
+    "createdAt": "2026-09-15T04:53:24.783Z",
+    "updatedAt": "2026-09-15T04:53:24.783Z"
+  },
+  {
+    "id": "prod-7",
+    "slug": "plc-based-long-tube-double-tube-rapid-jet-dyeing-machine",
+    "title": "Plc Based Long Tube Rapid Jet Dyeing - One Autoclave Two Tubes",
+    "image": "/assets/img/product/product7.jpg",
+    "gallery": [
+      "/assets/img/product/product7.jpg"
+    ],
+    "highlights": [
+      "Double-Rope High-Speed Dyeing",
+      "Smooth Fabric Transport",
+      "Low Fabric Tension",
+      "2 Chamber – Upto 500 Kg"
+    ],
+    "paragraphs": [
+      "The ANJANI Long Tube Double Tube Rapid Jet Dyeing Machine is designed for high-speed processing of light to heavy-weight woven and knitted fabrics. Its double-tube configuration provides smooth fabric transport at high machine loadings, while the flooded fabric transport system and high-flow dye-liquor circulation support efficient and uniform dyeing.",
+      "The machine is particularly suitable for crease-sensitive fabrics including polyester, polyester blends, polyamide, microfibers and Lycra blends, as well as pile and wool fabrics."
+    ],
+    "capacity": "From 250 Kg to 500 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/LONG-TUBE-CATALOGUE-ANJANI.pdf",
+    "keyAdvantages": [
+      "Double-Tube Configuration",
+      "High-Flow Dye-Liquor Circulation",
+      "Smooth Fabric Transport at High Loading",
+      "Minimum Fabric Tension",
+      "Reduced Crease Formation",
+      "Suitable for Crease-Sensitive Fabrics"
+    ],
+    "spaceModel": [
+      {
+        "model": "DTRD-250",
+        "width": "1600 MM",
+        "length": "10200 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "DTRD-300",
+        "width": "1600 MM",
+        "length": "12000 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "DTRD-400",
+        "width": "1600 MM",
+        "length": "13000 MM",
+        "height": "3200 MM"
+      },
+      {
+        "model": "DTRD-500",
+        "width": "1650 MM",
+        "length": "14500 MM",
+        "height": "3200 MM"
+      }
+    ],
+    "featured": true,
+    "order": 7,
+    "createdAt": "2026-09-15T04:53:24.783Z",
+    "updatedAt": "2026-09-15T04:53:24.783Z"
+  },
+  {
+    "id": "prod-8",
+    "slug": "plc-based-long-tube-soft-flow-dyeing-machine",
+    "title": "PLC Based Long Tube Soft Flow Dyeing Machine",
+    "image": "/assets/img/product/product8.jpg",
+    "gallery": [
+      "/assets/img/product/product8.jpg"
+    ],
+    "highlights": [
+      "Very Gentle Fabric Handling",
+      "Low-Tension Fabric Processing",
+      "Upper Tube Dyeing",
+      "Suitable for Spandex & Stretch Fabrics"
+    ],
+    "paragraphs": [
+      "The ANJANI Long Tube Soft Flow Dyeing Machine is designed for very gentle fabric handling and low-tension processing. Its design is particularly suitable for knitted and stretch fabrics, including cotton-Lycra, rayon-Lycra, polyester-Lycra and nylon-Lycra fabrics.",
+      "The machine is designed with a short chamber, short fabric length and low liquor ratio, while its low nozzle-pressure operation makes it suitable for fabrics requiring gentle and controlled fabric movement."
+    ],
+    "capacity": "From 200 Kg to 500 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/LONG-TUBE-CATALOGUE-ANJANI.pdf",
+    "keyAdvantages": [
+      "Very Gentle Fabric Handling",
+      "Low-Tension Fabric Processing",
+      "Suitable for Spandex & Stretch Fabrics",
+      "Smooth Operation at Low Nozzle Pressure",
+      "Suitable for Light to Heavy Fabrics"
+    ],
+    "spaceModel": [
+      {
+        "model": "LTSF-200",
+        "width": "1500 MM",
+        "length": "11600 MM",
+        "height": "3000 MM"
+      },
+      {
+        "model": "LTSF-250",
+        "width": "1600 MM",
+        "length": "11600 MM",
+        "height": "3000 MM"
+      },
+      {
+        "model": "LTSF-300",
+        "width": "2600 MM",
+        "length": "11000 MM",
+        "height": "3000 MM"
+      },
+      {
+        "model": "LTSF-400",
+        "width": "2600 MM",
+        "length": "11600 MM",
+        "height": "3000 MM"
+      },
+      {
+        "model": "LTSF-500",
+        "width": "2700 MM",
+        "length": "11600 MM",
+        "height": "3000 MM"
+      }
+    ],
+    "featured": true,
+    "order": 8,
+    "createdAt": "2026-09-15T04:53:24.784Z",
+    "updatedAt": "2026-09-15T04:53:24.784Z"
+  },
+  {
+    "id": "prod-9",
+    "slug": "plc-based-long-tube-with-double-tube-rapid-jet",
+    "title": "Plc Based Long Tube Rapid Jet Dyeing - Two Autoclave Two Tubes",
+    "image": "/assets/img/product/product9.jpg",
+    "gallery": [
+      "/assets/img/product/product9.jpg"
+    ],
+    "highlights": [
+      "Double-Rope Configuration",
+      "2 Autoclave",
+      "Minimum Fabric Tension",
+      "Even Dye Liquor Exchange"
+    ],
+    "paragraphs": [
+      "The ANJANI Long Tube Double Tube Rapid Jet Dyeing Machine with Autoclaves and Two Nozzles is designed for efficient processing of light to heavy-weight woven and knitted fabrics.",
+      "The double-rope design provides smooth fabric transport even at high machine loadings. Combined with high-flow dye-liquor circulation and flooded fabric transport, the machine is designed for efficient fabric movement and consistent dye-liquor exchange."
+    ],
+    "capacity": "From 300 Kg to 1000 Kg",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/LONG-TUBE-CATALOGUE-ANJANI.pdf",
+    "keyAdvantages": [
+      "Two Autoclave / Two Nozzle Configuration",
+      "Double-Rope Fabric Processing",
+      "High-Flow Dye-Liquor Circulation",
+      "Smooth Fabric Transport at High Loading",
+      "Minimum Fabric Tension",
+      "Reduced Crease Formation",
+      "Efficient Dye-Liquor Exchange"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 9,
+    "createdAt": "2026-09-15T04:53:24.785Z",
+    "updatedAt": "2026-09-15T04:53:24.785Z"
+  },
+  {
+    "id": "prod-10",
+    "slug": "plc-based-long-tube-sample-jet-dyeing-machine",
+    "title": "PLC Based Long Tube Sample Jet Dyeing Machine",
+    "image": "/assets/img/product/product10.jpg",
+    "gallery": [
+      "/assets/img/product/product10.jpg"
+    ],
+    "highlights": [
+      "Accurate Sample Development",
+      "Accurate Color Matching",
+      "Low-Tension Fabric Handling",
+      "Precise Process Control"
+    ],
+    "paragraphs": [
+      "The ANJANI PLC Based Long Tube Sample Jet Dyeing Machine is designed for high efficiency fabric dyeing with precision engineering, reliable process performance, and optimized power and water consumption."
+    ],
+    "capacity": "Customized Capacity Available",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/LONG-TUBE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "Robust SS 316L construction",
+      "Short liquor ratio dyeing",
+      "Efficient heating & cooling heat exchanger",
+      "PLC-based process control",
+      "Smooth fabric transport"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 10,
+    "createdAt": "2026-09-15T04:53:24.785Z",
+    "updatedAt": "2026-09-15T04:53:24.785Z"
+  },
+  {
+    "id": "prod-11",
+    "slug": "plc-based-weight-reduction-machine-with-caustic-recovery-unit",
+    "title": "PLC Based Weight Reduction Machine with Caustic Recovery Unit",
+    "image": "/assets/img/product/product11.jpg",
+    "gallery": [
+      "/assets/img/product/product11.jpg"
+    ],
+    "highlights": [
+      "Low-Tension Weight Reduction Process",
+      "Uniform Alkali Treatment",
+      "Integrated Caustic Recovery",
+      "Reduced Water & Steam Consumption"
+    ],
+    "paragraphs": [
+      "The ANJANI PLC Based Weight Reduction Machine with Caustic Recovery Unit is designed for high efficiency fabric dyeing with precision engineering, reliable process performance, and optimized power and water consumption."
+    ],
+    "capacity": "Customized Capacity Available",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "Robust SS 316L construction",
+      "Short liquor ratio dyeing",
+      "Efficient heating & cooling heat exchanger",
+      "PLC-based process control",
+      "Smooth fabric transport"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 11,
+    "createdAt": "2026-09-15T04:53:24.786Z",
+    "updatedAt": "2026-09-15T04:53:24.786Z"
+  },
+  {
+    "id": "prod-12",
+    "slug": "fully-automatic-caustic-recovery-plant",
+    "title": "Fully Automatic Caustic Recovery Plant",
+    "image": "/assets/img/product/product12.jpg",
+    "gallery": [
+      "/assets/img/product/product12.jpg"
+    ],
+    "highlights": [
+      "Up to 90% Caustic Recovery",
+      "Caustic Reuse in Mercerizing",
+      "Reduced Effluent Load",
+      "Lower ETP Operating Costs"
+    ],
+    "paragraphs": [
+      "The ANJANI Fully Automatic Caustic Recovery Plant is designed for high efficiency fabric dyeing with precision engineering, reliable process performance, and optimized power and water consumption."
+    ],
+    "capacity": "Customized Capacity Available",
+    "whatsappNumber": "917096007670",
+    "brochureUrl": "/assets/pdf/U-TYPE-CATALOGUE.pdf",
+    "keyAdvantages": [
+      "Robust SS 316L construction",
+      "Short liquor ratio dyeing",
+      "Efficient heating & cooling heat exchanger",
+      "PLC-based process control",
+      "Smooth fabric transport"
+    ],
+    "spaceModel": [],
+    "featured": true,
+    "order": 12,
+    "createdAt": "2026-09-15T04:53:24.786Z",
+    "updatedAt": "2026-09-15T04:53:24.786Z"
+  }
+]

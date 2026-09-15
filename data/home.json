@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "title": "Engineering the Future of Fabric Dyeing Machinery Since 1990",
+    "subtitle": "Delivering advanced fabric dyeing machinery trusted by textile manufacturers worldwide for over 36 years.",
+    "buttonText": "Learn More",
+    "buttonLink": "/about-us",
+    "videoDesktop": "/assets/video/main.mp4",
+    "videoMobile": "/assets/video/mobile.mp4"
+  },
+  "about": {
+    "badge": "About Our Story",
+    "title": "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery",
+    "highlight": "Established in 1990, Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
+    "productsHighlight": "Our comprehensive product portfolio includes Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants, and a wide range of customized textile processing machinery.",
+    "description": "Every machine is precision-engineered to optimize water, steam, and power consumption while improving productivity, reducing processing time, and ensuring consistent performance for modern textile manufacturers worldwide.",
+    "image": "/assets/img/home1/about-img.jpg"
+  },
+  "counters": [
+    {
+      "number": "36",
+      "suffix": "+",
+      "label": "Years of Industry Excellence"
+    },
+    {
+      "number": "45",
+      "suffix": "K",
+      "label": "Sq Ft Production Facility"
+    },
+    {
+      "number": "270",
+      "suffix": "",
+      "label": "Pcs Annual Production Capacity"
+    }
+  ],
+  "bannerImage": "/assets/img/home1/singleimg.jpg",
+  "certifications": [
+    {
+      "image": "/assets/img/Certifications/gogreen.png",
+      "title": "GO GREEN",
+      "description": "Sustainable Manufacturing Commitment"
+    },
+    {
+      "image": "/assets/img/Certifications/iso.png",
+      "title": "ISO Certified",
+      "description": "Commitment to Quality & Excellence"
+    },
+    {
+      "image": "/assets/img/Certifications/year.png",
+      "title": "36 Years",
+      "description": "Decades of Manufacturing Excellence"
+    },
+    {
+      "image": "/assets/img/Certifications/outlook.png",
+      "title": "Industry Outlook",
+      "description": "Recognized Textile Machinery Manufacturer"
+    }
+  ],
+  "updatedAt": "2026-09-15T04:53:24.787Z"
+}

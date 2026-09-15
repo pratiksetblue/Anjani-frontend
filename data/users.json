@@ -1,0 +1,18 @@
+[
+  {
+    "id": "user-admin-1",
+    "name": "Anjani Admin",
+    "email": "admin@anjaniindustries.com",
+    "password": "$2b$10$kQb15tD.ItS7QP56dHCUr.ufjM8hg6eXhrQnQEf0Woa7qQy8IaD1m",
+    "role": "Super Admin",
+    "createdAt": "2026-09-15T04:53:24.872Z"
+  },
+  {
+    "id": "6aa907a6d509ba71121890e4",
+    "name": "Anjani",
+    "email": "info@anjaniindustries.in",
+    "password": "$2b$10$Q9Km6HZGf2BXQcD04X9wAe5BpIRxgw4337qCo.zb7al3LdW/0k4WS",
+    "role": "Super Admin",
+    "createdAt": "2026-09-15T08:53:58.371Z"
+  }
+]

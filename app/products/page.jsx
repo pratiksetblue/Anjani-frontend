@@ -1,5 +1,17 @@
 import PageSections from "../../components/pages/ProductsSections";
+import { getPageSeo, getProducts } from "@/lib/db";
 
-export const metadata = { title: "Advance Fabric Dyeing & Processing Machinery Catalog" ,description: ": Explore our full range of PLC-based soft flow dyeing machines, rapid jet dye units, weight reduction systems, and automatic caustic recovery plants.", };
+export async function generateMetadata() {
+  const seo = await getPageSeo("/products");
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
+  };
+}
 
-export default function Page() { return <PageSections />; }
+export default async function Page() {
+  const products = await getProducts();
+  const safeProducts = JSON.parse(JSON.stringify(products || []));
+  return <PageSections initialProducts={safeProducts} />;
+}

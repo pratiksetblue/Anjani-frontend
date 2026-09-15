@@ -1,5 +1,15 @@
 import PageSections from "../../components/pages/OurStorySections";
+import { getPageSeo } from "@/lib/db";
 
-export const metadata = { title: "Textile Machinery Innovation & Legacy | Anjani Industries" ,description: "Discover how Anjani Industries evolved from Anjani Machines Pvt. Ltd. into a pioneer of low liquor ratio fabric dyeing and automatic caustic recovery systems.", };
+export async function generateMetadata() {
+  const seo = await getPageSeo("/our-story");
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
+  };
+}
 
-export default function Page() { return <PageSections />; }
+export default function Page() {
+  return <PageSections />;
+}

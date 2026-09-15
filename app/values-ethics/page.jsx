@@ -1,5 +1,15 @@
 import PageSections from "../../components/pages/ValuesEthicsSections";
+import { getPageSeo } from "@/lib/db";
 
-export const metadata = { title: "Sustainable Textile Machinery & Quality Standards | Anjani Industries" ,description: "Committed to eco-friendly fabric dyeing technology, precision engineering, and customer satisfaction, Anjani Industries builds durable, low-energy machinery.", };
+export async function generateMetadata() {
+  const seo = await getPageSeo("/values-ethics");
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
+  };
+}
 
-export default function Page() { return <PageSections />; }
+export default function Page() {
+  return <PageSections />;
+}

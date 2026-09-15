@@ -1,5 +1,15 @@
 import PageSections from "../../components/pages/AboutUsSections";
+import { getPageSeo } from "@/lib/db";
 
-export const metadata = { title: "Fabric Dyeing Machinery Manufacturer in India | Anjani Industries", description: "Learn about Anjani Industries, delivering energy-efficient fabric dyeing machinery, scouring units, and textile processing solutions with 36+ years of expertise.",  };
+export async function generateMetadata() {
+  const seo = await getPageSeo("/about-us");
+  return {
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
+  };
+}
 
-export default function Page() { return <PageSections />; }
+export default function Page() {
+  return <PageSections />;
+}

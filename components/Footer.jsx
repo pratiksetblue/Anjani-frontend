@@ -62,6 +62,47 @@ export default function Footer() {
       .catch(() => {});
   }, []);
 
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [submittingNewsletter, setSubmittingNewsletter] = useState(false);
+  const [newsletterMsg, setNewsletterMsg] = useState({ text: "", type: "" });
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.trim()) {
+      setNewsletterMsg({ text: "Please enter your email address.", type: "error" });
+      return;
+    }
+
+    setSubmittingNewsletter(true);
+    setNewsletterMsg({ text: "", type: "" });
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail.trim() }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Subscription failed.");
+      }
+
+      setNewsletterMsg({
+        text: "✓ Thank you for subscribing! Check your inbox for confirmation.",
+        type: "success",
+      });
+      setNewsletterEmail("");
+    } catch (err) {
+      setNewsletterMsg({
+        text: err.message || "Failed to subscribe. Please try again.",
+        type: "error",
+      });
+    } finally {
+      setSubmittingNewsletter(false);
+    }
+  };
+
   return (
     <>
       <div className="footer-top-banner-section">
@@ -142,7 +183,7 @@ export default function Footer() {
                 <div className="col-lg-9">
                   <div className="footer-menu">
                     <div className="row gy-5">
-                      <div className="col-md-6 col-sm-6 d-flex justify-content-lg-center">
+                      <div className="col-lg-3 col-md-6 col-sm-6">
                         <div className="footer-widget">
                           <div className="widget-title">
                             <h5>COMPANY LINKS</h5>
@@ -201,7 +242,7 @@ export default function Footer() {
                         </div>
                       </div>
 
-                      <div className="col-md-6 col-sm-6 d-flex justify-content-lg-center">
+                      <div className="col-lg-4 col-md-6 col-sm-6">
                         <div className="footer-widget">
                           <div className="widget-title">
                             <h5>PRODUCTS</h5>
@@ -221,6 +262,94 @@ export default function Footer() {
                               ))}
                             </ul>
                           </div>
+                        </div>
+                      </div>
+
+                      <div className="col-lg-5 col-md-12">
+                        <div className="footer-widget">
+                          <div className="widget-title">
+                            <h5>NEWSLETTER</h5>
+                          </div>
+                          <p style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6", marginBottom: "16px" }}>
+                            Subscribe to receive the latest updates on advanced fabric dyeing machinery, eco-friendly innovations, and global textile trade news.
+                          </p>
+
+                          <form onSubmit={handleNewsletterSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                            <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                              <input
+                                type="email"
+                                required
+                                placeholder="Enter your email address..."
+                                value={newsletterEmail}
+                                onChange={(e) => setNewsletterEmail(e.target.value)}
+                                disabled={submittingNewsletter}
+                                style={{
+                                  width: "100%",
+                                  height: "48px",
+                                  padding: "0 120px 0 16px",
+                                  backgroundColor: "#161926",
+                                  border: "1px solid #2d3248",
+                                  borderRadius: "6px",
+                                  color: "#ffffff",
+                                  fontSize: "14px",
+                                  outline: "none",
+                                  transition: "border-color 0.2s ease",
+                                }}
+                                onFocus={(e) => (e.target.style.borderColor = "#cb0000")}
+                                onBlur={(e) => (e.target.style.borderColor = "#2d3248")}
+                              />
+                              <button
+                                type="submit"
+                                disabled={submittingNewsletter}
+                                style={{
+                                  position: "absolute",
+                                  right: "4px",
+                                  height: "40px",
+                                  padding: "0 16px",
+                                  backgroundColor: "#cb0000",
+                                  color: "#ffffff",
+                                  border: "none",
+                                  borderRadius: "4px",
+                                  fontSize: "13px",
+                                  fontWeight: "600",
+                                  cursor: submittingNewsletter ? "not-allowed" : "pointer",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "6px",
+                                  transition: "background-color 0.2s ease",
+                                }}
+                                onMouseEnter={(e) => !submittingNewsletter && (e.target.style.backgroundColor = "#a80000")}
+                                onMouseLeave={(e) => !submittingNewsletter && (e.target.style.backgroundColor = "#cb0000")}
+                              >
+                                <span>{submittingNewsletter ? "Subscribing..." : "Subscribe"}</span>
+                                {!submittingNewsletter && (
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                  </svg>
+                                )}
+                              </button>
+                            </div>
+
+                            {newsletterMsg.text && (
+                              <div
+                                style={{
+                                  fontSize: "13px",
+                                  padding: "8px 12px",
+                                  borderRadius: "4px",
+                                  backgroundColor: newsletterMsg.type === "success" ? "rgba(34, 197, 94, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                                  color: newsletterMsg.type === "success" ? "#4ade80" : "#f87171",
+                                  border: `1px solid ${newsletterMsg.type === "success" ? "rgba(34, 197, 94, 0.3)" : "rgba(239, 68, 68, 0.3)"}`,
+                                }}
+                              >
+                                {newsletterMsg.text}
+                              </div>
+                            )}
+
+                            <span style={{ fontSize: "12px", color: "#64748b", marginTop: "2px" }}>
+                              🔒 We respect your privacy. No spam, ever.
+                            </span>
+                          </form>
                         </div>
                       </div>
                     </div>

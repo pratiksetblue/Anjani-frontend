@@ -10,8 +10,10 @@ export default function AdminAboutPage() {
     title: "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery",
     highlight:
       "Established in 1990, Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
+    portfolioPrefix: "Our comprehensive product portfolio includes",
     productsHighlight:
-      "Our comprehensive product portfolio includes Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants, and a wide range of customized textile processing machinery.",
+      "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,",
+    portfolioSuffix: "and a wide range of customized textile processing machinery.",
     description:
       "Every machine is precision-engineered to optimize water, steam, and power consumption while improving productivity, reducing processing time, and ensuring consistent performance for modern textile manufacturers worldwide.",
     image: "/assets/img/home1/about-img.jpg",
@@ -152,15 +154,107 @@ export default function AdminAboutPage() {
               />
             </div>
 
-            <div className="admin-form-group">
-              <label className="admin-label">Products Portfolio Highlight</label>
-              <textarea
-                rows={3}
-                className="admin-textarea"
-                placeholder="Our comprehensive product portfolio includes..."
-                value={about.productsHighlight || ""}
-                onChange={(e) => setAbout({ ...about, productsHighlight: e.target.value })}
-              />
+            {/* Products Portfolio Paragraph (Prefix + Highlight + Suffix) */}
+            <div
+              style={{
+                padding: "16px",
+                backgroundColor: "#f8fafc",
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+              }}
+            >
+              <div>
+                <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 4px 0", color: "#0f172a" }}>
+                  Products Portfolio Paragraph (Structured 3-Part Text)
+                </h3>
+                <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
+                  Customize the introduction, the red highlighted machinery list, and the closing sentence.
+                </p>
+              </div>
+
+              {/* 1. Prefix Text */}
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label className="admin-label" style={{ fontSize: 13 }}>
+                  1. Starting / Introduction Text (Normal Text)
+                </label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  placeholder="e.g. Our comprehensive product portfolio includes"
+                  value={about.portfolioPrefix ?? "Our comprehensive product portfolio includes"}
+                  onChange={(e) => setAbout({ ...about, portfolioPrefix: e.target.value })}
+                />
+              </div>
+
+              {/* 2. Highlighted Machinery List */}
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label className="admin-label" style={{ fontSize: 13, color: "#cb0000" }}>
+                  2. Machinery List (Red Highlighted Bold Text)
+                </label>
+                <textarea
+                  rows={3}
+                  className="admin-textarea"
+                  placeholder="e.g. Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines..."
+                  value={about.productsHighlight || ""}
+                  onChange={(e) => setAbout({ ...about, productsHighlight: e.target.value })}
+                />
+              </div>
+
+              {/* 3. Suffix Text */}
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label className="admin-label" style={{ fontSize: 13 }}>
+                  3. Ending / Conclusion Text (Normal Text)
+                </label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  placeholder="e.g. and a wide range of customized textile processing machinery."
+                  value={about.portfolioSuffix ?? "and a wide range of customized textile processing machinery."}
+                  onChange={(e) => setAbout({ ...about, portfolioSuffix: e.target.value })}
+                />
+              </div>
+
+              {/* Live Visual Preview */}
+              <div
+                style={{
+                  padding: "12px 14px",
+                  backgroundColor: "#ffffff",
+                  borderRadius: 6,
+                  border: "1px dashed #cbd5e1",
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: "#334155",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    color: "#94a3b8",
+                    marginBottom: 4,
+                  }}
+                >
+                  Live Preview on Website:
+                </div>
+                <span>
+                  {about.portfolioPrefix !== undefined && about.portfolioPrefix !== ""
+                    ? `${about.portfolioPrefix} `
+                    : ""}
+                </span>
+                <span style={{ color: "#cb0000", fontWeight: 600 }}>
+                  {about.productsHighlight ||
+                    "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,"}
+                </span>
+                <span>
+                  {about.portfolioSuffix !== undefined && about.portfolioSuffix !== ""
+                    ? ` ${about.portfolioSuffix}`
+                    : ""}
+                </span>
+              </div>
             </div>
 
             <div className="admin-form-group">

@@ -48,9 +48,31 @@ const EmailSettingSchema = new mongoose.Schema(
         default: "New Customer Inquiry Received",
       },
     },
+    newsletterTemplate: {
+      enabled: { type: Boolean, default: true },
+      subject: {
+        type: String,
+        default: "Welcome to Anjani Industries Newsletter - Textile Machinery Updates",
+      },
+      heading: {
+        type: String,
+        default: "Thank You for Subscribing!",
+      },
+      body: {
+        type: String,
+        default:
+          "Dear Subscriber,\n\nThank you for subscribing to the Anjani Industries newsletter!\n\nYou are now part of our valued community. You will receive regular updates about our latest fabric dyeing machinery innovations, eco-friendly technological breakthroughs, industry trends, and global exhibition announcements directly in your inbox.\n\nIf you ever need technical advice or customized machinery specifications, our engineering team is here to assist you.",
+      },
+      footerNote: {
+        type: String,
+        default:
+          "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
+      },
+    },
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
+delete mongoose.models.EmailSetting;
 export default mongoose.models.EmailSetting ||
   mongoose.model("EmailSetting", EmailSettingSchema);

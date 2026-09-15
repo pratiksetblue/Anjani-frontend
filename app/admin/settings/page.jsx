@@ -14,6 +14,9 @@ import {
   Share2,
   Users,
   ArrowRight,
+  Plus,
+  Trash2,
+  MapPin,
 } from "lucide-react";
 import ImageUploadPreview from "@/components/admin/ImageUploadPreview";
 
@@ -410,6 +413,167 @@ export default function AdminSettingsPage() {
                 <span>{savingSettings ? "Saving Settings..." : "Save Company Settings"}</span>
               </button>
             </form>
+          </div>
+
+          {/* Sales & Service Offices Card */}
+          <div className="admin-card">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 16,
+                flexWrap: "wrap",
+                gap: 10,
+              }}
+            >
+              <div>
+                <h2
+                  className="admin-card-title"
+                  style={{ display: "flex", alignItems: "center", gap: 8, margin: 0 }}
+                >
+                  <MapPin size={18} />
+                  <span>Sales &amp; Service Offices</span>
+                </h2>
+                <p style={{ fontSize: 13, color: "#64748b", margin: "4px 0 0 0" }}>
+                  Manage national and global offices displayed on the Contact Us page.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const current = settings.salesOffices || [];
+                  setSettings({
+                    ...settings,
+                    salesOffices: [...current, { country: "", cities: "" }],
+                  });
+                }}
+                className="admin-btn admin-btn-secondary admin-btn-sm"
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <Plus size={14} />
+                <span>Add Office</span>
+              </button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {(settings.salesOffices || []).map((office, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: "14px",
+                    backgroundColor: "#f8fafc",
+                    borderRadius: 8,
+                    border: "1px solid #e2e8f0",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "#475569",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Office #{idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = (settings.salesOffices || []).filter(
+                          (_, i) => i !== idx
+                        );
+                        setSettings({ ...settings, salesOffices: updated });
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#ef4444",
+                        cursor: "pointer",
+                        padding: "2px 6px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        fontSize: 12,
+                      }}
+                    >
+                      <Trash2 size={14} />
+                      <span>Remove</span>
+                    </button>
+                  </div>
+
+                  <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                    <label className="admin-label" style={{ fontSize: 12 }}>
+                      Country / Title
+                    </label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      placeholder="e.g. India or Global Presence"
+                      value={office.country || ""}
+                      onChange={(e) => {
+                        const updated = [...(settings.salesOffices || [])];
+                        updated[idx] = { ...updated[idx], country: e.target.value };
+                        setSettings({ ...settings, salesOffices: updated });
+                      }}
+                    />
+                  </div>
+
+                  <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                    <label className="admin-label" style={{ fontSize: 12 }}>
+                      Cities / Locations
+                    </label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      placeholder="e.g. Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara"
+                      value={office.cities || ""}
+                      onChange={(e) => {
+                        const updated = [...(settings.salesOffices || [])];
+                        updated[idx] = { ...updated[idx], cities: e.target.value };
+                        setSettings({ ...settings, salesOffices: updated });
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {(!settings.salesOffices || settings.salesOffices.length === 0) && (
+                <div
+                  style={{
+                    padding: 20,
+                    textAlign: "center",
+                    color: "#94a3b8",
+                    fontSize: 13,
+                    border: "1px dashed #cbd5e1",
+                    borderRadius: 8,
+                  }}
+                >
+                  No sales offices configured. Click "Add Office" above to add one.
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={handleSaveSettings}
+                disabled={savingSettings}
+                className="admin-btn admin-btn-primary"
+                style={{ width: "100%", justifyContent: "center", marginTop: 4 }}
+              >
+                <Save size={16} />
+                <span>{savingSettings ? "Saving..." : "Save Sales & Service Offices"}</span>
+              </button>
+            </div>
           </div>
         </div>
 

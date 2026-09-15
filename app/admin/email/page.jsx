@@ -54,6 +54,14 @@ export default function AdminEmailSettingsPage() {
       subject: "[New Inquiry Alert] {userName} - {subject}",
       heading: "New Customer Inquiry Received",
     },
+    newsletterTemplate: {
+      enabled: true,
+      subject: "Welcome to Anjani Industries Newsletter - Textile Machinery Updates",
+      heading: "Thank You for Subscribing!",
+      body: "Dear Subscriber,\n\nThank you for subscribing to the Anjani Industries newsletter!\n\nYou are now part of our valued community. You will receive regular updates about our latest fabric dyeing machinery innovations, eco-friendly technological breakthroughs, industry trends, and global exhibition announcements directly in your inbox.\n\nIf you ever need technical advice or customized machinery specifications, our engineering team is here to assist you.",
+      footerNote:
+        "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
+    },
   });
 
   useEffect(() => {
@@ -72,6 +80,10 @@ export default function AdminEmailSettingsPage() {
               adminTemplate: {
                 ...settings.adminTemplate,
                 ...(data.adminTemplate || {}),
+              },
+              newsletterTemplate: {
+                ...settings.newsletterTemplate,
+                ...(data.newsletterTemplate || {}),
               },
             });
             if (data.smtp?.adminNotificationEmail) {
@@ -212,6 +224,16 @@ export default function AdminEmailSettingsPage() {
     }));
   };
 
+  const insertNewsletterVariable = (variable) => {
+    setSettings((prev) => ({
+      ...prev,
+      newsletterTemplate: {
+        ...prev.newsletterTemplate,
+        body: (prev.newsletterTemplate?.body || "") + ` {${variable}}`,
+      },
+    }));
+  };
+
   if (loading) {
     return (
       <div style={{ padding: 40, textAlign: "center", color: "#64748b" }}>
@@ -231,6 +253,11 @@ export default function AdminEmailSettingsPage() {
       id: "adminTemplate",
       label: "Admin Lead Notification Template",
       icon: Bell,
+    },
+    {
+      id: "newsletterTemplate",
+      label: "Newsletter Welcome Template",
+      icon: Mail,
     },
   ];
 
@@ -1439,6 +1466,364 @@ export default function AdminEmailSettingsPage() {
                         Reply to Rajesh Patel
                       </span>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 4: NEWSLETTER WELCOME TEMPLATE
+        ========================================================================= */}
+        {activeTab === "newsletterTemplate" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {/* Enable/Disable Card */}
+            <div
+              className="admin-card"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "18px 24px",
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    margin: "0 0 4px 0",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "#0f172a",
+                  }}
+                >
+                  Newsletter Welcome Email Auto-Responder
+                </h3>
+                <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
+                  Automatically delivers a branded welcome email to subscribers immediately after they join the newsletter in the website footer.
+                </p>
+              </div>
+
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={settings.newsletterTemplate?.enabled ?? true}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      newsletterTemplate: {
+                        ...settings.newsletterTemplate,
+                        enabled: e.target.checked,
+                      },
+                    })
+                  }
+                  style={{
+                    width: 18,
+                    height: 18,
+                    accentColor: "var(--admin-primary)",
+                  }}
+                />
+                <span style={{ fontWeight: 600, fontSize: 14 }}>
+                  {settings.newsletterTemplate?.enabled !== false ? "Active" : "Disabled"}
+                </span>
+              </label>
+            </div>
+
+            {/* Template Inputs Card */}
+            <div className="admin-card">
+              <h3 className="admin-card-title" style={{ marginBottom: 18 }}>
+                Newsletter Welcome Email Template
+              </h3>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Welcome Email Subject Line</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={settings.newsletterTemplate?.subject || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      newsletterTemplate: {
+                        ...settings.newsletterTemplate,
+                        subject: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Email Heading Banner</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={settings.newsletterTemplate?.heading || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      newsletterTemplate: {
+                        ...settings.newsletterTemplate,
+                        heading: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+
+              {/* Variable Chips */}
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#475569",
+                    marginBottom: 6,
+                  }}
+                >
+                  Click to insert placeholder tags into newsletter body:
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {[
+                    "subscriberEmail",
+                    "companyName",
+                    "companyPhone",
+                    "companyEmail",
+                    "date",
+                  ].map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => insertNewsletterVariable(v)}
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: 4,
+                        border: "1px solid #cbd5e1",
+                        backgroundColor: "#f8fafc",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        color: "#9333ea",
+                        fontWeight: 600,
+                      }}
+                    >
+                      +{`{${v}}`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Main Message Body</label>
+                <textarea
+                  rows={7}
+                  className="admin-textarea"
+                  value={settings.newsletterTemplate?.body || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      newsletterTemplate: {
+                        ...settings.newsletterTemplate,
+                        body: e.target.value,
+                      },
+                    })
+                  }
+                />
+                <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                  Use double line breaks to separate paragraphs.
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Footer Contact Note</label>
+                <textarea
+                  rows={2}
+                  className="admin-textarea"
+                  value={settings.newsletterTemplate?.footerNote || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      newsletterTemplate: {
+                        ...settings.newsletterTemplate,
+                        footerNote: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Live Interactive Email Preview Card */}
+            <div className="admin-card">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 14,
+                }}
+              >
+                <Eye size={18} style={{ color: "var(--admin-primary)" }} />
+                <h3 className="admin-card-title" style={{ margin: 0 }}>
+                  Live Newsletter Welcome Email Preview
+                </h3>
+              </div>
+              <p
+                style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px 0" }}
+              >
+                This preview shows exactly how newly registered subscribers will view your welcome email in their inbox.
+              </p>
+
+              <div
+                style={{
+                  backgroundColor: "#f1f5f9",
+                  padding: "24px 16px",
+                  borderRadius: 10,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: 580,
+                    width: "100%",
+                    backgroundColor: "#ffffff",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  {/* Email Header */}
+                  <div
+                    style={{
+                      backgroundColor: "#0c0d14",
+                      borderTop: "4px solid #cb0000",
+                      padding: "20px 24px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: "#ffffff",
+                        fontSize: 18,
+                        fontWeight: 700,
+                        letterSpacing: 1,
+                      }}
+                    >
+                      <span style={{ color: "#cb0000" }}>ANJANI</span>{" "}
+                      INDUSTRIES
+                    </div>
+                    <div
+                      style={{
+                        color: "#94a3b8",
+                        fontSize: 11,
+                        marginTop: 4,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Official Newsletter Subscription Confirmed
+                    </div>
+                  </div>
+
+                  {/* Email Body */}
+                  <div style={{ padding: "28px 24px" }}>
+                    <h2
+                      style={{
+                        margin: "0 0 16px 0",
+                        fontSize: 18,
+                        fontWeight: 700,
+                        color: "#0f172a",
+                      }}
+                    >
+                      {settings.newsletterTemplate?.heading || "Thank You for Subscribing!"}
+                    </h2>
+
+                    <div
+                      style={{
+                        fontSize: 14,
+                        color: "#334155",
+                        lineHeight: 1.6,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {(settings.newsletterTemplate?.body || "")
+                        .replace(/\{subscriberEmail\}/g, "patel.textiles@gmail.com")
+                        .replace(/\{userName\}/g, "Valued Subscriber")
+                        .replace(/\{userEmail\}/g, "patel.textiles@gmail.com")
+                        .replace(/\{companyName\}/g, "Anjani Industries")
+                        .replace(/\{companyPhone\}/g, "+91 8154 888 370")
+                        .replace(/\{companyEmail\}/g, "info@anjaniindustries.in")
+                        .replace(/\{date\}/g, new Date().toLocaleDateString("en-IN", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }))}
+                    </div>
+
+                    {/* Subscriber confirmation box */}
+                    <div
+                      style={{
+                        backgroundColor: "#faf5ff",
+                        border: "1px solid #e9d5ff",
+                        borderRadius: 6,
+                        padding: "14px 16px",
+                        margin: "20px 0",
+                        fontSize: 13,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 700,
+                          color: "#7e22ce",
+                          marginBottom: 6,
+                          textTransform: "uppercase",
+                          fontSize: 11,
+                        }}
+                      >
+                        ✓ Subscription Verified
+                      </div>
+                      <div style={{ color: "#475569", fontSize: 13 }}>
+                        Registered Email: <strong style={{ color: "#0f172a" }}>patel.textiles@gmail.com</strong>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: "center", marginTop: 24 }}>
+                      <span
+                        style={{
+                          backgroundColor: "#cb0000",
+                          color: "#ffffff",
+                          padding: "10px 24px",
+                          borderRadius: 6,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          display: "inline-block",
+                        }}
+                      >
+                        Explore Machinery Range
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Email Footer */}
+                  <div
+                    style={{
+                      backgroundColor: "#f8fafc",
+                      borderTop: "1px solid #e2e8f0",
+                      padding: "16px 20px",
+                      textAlign: "center",
+                      fontSize: 11,
+                      color: "#64748b",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {settings.newsletterTemplate?.footerNote}
                   </div>
                 </div>
               </div>

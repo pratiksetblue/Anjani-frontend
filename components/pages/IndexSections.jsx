@@ -83,7 +83,9 @@ const defaultHome = {
     badge: "About Our Story",
     title: "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery",
     highlight: "Established in 1990, Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
-    productsHighlight: "Our comprehensive product portfolio includes Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants, and a wide range of customized textile processing machinery.",
+    portfolioPrefix: "Our comprehensive product portfolio includes",
+    productsHighlight: "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,",
+    portfolioSuffix: "and a wide range of customized textile processing machinery.",
     description: "Every machine is precision-engineered to optimize water, steam, and power consumption while improving productivity, reducing processing time, and ensuring consistent performance for modern textile manufacturers worldwide.",
     image: "/assets/img/home1/about-img.jpg",
   },
@@ -201,6 +203,34 @@ export function Section1({ hero }) {
 ========================================================= */
 
 export function Section2({ about }) {
+  const prefix =
+    about?.portfolioPrefix !== undefined
+      ? about.portfolioPrefix
+      : "Our comprehensive product portfolio includes";
+  const suffix =
+    about?.portfolioSuffix !== undefined
+      ? about.portfolioSuffix
+      : "and a wide range of customized textile processing machinery.";
+
+  const getCleanProductsHighlight = (text) => {
+    let cleaned = (
+      text ||
+      "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,"
+    ).trim();
+
+    if (prefix) {
+      const pEsc = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      cleaned = cleaned.replace(new RegExp(`^${pEsc}\\s*`, "i"), "");
+    }
+    if (suffix) {
+      const sEsc = suffix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      cleaned = cleaned.replace(new RegExp(`[\\s,]*${sEsc}\\s*$`, "i"), "");
+    }
+    cleaned = cleaned.trim();
+    if (suffix && !cleaned.endsWith(",")) cleaned += ",";
+    return cleaned;
+  };
+
   return (
     <section className="home1-about-section mb-80">
       <div className="container-fluid">
@@ -227,11 +257,11 @@ export function Section2({ about }) {
                     </p>
 
                     <p>
-                      Our comprehensive product portfolio includes{" "}
+                      {prefix ? `${prefix} ` : ""}
                       <span className="red fw-semibold">
-                        {about?.productsHighlight || "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines, U-Type Jet Dyeing Machines, Long Tube Rapid Jet Dyeing Machines, Weight Reduction (Scouring) Machines, Caustic Recovery Plants,"}
-                      </span>{" "}
-                      and a wide range of customized textile processing machinery.
+                        {getCleanProductsHighlight(about?.productsHighlight)}
+                      </span>
+                      {suffix ? ` ${suffix}` : ""}
                     </p>
 
                     <p>
@@ -464,35 +494,47 @@ export function Section6({ certifications }) {
    MAIN COMPONENT
 ========================================================= */
 
-export default function IndexSections() {
-  const [homeData, setHomeData] = useState(defaultHome);
-  const [products, setProducts] = useState(defaultProducts);
+export default function IndexSections({ initialHomeData, initialProducts }) {
+  const [homeData, setHomeData] = useState(initialHomeData || defaultHome);
+  const [products, setProducts] = useState(
+    initialProducts && initialProducts.length > 0
+      ? initialProducts.map((p) => ({
+          title: p.title,
+          href: p.href || `/${p.slug}`,
+          image: p.image,
+        }))
+      : defaultProducts
+  );
 
   useEffect(() => {
-    fetch("/api/home")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data && data.hero) {
-          setHomeData(data);
-        }
-      })
-      .catch(() => {});
+    if (!initialHomeData) {
+      fetch("/api/home")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && data.hero) {
+            setHomeData(data);
+          }
+        })
+        .catch(() => {});
+    }
 
-    fetch("/api/products")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(
-            data.map((p) => ({
-              title: p.title,
-              href: `/${p.slug}`,
-              image: p.image,
-            }))
-          );
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialProducts || initialProducts.length === 0) {
+      fetch("/api/products")
+        .then((res) => (res.ok ? res.json() : []))
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setProducts(
+              data.map((p) => ({
+                title: p.title,
+                href: `/${p.slug}`,
+                image: p.image,
+              }))
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialHomeData, initialProducts]);
 
   return (
     <>

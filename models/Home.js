@@ -17,7 +17,9 @@ const HomeSchema = new mongoose.Schema(
       badge: { type: String, default: "About Our Story" },
       title: { type: String, default: "Anjani – A Leading Manufacturer of Fabric Dyeing Machinery" },
       highlight: { type: String },
+      portfolioPrefix: { type: String, default: "Our comprehensive product portfolio includes" },
       productsHighlight: { type: String },
+      portfolioSuffix: { type: String, default: "and a wide range of customized textile processing machinery." },
       description: { type: String },
       image: { type: String, default: "/assets/img/home1/about-img.jpg" },
     },
@@ -37,7 +39,8 @@ const HomeSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
+delete mongoose.models.Home;
 export default mongoose.models.Home || mongoose.model("Home", HomeSchema);

@@ -12,7 +12,9 @@ const ArrowIcon = () => (
   </svg>
 );
 
-export function Section1() {
+export function Section1({ bannerTitle }) {
+  const title = bannerTitle || "Advance Textile<br />Dyeing &amp; Processing Machines";
+
   return (
     <div className="breadcrumb-section">
       <div className="breadcrumb-content-wrap">
@@ -26,11 +28,7 @@ export function Section1() {
                   </li>
                   <li>Products</li>
                 </ul>
-                <h1>
-                  Advance Textile
-                  <br />
-                  Dyeing &amp; Processing Machines
-                </h1>
+                <h1 dangerouslySetInnerHTML={{ __html: title }} />
               </div>
             </div>
           </div>
@@ -102,7 +100,44 @@ export function Section2({ initialProducts = [] }) {
   );
 }
 
-export function Section3() {
+export function Section3({ whyChoose }) {
+  const title = whyChoose?.title || "Why Choose ANJANI?";
+  const cards =
+    Array.isArray(whyChoose?.cards) && whyChoose.cards.length > 0
+      ? whyChoose.cards
+      : [
+          {
+            icon: "/assets/img/icon/icon1.png",
+            title: "36+ Years of<br />Engineering Experience",
+            desc: "Manufacturing textile processing machinery since 1990.",
+          },
+          {
+            icon: "/assets/img/icon/icon2.png",
+            title: "Advanced Fabric<br />Handling",
+            desc: "Designed for controlled and gentle fabric movement.",
+          },
+          {
+            icon: "/assets/img/icon/icon3.png",
+            title: "Energy & Resource<br />Efficiency",
+            desc: "Engineered to reduce water, steam, power and processing time.",
+          },
+          {
+            icon: "/assets/img/icon/icon4.png",
+            title: "Automation &<br />Process Control",
+            desc: "Intelligent PLC automation for consistent batch-to-batch repeatability.",
+          },
+          {
+            icon: "/assets/img/icon/icon5.png",
+            title: "Robust Stainless<br />Steel Construction",
+            desc: "Built with high-grade materials for durability and long operating life.",
+          },
+          {
+            icon: "/assets/img/icon/icon6.png",
+            title: "Dedicated<br />After-Sales Support",
+            desc: "Prompt service, technical support, and genuine spare parts.",
+          },
+        ];
+
   return (
     <div className="mb-80 values-ethics-section">
       <div className="container-fluid">
@@ -113,143 +148,36 @@ export function Section3() {
         >
           <div className="col-xl-12 col-lg-12 col-md-8">
             <div className="section-title text-center mb-5">
-              <h2>Why Choose ANJANI?</h2>
+              <h2>{title}</h2>
             </div>
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="36+ Years of Engineering Experience"
-                    src="/assets/img/icon/icon1.png"
-                  />
+          {cards.map((card, idx) => (
+            <div key={idx} className="col-lg-4 col-md-6 mb-4">
+              <div className="customer-box inn-probox h-100">
+                <div>
+                  <div className="pro-icon">
+                    <img alt={card.title?.replace(/<[^>]+>/g, '') || "Icon"} src={card.icon} />
+                  </div>
+                  <h4 dangerouslySetInnerHTML={{ __html: card.title }} />
+                  <p className="mb-0">{card.desc}</p>
                 </div>
-                <h4>
-                  36+ Years of
-                  <br />
-                  Engineering Experience
-                </h4>
-                <p className="mb-0">
-                  Manufacturing textile processing machinery since 1990.
-                </p>
               </div>
             </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="Advanced Fabric Handling"
-                    src="/assets/img/icon/icon2.png"
-                  />
-                </div>
-                <h4>
-                  Advanced Fabric
-                  <br />
-                  Handling
-                </h4>
-                <p className="mb-0">
-                  Designed for controlled and gentle fabric movement.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="Energy & Resource Efficiency"
-                    src="/assets/img/icon/icon3.png"
-                  />
-                </div>
-                <h4>
-                  Energy &amp; Resource
-                  <br />
-                  Efficiency
-                </h4>
-                <p className="mb-0">
-                  Engineered to reduce water, steam, power and processing time.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="PLC-Based Automation"
-                    src="/assets/img/icon/icon4.png"
-                  />
-                </div>
-                <h4>
-                  PLC-Based
-                  <br />
-                  Automation
-                </h4>
-                <p className="mb-0">
-                  Precise and repeatable process control.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="Robust Construction"
-                    src="/assets/img/icon/icon5.png"
-                  />
-                </div>
-                <h4>
-                  Robust
-                  <br />
-                  Construction
-                </h4>
-                <p className="mb-0">
-                  Designed for continuous industrial operation.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="customer-box inn-probox">
-              <div>
-                <div className="pro-icon">
-                  <img
-                    alt="Technical Support"
-                    src="/assets/img/icon/icon6.png"
-                  />
-                </div>
-                <h4>
-                  Technical
-                  <br />
-                  Support
-                </h4>
-                <p className="mb-0">
-                  Sales and service support across India and international markets.
-                </p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-export default function ProductsSections({ initialProducts = [] }) {
+export default function ProductsSections({ initialProducts = [], pageData = {} }) {
   return (
     <>
-      <Section1 />
+      <Section1 bannerTitle={pageData.bannerTitle} />
       <Section2 initialProducts={initialProducts} />
-      <Section3 />
+      <Section3 whyChoose={pageData.whyChoose} />
     </>
   );
 }

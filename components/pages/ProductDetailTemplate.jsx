@@ -85,12 +85,12 @@ export default function ProductDetailTemplate({ product }) {
                       <span>
                         TALK TO OUR TECHNICAL
                         <br />
-                        ENGINEER ON WHATAPP
+                        ENGINEER ON WHATSAPP
                       </span>
                       <span>
                         TALK TO OUR TECHNICAL
                         <br />
-                        ENGINEER ON WHATAPP
+                        ENGINEER ON WHATSAPP
                       </span>
                       <svg
                         fill="none"

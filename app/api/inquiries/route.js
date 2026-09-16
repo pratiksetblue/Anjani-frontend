@@ -17,7 +17,14 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    if (!body.name || !body.email || !body.phone || !body.message) {
+    if (body.type === "Newsletter") {
+      if (!body.email) {
+        return NextResponse.json(
+          { error: "Email address is required for newsletter." },
+          { status: 400 }
+        );
+      }
+    } else if (!body.name || !body.email || !body.phone || !body.message) {
       return NextResponse.json(
         { error: "Name, Email, Phone and Message are required" },
         { status: 400 }

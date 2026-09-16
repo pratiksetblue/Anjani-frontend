@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   MessageSquareQuote,
   Search,
   Trash2,
   Eye,
+  Edit,
   RefreshCw,
   Mail,
   Phone,
@@ -14,16 +16,42 @@ import {
   Copy,
   Check,
   Users,
+  Globe,
+  UserPlus,
+  Save,
+  Download,
 } from "lucide-react";
 
 export default function AdminInquiriesPage() {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL"); // ALL | Inquiry | Newsletter
   const [search, setSearch] = useState("");
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [copiedEmails, setCopiedEmails] = useState(false);
+
+  // Edit State
+  const [editingInquiry, setEditingInquiry] = useState(null);
+  const [isAddingSubscriber, setIsAddingSubscriber] = useState(false);
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editForm, setEditForm] = useState({
+    id: "",
+    firstName: "",
+    lastName: "",
+    country: "",
+    email: "",
+    phone: "",
+    message: "",
+    type: "Newsletter",
+  });
+  const [newSubForm, setNewSubForm] = useState({
+    firstName: "",
+    lastName: "",
+    country: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
 
   const fetchInquiries = async () => {
     setLoading(true);
@@ -44,31 +72,8 @@ export default function AdminInquiriesPage() {
     fetchInquiries();
   }, []);
 
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      const res = await fetch(`/api/inquiries/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (res.ok) {
-        setInquiries((prev) =>
-          prev.map((inq) =>
-            inq.id === id || inq._id === id ? { ...inq, status: newStatus } : inq
-          )
-        );
-        if (selectedInquiry && (selectedInquiry.id === id || selectedInquiry._id === id)) {
-          setSelectedInquiry((prev) => ({ ...prev, status: newStatus }));
-        }
-      }
-    } catch (err) {
-      console.error("Status update error:", err);
-    }
-  };
-
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this inquiry?")) return;
+    if (!confirm("Are you sure you want to delete this record?")) return;
 
     try {
       const res = await fetch(`/api/inquiries/${id}`, { method: "DELETE" });
@@ -80,6 +85,127 @@ export default function AdminInquiriesPage() {
       }
     } catch (err) {
       console.error("Delete error:", err);
+    }
+  };
+
+  const openEditModal = (inq) => {
+    let fn = inq.firstName || "";
+    let ln = inq.lastName || "";
+    if (!fn && !ln && inq.name && inq.name !== "Newsletter Subscriber" && inq.name !== "Valued Customer") {
+      const parts = inq.name.trim().split(" ");
+      fn = parts[0] || "";
+      ln = parts.slice(1).join(" ") || "";
+    }
+
+    setEditForm({
+      id: inq.id || inq._id,
+      firstName: fn,
+      lastName: ln,
+      country: inq.country || "",
+      email: inq.email || "",
+      phone: inq.phone || "",
+      message: inq.message || "",
+      type: inq.type || "Inquiry",
+    });
+    setEditingInquiry(inq);
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    if (!editForm.email || !editForm.email.trim()) {
+      alert("Email is required");
+      return;
+    }
+
+    setSavingEdit(true);
+    try {
+      const res = await fetch(`/api/inquiries/${editForm.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: editForm.firstName.trim(),
+          lastName: editForm.lastName.trim(),
+          country: editForm.country.trim(),
+          email: editForm.email.trim(),
+          phone: editForm.phone.trim(),
+          message: editForm.message.trim(),
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setInquiries((prev) =>
+          prev.map((item) =>
+            item.id === editForm.id || item._id === editForm.id
+              ? { ...item, ...updated }
+              : item
+          )
+        );
+        if (selectedInquiry && (selectedInquiry.id === editForm.id || selectedInquiry._id === editForm.id)) {
+          setSelectedInquiry((prev) => ({ ...prev, ...updated }));
+        }
+        setEditingInquiry(null);
+      } else {
+        const err = await res.json();
+        alert(err.error || "Failed to update record");
+      }
+    } catch (err) {
+      console.error("Save edit error:", err);
+      alert("Failed to save changes.");
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  const handleAddSubscriber = async (e) => {
+    e.preventDefault();
+    if (!newSubForm.email || !newSubForm.email.trim()) {
+      alert("Email is required");
+      return;
+    }
+
+    setSavingEdit(true);
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: newSubForm.firstName.trim(),
+          lastName: newSubForm.lastName.trim(),
+          country: newSubForm.country.trim(),
+          email: newSubForm.email.trim(),
+          phone: newSubForm.phone.trim(),
+          message: newSubForm.message.trim() || "Manually added by Admin",
+          type: "Newsletter",
+          subject: "Newsletter Subscription",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.inquiry) {
+          setInquiries((prev) => [data.inquiry, ...prev]);
+        } else {
+          fetchInquiries();
+        }
+        setIsAddingSubscriber(false);
+        setNewSubForm({
+          firstName: "",
+          lastName: "",
+          country: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } else {
+        const err = await res.json();
+        alert(err.error || "Failed to add subscriber");
+      }
+    } catch (err) {
+      console.error("Add subscriber error:", err);
+      alert("Failed to add subscriber");
+    } finally {
+      setSavingEdit(false);
     }
   };
 
@@ -98,9 +224,35 @@ export default function AdminInquiriesPage() {
     setTimeout(() => setCopiedEmails(false), 2500);
   };
 
+  const handleExportCSV = () => {
+    const list = typeFilter === "Newsletter" ? newsletterSubscribers : filtered;
+    if (list.length === 0) {
+      alert("No records to export.");
+      return;
+    }
+
+    const headers = ["Date", "First Name", "Last Name", "Country", "Email", "Phone", "Notes / Message"];
+    const rows = list.map((item) => [
+      new Date(item.createdAt).toLocaleDateString("en-IN"),
+      item.firstName || "",
+      item.lastName || "",
+      item.country || "",
+      item.email || "",
+      item.phone || "",
+      (item.message || "").replace(/\n/g, " "),
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].map(e => e.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `anjani_${typeFilter.toLowerCase()}_leads_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filtered = inquiries.filter((inq) => {
-    const matchesStatus =
-      statusFilter === "ALL" || inq.status === statusFilter;
     const matchesType =
       typeFilter === "ALL"
         ? true
@@ -109,11 +261,13 @@ export default function AdminInquiriesPage() {
         : inq.type !== "Newsletter";
     const matchesSearch =
       inq.name?.toLowerCase().includes(search.toLowerCase()) ||
+      inq.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+      inq.lastName?.toLowerCase().includes(search.toLowerCase()) ||
+      inq.country?.toLowerCase().includes(search.toLowerCase()) ||
       inq.email?.toLowerCase().includes(search.toLowerCase()) ||
       inq.phone?.includes(search) ||
-      inq.subject?.toLowerCase().includes(search.toLowerCase()) ||
       inq.message?.toLowerCase().includes(search.toLowerCase());
-    return matchesStatus && matchesType && matchesSearch;
+    return matchesType && matchesSearch;
   });
 
   return (
@@ -133,11 +287,21 @@ export default function AdminInquiriesPage() {
             Customer Inquiries &amp; Newsletter Leads ({inquiries.length})
           </h1>
           <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            Monitor contact form submissions, machinery quote requests, and newsletter subscriptions.
+            Monitor and manage contact inquiries and newsletter subscribers with First Name, Last Name, and Country editing.
           </p>
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <button
+            onClick={() => setIsAddingSubscriber(true)}
+            className="admin-btn admin-btn-primary"
+            title="Manually add a new newsletter subscriber"
+            style={{ gap: 6 }}
+          >
+            <UserPlus size={16} />
+            <span>+ Add Subscriber</span>
+          </button>
+
           {newsletterSubscribers.length > 0 && (
             <button
               onClick={handleCopyNewsletterEmails}
@@ -155,11 +319,21 @@ export default function AdminInquiriesPage() {
               ) : (
                 <>
                   <Copy size={16} />
-                  <span>Copy Newsletter Emails ({newsletterSubscribers.length})</span>
+                  <span>Copy Emails ({newsletterSubscribers.length})</span>
                 </>
               )}
             </button>
           )}
+
+          <button
+            onClick={handleExportCSV}
+            className="admin-btn admin-btn-secondary"
+            title="Export filtered records to CSV"
+            style={{ gap: 6, borderColor: "#cbd5e1" }}
+          >
+            <Download size={16} />
+            <span>Export CSV</span>
+          </button>
 
           <button onClick={fetchInquiries} className="admin-btn admin-btn-secondary">
             <RefreshCw size={16} />
@@ -242,17 +416,18 @@ export default function AdminInquiriesPage() {
       </div>
 
       <div className="admin-card">
-        {/* Filters */}
+        {/* Search Bar */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             flexWrap: "wrap",
             gap: 14,
             marginBottom: 20,
           }}
         >
-          <div style={{ position: "relative", width: 320 }}>
+          <div style={{ position: "relative", width: 360, maxWidth: "100%" }}>
             <Search
               size={18}
               style={{
@@ -267,25 +442,14 @@ export default function AdminInquiriesPage() {
               type="text"
               className="admin-input"
               style={{ paddingLeft: 40 }}
-              placeholder="Search by name, email, phone..."
+              placeholder="Search by name, country, email, phone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <span style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>Status:</span>
-            {["ALL", "New", "Contacted", "Resolved"].map((st) => (
-              <button
-                key={st}
-                onClick={() => setStatusFilter(st)}
-                className={`admin-btn admin-btn-sm ${
-                  statusFilter === st ? "admin-btn-primary" : "admin-btn-secondary"
-                }`}
-              >
-                {st}
-              </button>
-            ))}
+          <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>
+            Showing <strong>{filtered.length}</strong> records
           </div>
         </div>
 
@@ -295,70 +459,26 @@ export default function AdminInquiriesPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>
-            No inquiries match your current filter.
+            No entries match your search.
           </div>
         ) : (
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Type</th>
                   <th>Date</th>
-                  <th>Contact Name</th>
+                  <th>Subscriber / Contact Name</th>
+                  <th>Country</th>
                   <th>Email &amp; Phone</th>
-                  <th>Subject</th>
-                  <th>Status</th>
                   <th style={{ textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((inq) => {
                   const isNewsletter = inq.type === "Newsletter";
+                  const displayName = [inq.firstName, inq.lastName].filter(Boolean).join(" ") || inq.name || (isNewsletter ? "Newsletter Subscriber" : "Valued Customer");
                   return (
                     <tr key={inq.id || inq._id}>
-                      <td>
-                        {isNewsletter ? (
-                          <span
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                              backgroundColor: "#faf5ff",
-                              color: "#7e22ce",
-                              border: "1px solid #e9d5ff",
-                              borderRadius: 12,
-                              padding: "2px 8px",
-                              fontSize: 11,
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                              letterSpacing: 0.5,
-                            }}
-                          >
-                            <Mail size={11} />
-                            Newsletter
-                          </span>
-                        ) : (
-                          <span
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                              backgroundColor: "#f0f9ff",
-                              color: "#0369a1",
-                              border: "1px solid #bae6fd",
-                              borderRadius: 12,
-                              padding: "2px 8px",
-                              fontSize: 11,
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                              letterSpacing: 0.5,
-                            }}
-                          >
-                            <MessageSquareQuote size={11} />
-                            Inquiry
-                          </span>
-                        )}
-                      </td>
                       <td style={{ fontSize: 13, color: "#64748b", whiteSpace: "nowrap" }}>
                         {new Date(inq.createdAt).toLocaleDateString("en-IN", {
                           day: "numeric",
@@ -368,12 +488,35 @@ export default function AdminInquiriesPage() {
                       </td>
                       <td>
                         <div style={{ fontWeight: 600, color: "#0f172a" }}>
-                          {inq.name || (isNewsletter ? "Newsletter Subscriber" : "Valued Customer")}
+                          {displayName}
                         </div>
                         {inq.productTitle && (
                           <div style={{ fontSize: 11, color: "var(--admin-primary)", fontWeight: 500 }}>
                             For: {inq.productTitle}
                           </div>
+                        )}
+                      </td>
+                      <td>
+                        {inq.country ? (
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4,
+                              backgroundColor: "#f8fafc",
+                              border: "1px solid #e2e8f0",
+                              padding: "2px 8px",
+                              borderRadius: 6,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              color: "#1e293b",
+                            }}
+                          >
+                            <Globe size={12} style={{ color: "#64748b" }} />
+                            {inq.country}
+                          </span>
+                        ) : (
+                          <span style={{ color: "#94a3b8", fontSize: 12 }}>— Not set</span>
                         )}
                       </td>
                       <td>
@@ -386,60 +529,30 @@ export default function AdminInquiriesPage() {
                           <div style={{ fontSize: 11, color: "#94a3b8" }}>—</div>
                         )}
                       </td>
-                      <td>
-                        <div
-                          style={{
-                            fontSize: 13,
-                            maxWidth: 220,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            color: isNewsletter ? "#7e22ce" : "inherit",
-                          }}
-                        >
-                          {inq.subject}
-                        </div>
-                      </td>
-                      <td>
-                        <select
-                          value={inq.status}
-                          onChange={(e) => handleStatusChange(inq.id || inq._id, e.target.value)}
-                          className="admin-select"
-                          style={{
-                            padding: "4px 8px",
-                            fontSize: 12,
-                            width: "auto",
-                            fontWeight: 600,
-                            borderRadius: 6,
-                            borderColor:
-                              inq.status === "New"
-                                ? "#93c5fd"
-                                : inq.status === "Contacted"
-                                ? "#fde68a"
-                                : "#86efac",
-                          }}
-                        >
-                          <option value="New">New</option>
-                          <option value="Contacted">Contacted</option>
-                          <option value="Resolved">Resolved</option>
-                        </select>
-                      </td>
                       <td style={{ textAlign: "right" }}>
                         <div style={{ display: "inline-flex", gap: 6 }}>
+                          <button
+                            onClick={() => openEditModal(inq)}
+                            className="admin-btn admin-btn-primary admin-btn-sm"
+                            title="Edit Subscriber (First Name, Last Name, Country, etc.)"
+                            style={{ gap: 4 }}
+                          >
+                            <Edit size={13} />
+                            <span>Edit</span>
+                          </button>
                           <button
                             onClick={() => setSelectedInquiry(inq)}
                             className="admin-btn admin-btn-secondary admin-btn-sm"
                             title="View Details"
                           >
-                            <Eye size={14} />
-                            <span>View</span>
+                            <Eye size={13} />
                           </button>
                           <button
                             onClick={() => handleDelete(inq.id || inq._id)}
                             className="admin-btn admin-btn-danger admin-btn-sm"
                             title="Delete Entry"
                           >
-                            <Trash2 size={14} />
+                            <Trash2 size={13} />
                           </button>
                         </div>
                       </td>
@@ -452,49 +565,263 @@ export default function AdminInquiriesPage() {
         )}
       </div>
 
+      {/* Edit Subscriber / Inquiry Modal */}
+      {editingInquiry && (
+        <div className="admin-modal-backdrop" onClick={() => setEditingInquiry(null)}>
+          <div className="admin-modal" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid #e2e8f0", paddingBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Edit size={18} style={{ color: "var(--admin-primary)" }} />
+                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
+                  {editingInquiry.type === "Newsletter" ? "Edit Newsletter Subscriber" : "Edit Customer Lead"}
+                </h2>
+              </div>
+              <button
+                onClick={() => setEditingInquiry(null)}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEdit}>
+              <div style={{ backgroundColor: "#f8fafc", padding: "10px 14px", borderRadius: 6, marginBottom: 16, border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: 12, color: "#64748b" }}>
+                  💡 <strong>Admin Edit Controls:</strong> Update First Name, Last Name, Country, and contact details below.
+                </div>
+              </div>
+
+              <div className="row g-3" style={{ marginBottom: 14 }}>
+                <div className="col-md-6">
+                  <label className="admin-label">First Name</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Rajesh"
+                    value={editForm.firstName}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, firstName: e.target.value }))}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="admin-label">Last Name</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Patel"
+                    value={editForm.lastName}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="row g-3" style={{ marginBottom: 14 }}>
+                <div className="col-md-6">
+                  <label className="admin-label">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    className="admin-input"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, email: e.target.value }))}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="admin-label">Country</label>
+                  <input
+                    type="text"
+                    list="country-suggestions"
+                    className="admin-input"
+                    placeholder="e.g. India, USA, Turkey..."
+                    value={editForm.country}
+                    onChange={(e) => setEditForm((prev) => ({ ...prev, country: e.target.value }))}
+                  />
+                  <datalist id="country-suggestions">
+                    <option value="India" />
+                    <option value="United States" />
+                    <option value="United Kingdom" />
+                    <option value="Bangladesh" />
+                    <option value="United Arab Emirates" />
+                    <option value="Turkey" />
+                    <option value="Germany" />
+                    <option value="Italy" />
+                    <option value="China" />
+                    <option value="Vietnam" />
+                    <option value="Indonesia" />
+                    <option value="Egypt" />
+                    <option value="Brazil" />
+                    <option value="Saudi Arabia" />
+                  </datalist>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 14 }}>
+                <label className="admin-label">Phone / WhatsApp</label>
+                <input
+                  type="tel"
+                  className="admin-input"
+                  placeholder="+91 98765 43210"
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, phone: e.target.value }))}
+                />
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label className="admin-label">Internal Notes / Message</label>
+                <textarea
+                  className="admin-textarea"
+                  rows={3}
+                  placeholder="Notes about this subscriber or lead..."
+                  value={editForm.message}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, message: e.target.value }))}
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, borderTop: "1px solid #e2e8f0", paddingTop: 14 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingInquiry(null)}
+                  className="admin-btn admin-btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  className="admin-btn admin-btn-primary"
+                  style={{ gap: 6 }}
+                >
+                  <Save size={16} />
+                  <span>{savingEdit ? "Saving..." : "Save Details"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add New Subscriber Modal */}
+      {isAddingSubscriber && (
+        <div className="admin-modal-backdrop" onClick={() => setIsAddingSubscriber(false)}>
+          <div className="admin-modal" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid #e2e8f0", paddingBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <UserPlus size={18} style={{ color: "var(--admin-primary)" }} />
+                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
+                  Add New Newsletter Subscriber
+                </h2>
+              </div>
+              <button
+                onClick={() => setIsAddingSubscriber(false)}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddSubscriber}>
+              <div className="row g-3" style={{ marginBottom: 14 }}>
+                <div className="col-md-6">
+                  <label className="admin-label">First Name</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Ramesh"
+                    value={newSubForm.firstName}
+                    onChange={(e) => setNewSubForm((prev) => ({ ...prev, firstName: e.target.value }))}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="admin-label">Last Name</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Shah"
+                    value={newSubForm.lastName}
+                    onChange={(e) => setNewSubForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="row g-3" style={{ marginBottom: 14 }}>
+                <div className="col-md-6">
+                  <label className="admin-label">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    className="admin-input"
+                    placeholder="subscriber@example.com"
+                    value={newSubForm.email}
+                    onChange={(e) => setNewSubForm((prev) => ({ ...prev, email: e.target.value }))}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="admin-label">Country</label>
+                  <input
+                    type="text"
+                    list="country-suggestions"
+                    className="admin-input"
+                    placeholder="e.g. India"
+                    value={newSubForm.country}
+                    onChange={(e) => setNewSubForm((prev) => ({ ...prev, country: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 14 }}>
+                <label className="admin-label">Phone / WhatsApp</label>
+                <input
+                  type="tel"
+                  className="admin-input"
+                  placeholder="+91 98765 43210"
+                  value={newSubForm.phone}
+                  onChange={(e) => setNewSubForm((prev) => ({ ...prev, phone: e.target.value }))}
+                />
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label className="admin-label">Internal Notes</label>
+                <textarea
+                  className="admin-textarea"
+                  rows={2}
+                  placeholder="Notes about subscriber source, company name, etc."
+                  value={newSubForm.message}
+                  onChange={(e) => setNewSubForm((prev) => ({ ...prev, message: e.target.value }))}
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, borderTop: "1px solid #e2e8f0", paddingTop: 14 }}>
+                <button
+                  type="button"
+                  onClick={() => setIsAddingSubscriber(false)}
+                  className="admin-btn admin-btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  className="admin-btn admin-btn-primary"
+                  style={{ gap: 6 }}
+                >
+                  <UserPlus size={16} />
+                  <span>{savingEdit ? "Adding..." : "Add Subscriber"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Inquiry Detail Modal */}
       {selectedInquiry && (
         <div className="admin-modal-backdrop" onClick={() => setSelectedInquiry(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
-                  {selectedInquiry.type === "Newsletter"
-                    ? "Newsletter Subscriber Details"
-                    : "Customer Inquiry Details"}
-                </h2>
-                {selectedInquiry.type === "Newsletter" ? (
-                  <span
-                    style={{
-                      backgroundColor: "#faf5ff",
-                      color: "#7e22ce",
-                      border: "1px solid #e9d5ff",
-                      borderRadius: 12,
-                      padding: "2px 8px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Newsletter
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      backgroundColor: "#f0f9ff",
-                      color: "#0369a1",
-                      border: "1px solid #bae6fd",
-                      borderRadius: 12,
-                      padding: "2px 8px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Direct Inquiry
-                  </span>
-                )}
-              </div>
+              <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
+                {selectedInquiry.type === "Newsletter"
+                  ? "Newsletter Subscriber Details"
+                  : "Customer Inquiry Details"}
+              </h2>
               <button
                 onClick={() => setSelectedInquiry(null)}
                 style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}
@@ -504,21 +831,17 @@ export default function AdminInquiriesPage() {
             </div>
 
             <div style={{ marginBottom: 16, backgroundColor: "#f8fafc", padding: 14, borderRadius: 8 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>
-                  {selectedInquiry.name}
-                </span>
-                <span
-                  className={`badge-status ${
-                    selectedInquiry.status === "New"
-                      ? "badge-new"
-                      : selectedInquiry.status === "Contacted"
-                      ? "badge-contacted"
-                      : "badge-resolved"
-                  }`}
-                >
-                  {selectedInquiry.status}
-                </span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <div>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}>
+                    {[selectedInquiry.firstName, selectedInquiry.lastName].filter(Boolean).join(" ") || selectedInquiry.name}
+                  </span>
+                  {selectedInquiry.country && (
+                    <span style={{ marginLeft: 8, fontSize: 12, backgroundColor: "#e2e8f0", padding: "2px 6px", borderRadius: 4, fontWeight: 600 }}>
+                      🌍 {selectedInquiry.country}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 16, fontSize: 13, color: "#475569" }}>
@@ -545,17 +868,10 @@ export default function AdminInquiriesPage() {
               </div>
             </div>
 
-            <div style={{ marginBottom: 16 }}>
-              <label className="admin-label">Subject</label>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>
-                {selectedInquiry.subject}
-              </div>
-            </div>
-
             <div style={{ marginBottom: 20 }}>
               <label className="admin-label">
                 {selectedInquiry.type === "Newsletter"
-                  ? "Subscription Summary"
+                  ? "Subscription Summary / Notes"
                   : "Message / Technical Requirement"}
               </label>
               <div
@@ -569,14 +885,14 @@ export default function AdminInquiriesPage() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {selectedInquiry.message}
+                {selectedInquiry.message || "—"}
               </div>
             </div>
 
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
                 alignItems: "center",
                 paddingTop: 14,
                 borderTop: "1px solid #e2e8f0",
@@ -584,21 +900,21 @@ export default function AdminInquiriesPage() {
                 gap: 12,
               }}
             >
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <span style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>Update Status:</span>
-                <select
-                  value={selectedInquiry.status}
-                  onChange={(e) => handleStatusChange(selectedInquiry.id || selectedInquiry._id, e.target.value)}
-                  className="admin-select"
-                  style={{ width: "auto", padding: "4px 8px", fontSize: 13 }}
-                >
-                  <option value="New">New</option>
-                  <option value="Contacted">Contacted</option>
-                  <option value="Resolved">Resolved</option>
-                </select>
-              </div>
-
               <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const inq = selectedInquiry;
+                    setSelectedInquiry(null);
+                    openEditModal(inq);
+                  }}
+                  className="admin-btn admin-btn-primary admin-btn-sm"
+                  style={{ gap: 4 }}
+                >
+                  <Edit size={14} />
+                  <span>Edit Details</span>
+                </button>
+
                 <a
                   href={`mailto:${selectedInquiry.email}`}
                   className="admin-btn admin-btn-secondary admin-btn-sm"
@@ -612,7 +928,7 @@ export default function AdminInquiriesPage() {
                     href={`https://wa.me/${selectedInquiry.phone.replace(/[^0-9]/g, "")}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="admin-btn admin-btn-primary admin-btn-sm"
+                    className="admin-btn admin-btn-secondary admin-btn-sm"
                   >
                     Reply on WhatsApp
                   </a>

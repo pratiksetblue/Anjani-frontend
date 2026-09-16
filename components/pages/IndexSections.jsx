@@ -349,7 +349,7 @@ export function Section4({ bannerImage }) {
    SECTION 5 - PRODUCTS
 ========================================================= */
 
-export function Section5({ products }) {
+export function Section5({ products, badge, title }) {
   const list = products && products.length > 0 ? products : defaultProducts;
 
   return (
@@ -362,8 +362,8 @@ export function Section5({ products }) {
               data-wow-delay="200ms"
               data-wow-duration="1500ms"
             >
-              <span>Our Specialities</span>
-              <h2>Our Products</h2>
+              <span>{badge || "Our Specialities"}</span>
+              <h2>{title || "Our Products"}</h2>
             </div>
           </div>
         </div>
@@ -443,7 +443,7 @@ export function Section5({ products }) {
    SECTION 6 - CERTIFICATIONS
 ========================================================= */
 
-export function Section6({ certifications }) {
+export function Section6({ certifications, title }) {
   const list = certifications && certifications.length > 0 ? certifications : defaultHome.certifications;
 
   return (
@@ -454,7 +454,7 @@ export function Section6({ certifications }) {
           data-wow-delay="200ms"
           data-wow-duration="1500ms"
         >
-          <h2>Our Certifications &amp; Achievements</h2>
+          <h2>{title || "Our Certifications & Achievements"}</h2>
         </div>
 
         <div className="row g-3">
@@ -542,8 +542,15 @@ export default function IndexSections({ initialHomeData, initialProducts }) {
       <Section2 about={homeData.about} />
       <Section3 counters={homeData.counters} />
       <Section4 bannerImage={homeData.bannerImage} />
-      <Section5 products={products} />
-      <Section6 certifications={homeData.certifications} />
+      <Section5
+        products={products}
+        badge={homeData.productsSpecialityBadge}
+        title={homeData.productsSectionTitle}
+      />
+      <Section6
+        certifications={homeData.certifications}
+        title={homeData.certificationsSectionTitle}
+      />
     </>
   );
 }

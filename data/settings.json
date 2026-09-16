@@ -14,11 +14,18 @@
   "salesOffices": [
     {
       "country": "India",
-      "cities": "Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara"
+      "cities": "Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara",
+      "flagIcon": "/assets/img/icon/india.svg"
     },
     {
-      "country": "Global Presence",
-      "cities": "Bangladesh, Sri Lanka, Egypt, Turkey, Vietnam & Indonesia"
+      "country": "Sri Lanka",
+      "cities": "Colombo",
+      "flagIcon": "/assets/img/icon/srilanka.svg"
+    },
+    {
+      "country": "Indonesia",
+      "cities": "Bandung",
+      "flagIcon": "/assets/img/icon/indonesia.svg"
     }
   ],
   "socialLinks": {

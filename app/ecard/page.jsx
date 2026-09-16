@@ -1,10 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ecard.css";
 
+const defaultEcard = {
+  name: "Dhruv Patel",
+  title: "Owner",
+  organization: "Anjani Industries",
+  tagline: "The Dyeing Machine Company",
+  frontImage: "/assets/img/front.png",
+  backImage: "/assets/img/back.png",
+  phoneMobile: "+91 9979 303 570",
+  phoneOffice: "+91 8154 888 370",
+  emailDirect: "dhruv@anjaniindustries.in",
+  emailGeneral: "info@anjaniindustries.in",
+  website: "https://www.anjaniindustries.in",
+  mapUrl: "https://maps.app.goo.gl/C7v1m2T8Y1cZBWNTA",
+  address: "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat- 394 230, Gujarat, India."
+};
+
 export default function EcardPage() {
+  const [cardData, setCardData] = useState(defaultEcard);
   const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/pages/ecard")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.name) {
+          setCardData({ ...defaultEcard, ...data });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const flipCard = () => {
     setFlipped((prev) => !prev);
@@ -20,19 +48,25 @@ export default function EcardPage() {
   const saveContact = (e) => {
     e.stopPropagation();
 
+    const nameParts = (cardData.name || "Dhruv Patel").split(" ");
+    const firstName = nameParts[0] || "Dhruv";
+    const lastName = nameParts.slice(1).join(" ") || "Patel";
+    const cleanMobile = (cardData.phoneMobile || "+919979303570").replace(/\s+/g, "");
+    const cleanOffice = (cardData.phoneOffice || "+918154888370").replace(/\s+/g, "");
+
     const vcf = [
       "BEGIN:VCARD",
       "VERSION:3.0",
-      "N:Patel;Dhruv;;;",
-      "FN:Dhruv Patel",
-      "ORG:Anjani Industries",
-      "TITLE:The Dyeing Machine Company",
-      "TEL;TYPE=CELL:+919979303570",
-      "TEL;TYPE=WORK:+918154888370",
-      "EMAIL;TYPE=INTERNET:dhruv@anjaniindustries.in",
-      "EMAIL;TYPE=WORK:info@anjaniindustries.in",
-      "URL:https://www.anjaniindustries.in",
-      "ADR;TYPE=WORK:;;Plot No. 983 & 984, Road No. 58, GIDC Sachin;Surat;Gujarat;394230;India",
+      `N:${lastName};${firstName};;;`,
+      `FN:${cardData.name || "Dhruv Patel"}`,
+      `ORG:${cardData.organization || "Anjani Industries"}`,
+      `TITLE:${cardData.tagline || cardData.title || "The Dyeing Machine Company"}`,
+      `TEL;TYPE=CELL:${cleanMobile}`,
+      `TEL;TYPE=WORK:${cleanOffice}`,
+      `EMAIL;TYPE=INTERNET:${cardData.emailDirect || "dhruv@anjaniindustries.in"}`,
+      `EMAIL;TYPE=WORK:${cardData.emailGeneral || "info@anjaniindustries.in"}`,
+      `URL:${cardData.website || "https://www.anjaniindustries.in"}`,
+      `ADR;TYPE=WORK:;;${cardData.address || "Plot No. 983 & 984, Road No. 58, GIDC Sachin;Surat;Gujarat;394230;India"}`,
       "END:VCARD",
     ].join("\r\n");
 
@@ -44,7 +78,7 @@ export default function EcardPage() {
     const a = document.createElement("a");
 
     a.href = url;
-    a.download = "Dhruv-Patel-Anjani-Industries.vcf";
+    a.download = `${(cardData.name || "Dhruv-Patel").replace(/\s+/g, "-")}-Anjani-Industries.vcf`;
 
     document.body.appendChild(a);
     a.click();
@@ -53,9 +87,12 @@ export default function EcardPage() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
+  const phoneHref = (cardData.phoneMobile || "+919979303570").replace(/\s+/g, "");
+  const emailHref = cardData.emailDirect || "dhruv@anjaniindustries.in";
+
   return (
     <main className="ecard-page">
-      <h1>Anjani Industries</h1>
+      <h1>{cardData.organization || "Anjani Industries"}</h1>
 
       <div className="ecard-scene">
         <div
@@ -69,15 +106,15 @@ export default function EcardPage() {
         >
           <section className="ecard-face ecard-front">
             <img
-              src="/assets/img/front.png"
-              alt="Anjani Industries visiting card front"
+              src={cardData.frontImage || "/assets/img/front.png"}
+              alt={`${cardData.organization} visiting card front`}
             />
           </section>
 
           <section className="ecard-face ecard-back">
             <img
-              src="/assets/img/back.png"
-              alt="Anjani Industries visiting card back"
+              src={cardData.backImage || "/assets/img/back.png"}
+              alt={`${cardData.organization} visiting card back`}
             />
           </section>
         </div>
@@ -92,28 +129,21 @@ export default function EcardPage() {
             />
           </svg>
         </span>
-
         Tap / click card to flip
       </div>
 
       <nav className="ecard-actions">
-        <a
-          className="ecard-action ecard-primary"
-          href="tel:+919979303570"
-        >
+        <a className="ecard-action ecard-primary" href={`tel:${phoneHref}`}>
           Call
         </a>
 
-        <a
-          className="ecard-action"
-          href="mailto:dhruv@anjaniindustries.in"
-        >
+        <a className="ecard-action" href={`mailto:${emailHref}`}>
           Email
         </a>
 
         <a
           className="ecard-action"
-          href="https://www.anjaniindustries.in"
+          href={cardData.website || "https://www.anjaniindustries.in"}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -122,18 +152,14 @@ export default function EcardPage() {
 
         <a
           className="ecard-action"
-          href="https://maps.app.goo.gl/C7v1m2T8Y1cZBWNTA"
+          href={cardData.mapUrl || "https://maps.app.goo.gl/C7v1m2T8Y1cZBWNTA"}
           target="_blank"
           rel="noopener noreferrer"
         >
           Location
         </a>
 
-        <button
-          className="ecard-action"
-          type="button"
-          onClick={saveContact}
-        >
+        <button className="ecard-action" type="button" onClick={saveContact}>
           Save Contact
         </button>
       </nav>

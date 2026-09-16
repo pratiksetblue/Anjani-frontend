@@ -1,5 +1,7 @@
 import PageSections from "../../components/pages/ProductsSections";
-import { getPageSeo, getProducts } from "@/lib/db";
+import { getPageSeo, getProducts, getPageContentBySlug } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   const seo = await getPageSeo("/products");
@@ -11,7 +13,10 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const products = await getProducts();
+  const [products, pageData] = await Promise.all([
+    getProducts(),
+    getPageContentBySlug("productsPage"),
+  ]);
   const safeProducts = JSON.parse(JSON.stringify(products || []));
-  return <PageSections initialProducts={safeProducts} />;
+  return <PageSections initialProducts={safeProducts} pageData={pageData || {}} />;
 }

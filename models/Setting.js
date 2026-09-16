@@ -23,6 +23,7 @@ const SettingSchema = new mongoose.Schema(
       {
         country: { type: String },
         cities: { type: String },
+        flagIcon: { type: String, default: "" },
       },
     ],
     socialLinks: {

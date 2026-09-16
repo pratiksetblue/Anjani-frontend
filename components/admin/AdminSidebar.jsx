@@ -18,7 +18,9 @@ import {
   LogOut,
   ExternalLink,
   Users,
+  History,
   X,
+  Newspaper,
 } from "lucide-react";
 
 const navItems = [
@@ -28,8 +30,10 @@ const navItems = [
   { label: "Certifications", href: "/admin/certifications", icon: Award },
   { label: "Counter Statistics", href: "/admin/counters", icon: BarChart3 },
   { label: "About Section", href: "/admin/about", icon: BookOpen },
+  { label: "Story Timeline", href: "/admin/timeline", icon: History },
   { label: "Inquiries (Leads)", href: "/admin/inquiries", icon: MessageSquareQuote },
-  { label: "Static Pages", href: "/admin/pages", icon: FileText },
+  { label: "Newsletter Leads", href: "/admin/newsletter", icon: Newspaper },
+  { label: "Pages & Sections", href: "/admin/pages", icon: FileText },
   { label: "SEO & Analytics", href: "/admin/seo", icon: Globe },
   { label: "Email & SMTP", href: "/admin/email", icon: Mail },
   { label: "Admin Users", href: "/admin/users", icon: Users },

@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
 
-export function Section1() {
+export function Section1({ bannerTitle, bannerSubtitle }) {
+  const title = bannerTitle || "Stay Connected";
+  const subtitle = bannerSubtitle || "How Can We Assist You.";
+
   return (
     <>
       <div className="breadcrumb-section">
@@ -11,9 +14,13 @@ export function Section1() {
               <div className="col-xl-7 col-lg-9">
                 <div className="breadcrumb-content">
                   <h1>
-                    Stay Connected
-                    <br />
-                    How Can We Assist You.
+                    {title}
+                    {subtitle && (
+                      <>
+                        <br />
+                        {subtitle}
+                      </>
+                    )}
                   </h1>
                 </div>
               </div>
@@ -136,46 +143,21 @@ export function Section3({ settings }) {
   );
 }
 
-function renderOfficeIcon(country = "") {
-  const c = (country || "").toLowerCase();
-  if (c.includes("india")) {
-    return (
-      <svg fill="none" height="42" viewBox="0 0 93 93" width="42" xmlns="http://www.w3.org/2000/svg">
-        <path d="M46.1934 0C58.9492 0 70.5019 5.17188 78.8594 13.5293C87.2168 21.8867 92.3906 33.4375 92.3906 46.1934C92.3906 58.9492 87.2168 70.5019 78.8594 78.8594C70.5019 87.2168 58.9492 92.3906 46.1934 92.3906C33.4531 92.3906 21.9004 87.2129 13.541 78.8496C5.17383 70.502 0 58.9492 0 46.1934C0 33.4375 5.17188 21.8867 13.5293 13.5293C21.8867 5.17188 33.4375 0 46.1934 0Z" fill="#DDDCDC"></path>
-        <path d="M46.1935 4.19531C57.791 4.19531 68.2945 8.89749 75.8929 16.4959C83.4914 24.0944 88.1953 34.5961 88.1953 46.1935C88.1953 57.791 83.4914 68.2945 75.8929 75.8929C68.2945 83.4914 57.791 88.1953 46.1935 88.1953C34.6103 88.1953 24.1068 83.4878 16.5066 75.8841C8.89927 68.2945 4.19531 57.791 4.19531 46.1935C4.19531 34.5961 8.89749 24.0944 16.4959 16.4959C24.0944 8.89749 34.5961 4.19531 46.1935 4.19531Z" fill="white"></path>
-        <path d="M46.1934 3.92773C62.6777 3.92773 76.9551 13.3594 83.9219 27.1191H8.46875C15.4375 13.3594 29.7148 3.92773 46.1934 3.92773Z" fill="#FF9933"></path>
-        <path d="M7.98828 64.2891H84.4023C77.623 78.582 63.0664 88.4629 46.1934 88.4629C29.3242 88.4629 14.7695 78.582 7.98828 64.2891Z" fill="#128807"></path>
-        <circle cx="46.1934" cy="46.1934" r="14" fill="none" stroke="#000088" strokeWidth="1.5" />
-        <circle cx="46.1934" cy="46.1934" r="2.5" fill="#000088" />
-        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-          <line
-            key={deg}
-            x1="46.1934"
-            y1="46.1934"
-            x2={46.1934 + 13 * Math.cos((deg * Math.PI) / 180)}
-            y2={46.1934 + 13 * Math.sin((deg * Math.PI) / 180)}
-            stroke="#000088"
-            strokeWidth="0.75"
-          />
-        ))}
-      </svg>
-    );
+function getOfficeFlagIcon(office) {
+  if (office?.flagIcon && office.flagIcon.trim()) {
+    return office.flagIcon.trim();
   }
-
-  return (
-    <svg fill="none" height="42" viewBox="0 0 93 93" width="42" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="46.5" cy="46.5" r="45" fill="#F8FAFC" stroke="#DDDCDC" strokeWidth="2" />
-      <circle cx="46.5" cy="46.5" r="32" fill="#FEF2F2" stroke="#CB0000" strokeWidth="2" />
-      <path
-        d="M46.5 22C33 22 22 33 22 46.5C22 60 33 71 46.5 71C60 71 71 60 71 46.5C71 33 60 22 46.5 22ZM46.5 66.5C35.5 66.5 26.5 57.5 26.5 46.5C26.5 35.5 35.5 26.5 46.5 26.5C57.5 26.5 66.5 35.5 66.5 46.5C66.5 57.5 57.5 66.5 46.5 66.5Z"
-        fill="#CB0000"
-      />
-      <ellipse cx="46.5" cy="46.5" rx="12" ry="24.5" stroke="#CB0000" strokeWidth="1.8" fill="none" />
-      <line x1="22" y1="46.5" x2="71" y2="46.5" stroke="#CB0000" strokeWidth="1.8" />
-      <line x1="28" y1="36" x2="65" y2="36" stroke="#CB0000" strokeWidth="1.5" />
-      <line x1="28" y1="57" x2="65" y2="57" stroke="#CB0000" strokeWidth="1.5" />
-    </svg>
-  );
+  const country = (office?.country || "").toLowerCase();
+  if (country.includes("india")) {
+    return "/assets/img/icon/india.svg";
+  }
+  if (country.includes("sri lanka") || country.includes("srilanka")) {
+    return "/assets/img/icon/srilanka.svg";
+  }
+  if (country.includes("indonesia")) {
+    return "/assets/img/icon/indonesia.svg";
+  }
+  return "/assets/img/icon/international.svg";
 }
 
 export function Section4({ settings }) {
@@ -185,29 +167,131 @@ export function Section4({ settings }) {
         {
           country: "India",
           cities: "Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara",
+          flagIcon: "/assets/img/icon/india.svg",
         },
         {
-          country: "Global Presence",
-          cities: "Bangladesh, Sri Lanka, Egypt, Turkey, Vietnam & Indonesia",
+          country: "Sri Lanka",
+          cities: "Colombo",
+          flagIcon: "/assets/img/icon/srilanka.svg",
+        },
+        {
+          country: "Indonesia",
+          cities: "Bandung",
+          flagIcon: "/assets/img/icon/indonesia.svg",
         },
       ];
 
   return (
     <>
-      <div className="contact-page-address-section mb-80">
+      <div className="contact-sales-offices-section mb-80">
         <div className="container">
-          <h6>Sales &amp; Service Offices</h6>
-          <ul className="contact-content">
-            {offices.map((office, idx) => (
-              <li className="single-contact" key={idx}>
-                <div className="icon">{renderOfficeIcon(office.country)}</div>
-                <div className="content">
-                  <span>{office.country}</span>
-                  <h6 className="mb-0">{office.cities}</h6>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <h4
+            className="sales-offices-title"
+            style={{
+              fontSize: "24px",
+              fontWeight: 700,
+              color: "#1e293b",
+              marginBottom: "20px",
+              fontFamily: "var(--font-manrope, 'Manrope', sans-serif)",
+            }}
+          >
+            Sales &amp; Service Offices
+          </h4>
+
+          <div
+            className="sales-offices-banner"
+            style={{
+              backgroundColor: "#ba1b1d",
+              borderRadius: "16px",
+              padding: "36px 30px",
+              boxShadow: "0 8px 24px rgba(186, 27, 29, 0.12)",
+            }}
+          >
+            <div
+              className="sales-offices-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "24px",
+              }}
+            >
+              {offices.map((office, idx) => {
+                const flagSrc = getOfficeFlagIcon(office);
+                return (
+                  <div
+                    key={idx}
+                    className="sales-office-card"
+                    style={{
+                      backgroundColor: "#ffffff",
+                      borderRadius: "16px",
+                      padding: "32px 26px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      minHeight: "185px",
+                      boxShadow: "0 4px 14px rgba(0, 0, 0, 0.04)",
+                    }}
+                  >
+                    <div
+                      className="sales-office-flag"
+                      style={{
+                        width: "46px",
+                        height: "46px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: "0 1px 4px rgba(0, 0, 0, 0.12)",
+                        backgroundColor: "#f8fafc",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={flagSrc}
+                        alt={office.country || "Flag"}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <h5
+                      style={{
+                        fontSize: "19px",
+                        fontWeight: 700,
+                        color: "#0f172a",
+                        marginTop: "18px",
+                        marginBottom: "8px",
+                        lineHeight: 1.3,
+                        fontFamily: "var(--font-manrope, 'Manrope', sans-serif)",
+                      }}
+                    >
+                      {office.country}
+                    </h5>
+
+                    <p
+                      style={{
+                        fontSize: "14.5px",
+                        color: "#475569",
+                        fontWeight: 500,
+                        lineHeight: 1.5,
+                        margin: 0,
+                        fontFamily: "var(--font-manrope, 'Manrope', sans-serif)",
+                      }}
+                    >
+                      {office.cities}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -414,9 +498,9 @@ export function Section5() {
                       disabled={submitting}
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
-                      style={{ marginTop: 20 }}
+                      style={{ border: "none", cursor: submitting ? "not-allowed" : "pointer" }}
                     >
-                      <span>{submitting ? "Submitting..." : "Submit Now"}</span>
+                      {submitting ? "Submitting..." : "Submit Now"}
                       <svg className="arrow" height="23" viewBox="0 0 23 23" width="23" xmlns="http://www.w3.org/2000/svg">
                         <g>
                           <path d="M0.113861 0H22.9999V4.28425L4.32671 22.9997L0 18.7154L12.7524 6.08815L0.113861 6.20089V0Z" />
@@ -436,10 +520,13 @@ export function Section5() {
   );
 }
 
-export default function ContactUsSections({ settings }) {
+export default function ContactUsSections({ settings, pageData = {} }) {
   return (
     <>
-      <Section1 />
+      <Section1
+        bannerTitle={pageData.bannerTitle}
+        bannerSubtitle={pageData.bannerSubtitle}
+      />
       <Section2 settings={settings} />
       <Section3 settings={settings} />
       <Section4 settings={settings} />

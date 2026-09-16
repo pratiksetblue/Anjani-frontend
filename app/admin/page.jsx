@@ -6,7 +6,6 @@ import {
   Boxes,
   MessageSquareQuote,
   TrendingUp,
-  Database,
   ArrowRight,
   Plus,
   Eye,
@@ -19,6 +18,7 @@ import {
   BookOpen,
   FileText,
   Globe,
+  History,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -131,18 +131,6 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="admin-stat-card">
-          <div>
-            <span>DATABASE</span>
-            <h3 style={{ fontSize: 22, color: "#16a34a" }}>MongoDB</h3>
-            <div style={{ fontSize: 12, color: "#16a34a", marginTop: 4, fontWeight: 500 }}>
-              ● Connected & Active
-            </div>
-          </div>
-          <div className="admin-stat-icon" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
-            <Database size={24} />
-          </div>
-        </div>
 
         <div className="admin-stat-card">
           <div>
@@ -205,6 +193,14 @@ export default function AdminDashboardPage() {
               icon: BookOpen,
               color: "#9333ea",
               bgColor: "#faf5ff",
+            },
+            {
+              title: "Story Timeline",
+              subtitle: "1990 to Present Milestones",
+              href: "/admin/timeline",
+              icon: History,
+              color: "#dc2626",
+              bgColor: "#fee2e2",
             },
             {
               title: "Leads & Inquiries",

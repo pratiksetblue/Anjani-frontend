@@ -17,6 +17,8 @@ import {
   Plus,
   Trash2,
   MapPin,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import ImageUploadPreview from "@/components/admin/ImageUploadPreview";
 
@@ -445,7 +447,10 @@ export default function AdminSettingsPage() {
                   const current = settings.salesOffices || [];
                   setSettings({
                     ...settings,
-                    salesOffices: [...current, { country: "", cities: "" }],
+                    salesOffices: [
+                      ...current,
+                      { country: "", cities: "", flagIcon: "" },
+                    ],
                   });
                 }}
                 className="admin-btn admin-btn-secondary admin-btn-sm"
@@ -457,96 +462,254 @@ export default function AdminSettingsPage() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {(settings.salesOffices || []).map((office, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    padding: "14px",
-                    backgroundColor: "#f8fafc",
-                    borderRadius: 8,
-                    border: "1px solid #e2e8f0",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                  }}
-                >
+              {(settings.salesOffices || []).map((office, idx) => {
+                const flagSrc = office.flagIcon?.trim()
+                  ? office.flagIcon.trim()
+                  : (office.country || "").toLowerCase().includes("india")
+                  ? "/assets/img/icon/india.svg"
+                  : (office.country || "").toLowerCase().includes("sri lanka") ||
+                    (office.country || "").toLowerCase().includes("srilanka")
+                  ? "/assets/img/icon/srilanka.svg"
+                  : (office.country || "").toLowerCase().includes("indonesia")
+                  ? "/assets/img/icon/indonesia.svg"
+                  : "/assets/img/icon/international.svg";
+
+                return (
                   <div
+                    key={idx}
                     style={{
+                      padding: "16px",
+                      backgroundColor: "#f8fafc",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
                       display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      flexDirection: "column",
+                      gap: 12,
                     }}
                   >
-                    <span
+                    <div
                       style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "#475569",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Office #{idx + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = (settings.salesOffices || []).filter(
-                          (_, i) => i !== idx
-                        );
-                        setSettings({ ...settings, salesOffices: updated });
-                      }}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#ef4444",
-                        cursor: "pointer",
-                        padding: "2px 6px",
                         display: "flex",
+                        justifyContent: "space-between",
                         alignItems: "center",
-                        gap: 4,
-                        fontSize: 12,
                       }}
                     >
-                      <Trash2 size={14} />
-                      <span>Remove</span>
-                    </button>
-                  </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div
+                          style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "50%",
+                            overflow: "hidden",
+                            border: "1px solid #cbd5e1",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#fff",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={flagSrc}
+                            alt="Flag preview"
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          />
+                        </div>
+                        <span
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: "#1e293b",
+                          }}
+                        >
+                          Office #{idx + 1}: {office.country || "Untitled"}
+                        </span>
+                      </div>
 
-                  <div className="admin-form-group" style={{ marginBottom: 0 }}>
-                    <label className="admin-label" style={{ fontSize: 12 }}>
-                      Country / Title
-                    </label>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      placeholder="e.g. India or Global Presence"
-                      value={office.country || ""}
-                      onChange={(e) => {
-                        const updated = [...(settings.salesOffices || [])];
-                        updated[idx] = { ...updated[idx], country: e.target.value };
-                        setSettings({ ...settings, salesOffices: updated });
-                      }}
-                    />
-                  </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => {
+                            const list = [...(settings.salesOffices || [])];
+                            if (idx > 0) {
+                              const item = list.splice(idx, 1)[0];
+                              list.splice(idx - 1, 0, item);
+                              setSettings({ ...settings, salesOffices: list });
+                            }
+                          }}
+                          style={{
+                            background: "none",
+                            border: "1px solid #cbd5e1",
+                            borderRadius: 4,
+                            padding: "4px",
+                            cursor: idx === 0 ? "not-allowed" : "pointer",
+                            opacity: idx === 0 ? 0.4 : 1,
+                            color: "#475569",
+                          }}
+                          title="Move up"
+                        >
+                          <ChevronUp size={14} />
+                        </button>
 
-                  <div className="admin-form-group" style={{ marginBottom: 0 }}>
-                    <label className="admin-label" style={{ fontSize: 12 }}>
-                      Cities / Locations
-                    </label>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      placeholder="e.g. Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara"
-                      value={office.cities || ""}
-                      onChange={(e) => {
-                        const updated = [...(settings.salesOffices || [])];
-                        updated[idx] = { ...updated[idx], cities: e.target.value };
-                        setSettings({ ...settings, salesOffices: updated });
-                      }}
-                    />
+                        <button
+                          type="button"
+                          disabled={idx === (settings.salesOffices || []).length - 1}
+                          onClick={() => {
+                            const list = [...(settings.salesOffices || [])];
+                            if (idx < list.length - 1) {
+                              const item = list.splice(idx, 1)[0];
+                              list.splice(idx + 1, 0, item);
+                              setSettings({ ...settings, salesOffices: list });
+                            }
+                          }}
+                          style={{
+                            background: "none",
+                            border: "1px solid #cbd5e1",
+                            borderRadius: 4,
+                            padding: "4px",
+                            cursor:
+                              idx === (settings.salesOffices || []).length - 1
+                                ? "not-allowed"
+                                : "pointer",
+                            opacity:
+                              idx === (settings.salesOffices || []).length - 1 ? 0.4 : 1,
+                            color: "#475569",
+                          }}
+                          title="Move down"
+                        >
+                          <ChevronDown size={14} />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = (settings.salesOffices || []).filter(
+                              (_, i) => i !== idx
+                            );
+                            setSettings({ ...settings, salesOffices: updated });
+                          }}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "#ef4444",
+                            cursor: "pointer",
+                            padding: "4px 6px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                            fontSize: 12,
+                          }}
+                          title="Remove office"
+                        >
+                          <Trash2 size={14} />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label className="admin-label" style={{ fontSize: 12 }}>
+                          Country / Title
+                        </label>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="e.g. India, Sri Lanka, Indonesia"
+                          value={office.country || ""}
+                          onChange={(e) => {
+                            const updated = [...(settings.salesOffices || [])];
+                            updated[idx] = { ...updated[idx], country: e.target.value };
+                            setSettings({ ...settings, salesOffices: updated });
+                          }}
+                        />
+                      </div>
+
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label className="admin-label" style={{ fontSize: 12 }}>
+                          Flag Icon Preset / Custom
+                        </label>
+                        <select
+                          className="admin-input"
+                          value={
+                            office.flagIcon === "/assets/img/icon/india.svg"
+                              ? "india"
+                              : office.flagIcon === "/assets/img/icon/srilanka.svg"
+                              ? "srilanka"
+                              : office.flagIcon === "/assets/img/icon/indonesia.svg"
+                              ? "indonesia"
+                              : office.flagIcon === "/assets/img/icon/international.svg"
+                              ? "international"
+                              : office.flagIcon
+                              ? "custom"
+                              : "auto"
+                          }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const updated = [...(settings.salesOffices || [])];
+                            let newFlag = "";
+                            if (val === "india") newFlag = "/assets/img/icon/india.svg";
+                            else if (val === "srilanka") newFlag = "/assets/img/icon/srilanka.svg";
+                            else if (val === "indonesia") newFlag = "/assets/img/icon/indonesia.svg";
+                            else if (val === "international") newFlag = "/assets/img/icon/international.svg";
+                            else if (val === "custom") newFlag = office.flagIcon || "/assets/img/icon/international.svg";
+                            else newFlag = ""; // auto
+
+                            updated[idx] = { ...updated[idx], flagIcon: newFlag };
+                            setSettings({ ...settings, salesOffices: updated });
+                          }}
+                        >
+                          <option value="auto">Auto (Match Country Name)</option>
+                          <option value="india">India Flag</option>
+                          <option value="srilanka">Sri Lanka Flag</option>
+                          <option value="indonesia">Indonesia Flag</option>
+                          <option value="international">Global / International Flag</option>
+                          <option value="custom">Custom Image URL</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {office.flagIcon &&
+                      !["/assets/img/icon/india.svg", "/assets/img/icon/srilanka.svg", "/assets/img/icon/indonesia.svg", "/assets/img/icon/international.svg"].includes(office.flagIcon) && (
+                        <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                          <label className="admin-label" style={{ fontSize: 12 }}>
+                            Custom Flag Image URL
+                          </label>
+                          <input
+                            type="text"
+                            className="admin-input"
+                            placeholder="e.g. /assets/img/icon/custom.svg or https://..."
+                            value={office.flagIcon || ""}
+                            onChange={(e) => {
+                              const updated = [...(settings.salesOffices || [])];
+                              updated[idx] = { ...updated[idx], flagIcon: e.target.value };
+                              setSettings({ ...settings, salesOffices: updated });
+                            }}
+                          />
+                        </div>
+                      )}
+
+                    <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                      <label className="admin-label" style={{ fontSize: 12 }}>
+                        Cities / Locations
+                      </label>
+                      <textarea
+                        rows={2}
+                        className="admin-textarea"
+                        placeholder="e.g. Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar & Bhilwara"
+                        value={office.cities || ""}
+                        onChange={(e) => {
+                          const updated = [...(settings.salesOffices || [])];
+                          updated[idx] = { ...updated[idx], cities: e.target.value };
+                          setSettings({ ...settings, salesOffices: updated });
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {(!settings.salesOffices || settings.salesOffices.length === 0) && (
                 <div

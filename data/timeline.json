@@ -1,0 +1,114 @@
+[
+  {
+    "year": "1990",
+    "heading": "Foundation of Excellence",
+    "description": "Anjani Machines Pvt. Ltd. was established under the leadership of Shri Kiranbhai Patel, laying the foundation for a company driven by engineering excellence, innovation, and customer satisfaction.",
+    "order": 1,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "1994",
+    "heading": "First International Milestone",
+    "description": "Successfully completed our <strong>first export order</strong>, marking the beginning of Anjani’s presence in international markets.",
+    "order": 2,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2009",
+    "heading": "Expansion & Consolidation",
+    "description": "All manufacturing operations were consolidated into a modern facility under Heatex Industries Limited, strengthening our manufacturing capabilities and operational efficiency.",
+    "order": 3,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2015",
+    "heading": "Introduction of the Next-Generation <span class=\"highlight\">U-Type Jet Dyeing Machine</span>",
+    "description": "Successfully introduced our next-generation U-Type Jet Dyeing Machine featuring an advanced 9-segment design, engineered to provide smooth fabric movement, superior dyeing quality, and enhanced processing efficiency.",
+    "order": 4,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2017",
+    "heading": "Entering Sustainable Processing Solutions",
+    "description": "Successfully designed, manufactured, and commissioned our <strong>first Caustic Recovery Plant</strong> with a capacity of 7,500 LPH for a leading textile processing company in Maharashtra.",
+    "order": 5,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2019",
+    "heading": "The Return of the Anjani Brand",
+    "description": "To revive the trusted legacy of the Anjani name, <span class=\"highlight\">ANJANI INDUSTRIES</span> was established in <span class=\"highlight\">October 2019</span>, carrying forward the brand with the vision of delivering innovative textile dyeing machinery under the tagline:<br /><br /><strong>“The Dyeing Machine Company.”</strong>",
+    "order": 6,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2020",
+    "heading": "A New Generation of Dyeing Technology",
+    "description": "Launched the ANJANI Low Liquor Ratio ECO+ Soft Flow Dyeing Machine, featuring reduced liquor ratio, shorter processing time, intelligent PLC automation, and enhanced energy efficiency—setting new benchmarks in textile dyeing technology.",
+    "order": 7,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2021",
+    "heading": "Industry Recognition",
+    "description": "Recognized among the <strong>Top 10 Textile Machinery Manufacturing Companies by Industry Outlook</strong>, reflecting our commitment to engineering excellence and innovation.",
+    "order": 8,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "FY 2021-22",
+    "heading": "Growing Customer Trust",
+    "description": "Successfully supplied, installed, and commissioned <strong>more than 20 ANJANI Low Liquor Ratio ECO+ Soft Flow Dyeing Machines</strong>, reinforcing our reputation as a trusted partner for textile manufacturers.",
+    "order": 9,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2023",
+    "heading": "Expanded manufacturing capabilities.",
+    "description": "Add CNC Press brake machine for accuracy of plate bending.",
+    "order": 10,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2024",
+    "heading": "Growing Customer Trust",
+    "description": "Successfully supplied, installed & commissioned of more than <strong>80+ ANJANI Low Liquor Ratio ECO+ Soft Flow dyeing machines</strong>, in last 4 years.",
+    "order": 11,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "2025",
+    "heading": "Growing Customer Trust",
+    "description": "In 2025, ANJANI INDUSTRIES had successfully supplied, installed, and commissioned <strong>over 180 textile dyeing and processing machines</strong>, including <strong>U-Type Jet Dyeing Machines, Long Tube Jet Dyeing Machines</strong>, and <strong>Newright Machines</strong>, for new textile processing units in <strong>Surat, Gujarat.</strong><br /><br />This milestone reflects the growing trust of textile manufacturers in ANJANI INDUSTRIES for delivering reliable, high-performance, and innovative textile processing solutions.",
+    "order": 12,
+    "isLarge": true,
+    "isActive": true
+  },
+  {
+    "year": "2026",
+    "heading": "",
+    "description": "Over <strong>36 years of engineering excellence</strong>, serving textile manufacturers across India and international markets.",
+    "order": 13,
+    "isLarge": false,
+    "isActive": true
+  },
+  {
+    "year": "Today",
+    "heading": "",
+    "description": "With over <strong>36 years of engineering excellence</strong>, ANJANI INDUSTRIES continues to innovate and deliver advanced textile dyeing and processing solutions that help customers improve productivity, reduce operating costs, and achieve sustainable manufacturing.",
+    "order": 14,
+    "isLarge": false,
+    "isActive": true
+  }
+]

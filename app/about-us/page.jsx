@@ -1,5 +1,7 @@
 import PageSections from "../../components/pages/AboutUsSections";
-import { getPageSeo } from "@/lib/db";
+import { getPageSeo, getPageContentBySlug } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   const seo = await getPageSeo("/about-us");
@@ -10,6 +12,7 @@ export async function generateMetadata() {
   };
 }
 
-export default function Page() {
-  return <PageSections />;
+export default async function Page() {
+  const pageData = await getPageContentBySlug("aboutUs");
+  return <PageSections pageData={pageData || {}} />;
 }

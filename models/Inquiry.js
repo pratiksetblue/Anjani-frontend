@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 const InquirySchema = new mongoose.Schema(
   {
     name: { type: String, default: "Valued Customer" },
+    firstName: { type: String, default: "" },
+    lastName: { type: String, default: "" },
+    country: { type: String, default: "" },
     email: { type: String, required: true },
     phone: { type: String, default: "" },
     subject: { type: String, default: "General Inquiry" },

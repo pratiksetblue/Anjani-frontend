@@ -10,7 +10,8 @@ const PageSchema = new mongoose.Schema(
     description: { type: String },
     paragraphs: [{ type: String }],
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
+delete mongoose.models.Page;
 export default mongoose.models.Page || mongoose.model("Page", PageSchema);

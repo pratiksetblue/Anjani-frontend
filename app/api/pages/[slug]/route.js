@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { getPagesContent, savePageContent } from "@/lib/db";
+import { getPageContentBySlug, savePageContent } from "@/lib/db";
 import { getAdminSession } from "@/lib/auth";
 
 export async function GET(request, { params }) {
   const { slug } = await params;
-  const pages = await getPagesContent();
-  const pageData = pages[slug] || null;
+  const pageData = await getPageContentBySlug(slug);
 
   if (!pageData) {
     return NextResponse.json({ error: "Page not found" }, { status: 404 });

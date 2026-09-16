@@ -179,3 +179,67 @@ main .wow.animated {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
   border-color: #c3150e;
 }
+
+/* =========================================================================
+   Sales & Service Offices Section (/contact-us)
+   ========================================================================= */
+.contact-sales-offices-section .sales-offices-banner {
+  background-color: #bb2017;
+  border-radius: 16px;
+  padding: 36px 32px;
+  box-shadow: 0 10px 30px rgba(187, 32, 23, 0.15);
+}
+
+.contact-sales-offices-section .sales-office-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 185px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.contact-sales-offices-section .sales-office-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 991px) {
+  .contact-sales-offices-section .sales-offices-banner {
+    padding: 24px 18px !important;
+  }
+  .contact-sales-offices-section .sales-office-card {
+    padding: 24px 20px !important;
+    min-height: auto;
+  }
+}
+
+/* =========================================================================
+   404 Not Found Page Styling
+   ========================================================================= */
+.not-found-page-container {
+  background-color: #ffffff;
+}
+
+.not-found-page-container .quick-link-card {
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.not-found-page-container .quick-link-card:hover {
+  transform: translateY(-4px);
+  border-color: #cb0000 !important;
+  box-shadow: 0 10px 25px rgba(203, 0, 0, 0.08);
+}
+
+.not-found-page-container .quick-link-card:hover h4 {
+  color: #cb0000 !important;
+}
+
+@media (max-width: 767px) {
+  .not-found-page-container .not-found-main-area {
+    padding: 45px 0 60px !important;
+  }
+}

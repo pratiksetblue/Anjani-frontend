@@ -1,6 +1,31 @@
 import { NextResponse } from "next/server";
-import { updateInquiryStatus, deleteInquiry } from "@/lib/db";
+import { updateInquiry, deleteInquiry } from "@/lib/db";
 import { getAdminSession } from "@/lib/auth";
+
+export async function PUT(request, { params }) {
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const body = await request.json();
+
+    const updated = await updateInquiry(id, body);
+    if (!updated) {
+      return NextResponse.json({ error: "Inquiry not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("Update inquiry error:", error);
+    return NextResponse.json(
+      { error: "Failed to update inquiry" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function PATCH(request, { params }) {
   const session = await getAdminSession();
@@ -10,9 +35,9 @@ export async function PATCH(request, { params }) {
 
   try {
     const { id } = await params;
-    const { status } = await request.json();
+    const body = await request.json();
 
-    const updated = await updateInquiryStatus(id, status);
+    const updated = await updateInquiry(id, body);
     if (!updated) {
       return NextResponse.json({ error: "Inquiry not found" }, { status: 404 });
     }
@@ -21,7 +46,7 @@ export async function PATCH(request, { params }) {
   } catch (error) {
     console.error("Update inquiry status error:", error);
     return NextResponse.json(
-      { error: "Failed to update inquiry status" },
+      { error: "Failed to update inquiry" },
       { status: 500 }
     );
   }

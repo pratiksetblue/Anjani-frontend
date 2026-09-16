@@ -1,23 +1,230 @@
 {
+  "ourStory": {
+    "bannerTitle": "The Story of ANJANI INDUSTRIES",
+    "bannerImage": "/assets/img/our-story-banner.jpg",
+    "redBoxTitle": "The journey of ANJANI INDUSTRIES began in 1990,<br />when Shri Kiranbhai Patel established Anjani Machines Pvt. Ltd.",
+    "redBoxSubtitle": "with a vision to manufacture high-quality textile dyeing and processing machinery for the growing textile industry.",
+    "timelineTitle": "The Story of ANJANI INDUSTRIES"
+  },
   "aboutUs": {
     "bannerTitle": "About ANJANI INDUSTRIES",
     "bannerImage": "/assets/img/about-banner.jpg",
-    "headline": "Established in 1990, ANJANI INDUSTRIES is one of India’s leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
-    "paragraphs": [
+    "redBoxTitle": "Established in 1990, ANJANI INDUSTRIES",
+    "redBoxSubtitle": "is one of India’s leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.",
+    "introParagraphs": [
       "Since our inception, we have been committed to delivering innovative, reliable, and energy-efficient textile processing solutions that empower manufacturers to enhance productivity, improve dyeing quality, and reduce operating costs.",
       "We specialize in the design, engineering, and manufacturing of technologically advanced textile dyeing machinery that combines precision engineering, robust construction, and intelligent automation to meet the evolving demands of the global textile industry."
-    ]
-  },
-  "ourStory": {
-    "bannerTitle": "Our Story & Journey",
-    "bannerImage": "/assets/img/about-banner.jpg",
-    "title": "Over 36 Years of Innovation in Textile Machinery",
-    "description": "From a modest workshop in 1990 to an internationally recognized manufacturing brand, Anjani Industries has consistently pushed the boundaries of textile engineering."
+    ],
+    "products": {
+      "title": "Our Products",
+      "subtitle": "Our comprehensive product portfolio includes:",
+      "items": [
+        "Low Liquor Ratio ECO+ Soft Flow Dyeing Machines",
+        "Weight Reduction (Scouring) Machines",
+        "U-Type Jet Dyeing Machines",
+        "Caustic Recovery Plants",
+        "Long Tube Rapid Jet Dyeing Machines",
+        "Customized Textile Processing Machinery"
+      ],
+      "footerText": "Every machine is meticulously engineered to minimize water, steam, and power consumption while maximizing productivity, reducing processing time, and delivering consistent dyeing performance."
+    },
+    "manufacturing": {
+      "title": "Manufacturing Excellence",
+      "image": "/assets/img/Manufacturing.jpg",
+      "paragraphs": [
+        "Our corporate headquarters and state-of-the-art manufacturing facility are located in Surat, Gujarat, India, spanning over 45,000 sq. ft. Equipped with modern manufacturing infrastructure, advanced R&D capabilities, precision machining, stringent quality control systems, and dedicated after-sales technical support, we deliver complete textile processing solutions under one roof.",
+        "Every stage of manufacturing—from design and fabrication to assembly, testing, and commissioning—is carried out with strict adherence to international quality standards to ensure long-lasting performance and reliability."
+      ]
+    },
+    "innovation": {
+      "title": "Innovation Driven by Experience",
+      "image": "/assets/img/Experience.jpg",
+      "paragraphs": [
+        "For over 36 years, Anjani Industries has continuously invested in research, product development, and engineering innovation to create machinery that meets the changing needs of modern textile processors.",
+        "Our focus on sustainable engineering enables customers to reduce water, steam, energy, and chemical consumption while achieving superior dyeing quality and lower production costs.",
+        "Today, textile manufacturers across India and international markets trust Anjani Industries for dependable machinery, technical expertise, and responsive after-sales support."
+      ]
+    },
+    "quality": {
+      "title": "Quality Assurance",
+      "subtitle": "As an ISO 9001:2015 Certified Company, quality is at the heart of everything we do.",
+      "description": "Every machine undergoes rigorous quality inspections and performance testing before dispatch, ensuring it meets our uncompromising standards for reliability, efficiency, and durability.",
+      "leadershipImage": "/assets/img/dhruv-patel.jpg",
+      "leadershipTitle": "Leadership Message",
+      "leadershipQuote": "“At Anjani Industries, we never compromise on the quality of our products. Our commitment is to deliver innovative textile dyeing solutions that create lasting value for our customers through quality, technology, and exceptional service.”",
+      "leadershipAuthor": "- Dhruv Patel, Owner"
+    },
+    "whyTrust": {
+      "title": "Why Textile manufacturers trust Anjani Industries?",
+      "reasons": [
+        {
+          "title": "36+ Years of Engineering Excellence",
+          "desc": "As an ISO 9001:2015 Certified Company, quality is at the heart of everything we do."
+        },
+        {
+          "title": "Quality • Technology • Metrology • Service",
+          "desc": "The four pillars that drive everything we do."
+        },
+        {
+          "title": "ISO 9001:2015 Certified Company",
+          "desc": "Committed to international quality standards."
+        },
+        {
+          "title": "45,000 sq. ft. Modern Manufacturing Facility",
+          "desc": "Equipped with advanced manufacturing and testing infrastructure."
+        },
+        {
+          "title": "Innovative & Energy-Efficient Dyeing Machinery",
+          "desc": "Designed to reduce water, steam, power, and operating costs."
+        },
+        {
+          "title": "Dedicated Research & Development",
+          "desc": "Continuously developing technologies for the evolving textile industry."
+        },
+        {
+          "title": "Reliable After-Sales Technical Support",
+          "desc": "Prompt service and long-term customer assistance."
+        },
+        {
+          "title": "Trusted by Textile Manufacturers Across India & International Markets",
+          "desc": "Building lasting partnerships through quality and performance."
+        }
+      ]
+    },
+    "hse": {
+      "title": "Health, Safety & Environment",
+      "paragraphs": [
+        "The safety of our employees, customers, and manufacturing operations is our highest priority.",
+        "We maintain a safe and healthy workplace through modern manufacturing practices, advanced production technologies, regular safety training, and strict quality and safety procedures.",
+        "Our commitment to environmental responsibility is reflected in the development of resource-efficient textile processing machinery that helps reduce water, energy, and steam consumption, contributing to a more sustainable textile industry."
+      ]
+    },
+    "commitment": {
+      "title": "Our Commitment",
+      "subtitle": "Quality • Technology • Metrology • Service",
+      "description": "These four pillars define everything we do and continue to guide Anjani Industries in delivering world-class textile dyeing and processing solutions for customers across the globe."
+    }
   },
   "valuesEthics": {
-    "bannerTitle": "Our Values & Ethics",
-    "bannerImage": "/assets/img/about-banner.jpg",
-    "title": "Committed to Quality, Integrity & Environmental Responsibility",
-    "description": "At Anjani Industries, our values define who we are and drive every machine we engineer."
+    "bannerTitle": "Our Core Values & Ethics",
+    "bannerImage": "/assets/img/values-banner.jpg",
+    "entrepreneurial": {
+      "title": "Entrepreneurial Spirit",
+      "subtitle": "Thinking Beyond Boundaries",
+      "description": "We embrace innovation, encourage creative thinking, and continuously pursue new opportunities to improve our products, processes, and customer experience."
+    },
+    "family": {
+      "title": "One Anjani Family",
+      "values": [
+        {
+          "icon": "/assets/img/icon/core_value/core_value1.png",
+          "title": "Growing Together, Succeeding Together",
+          "desc": "We believe every employee, customer, supplier, and business partner is part of the Anjani family. Through trust, collaboration, and mutual respect, we build lasting relationships and achieve shared success."
+        },
+        {
+          "icon": "/assets/img/icon/core_value/core_value2.png",
+          "title": "Innovation",
+          "desc": "We continuously develop advanced technologies to create efficient, reliable, and sustainable textile processing solutions."
+        }
+      ]
+    },
+    "qualityIntegrity": {
+      "qualityTitle": "Quality",
+      "qualityDesc": "We never compromise on quality and strive for excellence in every machine we manufacture.",
+      "integrityTitle": "Integrity",
+      "integrityDesc": "We conduct our business with honesty, transparency, and professionalism.",
+      "image": "/assets/img/quality.jpg"
+    },
+    "customerCommitment": {
+      "title": "Customer Commitment",
+      "subtitle": "We build long-term partnerships by delivering dependable products and exceptional after-sales support.",
+      "ethics": [
+        {
+          "title": "Ethics Of Anjani Industries",
+          "desc": "Treat people as you want to be treated."
+        },
+        {
+          "title": "Respect for others",
+          "desc": "Treat people as you want to be treated."
+        },
+        {
+          "title": "Integrity and honesty",
+          "desc": "Tell the truth and avoid any wrongdoing to the best of your ability."
+        },
+        {
+          "title": "Justice",
+          "desc": "Make sure you’re objective and fair and don’t disadvantage others."
+        },
+        {
+          "title": "Lawfulness",
+          "desc": "Know and follow the law – always."
+        },
+        {
+          "title": "Competence and accountability",
+          "desc": "Work hard and be responsible for your work."
+        },
+        {
+          "title": "Teamwork",
+          "desc": "Collaborate and ask for help."
+        }
+      ]
+    }
+  },
+  "productsPage": {
+    "bannerTitle": "Advance Textile<br />Dyeing & Processing Machines",
+    "whyChoose": {
+      "title": "Why Choose ANJANI?",
+      "cards": [
+        {
+          "icon": "/assets/img/icon/icon1.png",
+          "title": "36+ Years of<br />Engineering Experience",
+          "desc": "Manufacturing textile processing machinery since 1990."
+        },
+        {
+          "icon": "/assets/img/icon/icon2.png",
+          "title": "Advanced Fabric<br />Handling",
+          "desc": "Designed for controlled and gentle fabric movement."
+        },
+        {
+          "icon": "/assets/img/icon/icon3.png",
+          "title": "Energy & Resource<br />Efficiency",
+          "desc": "Engineered to reduce water, steam, power and processing time."
+        },
+        {
+          "icon": "/assets/img/icon/icon4.png",
+          "title": "Automation &<br />Process Control",
+          "desc": "Intelligent PLC automation for consistent batch-to-batch repeatability."
+        },
+        {
+          "icon": "/assets/img/icon/icon5.png",
+          "title": "Robust Stainless<br />Steel Construction",
+          "desc": "Built with high-grade materials for durability and long operating life."
+        },
+        {
+          "icon": "/assets/img/icon/icon6.png",
+          "title": "Dedicated<br />After-Sales Support",
+          "desc": "Prompt service, technical support, and genuine spare parts."
+        }
+      ]
+    }
+  },
+  "contactUs": {
+    "bannerTitle": "Stay Connected",
+    "bannerSubtitle": "How Can We Assist You."
+  },
+  "ecard": {
+    "name": "Dhruv Patel",
+    "title": "Owner",
+    "organization": "Anjani Industries",
+    "tagline": "The Dyeing Machine Company",
+    "frontImage": "/assets/img/front.png",
+    "backImage": "/assets/img/back.png",
+    "phoneMobile": "+91 9979 303 570",
+    "phoneOffice": "+91 8154 888 370",
+    "emailDirect": "dhruv@anjaniindustries.in",
+    "emailGeneral": "info@anjaniindustries.in",
+    "website": "https://www.anjaniindustries.in",
+    "mapUrl": "https://maps.app.goo.gl/C7v1m2T8Y1cZBWNTA",
+    "address": "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat- 394 230, Gujarat, India."
   }
 }

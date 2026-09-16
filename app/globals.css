@@ -9,10 +9,39 @@
 @import url("/assets/css/jquery.fancybox.min.css");
 @import url("/assets/css/style.css");
 
-/* Next.js compatibility helpers */
-html, body { margin: 0; padding: 0; }
-main { display: block; }
+/* Next.js compatibility helpers & viewport containment */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
 
+main {
+  display: block;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* Mobile Navigation Backdrop Overlay */
+.mobile-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 99998;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
 
 /* WOW animation flicker fix */
 main .wow {
@@ -23,7 +52,6 @@ main .wow.animated {
   visibility: visible;
 }
 
-
 .dropdown-icon {
   display: none !important;
 }
@@ -32,11 +60,59 @@ main .wow.animated {
   .dropdown-icon {
     display: block !important;
   }
+
+  header.style-1 .main-menu {
+    width: 310px !important;
+    max-width: 86vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    z-index: 99999 !important;
+  }
+
+  header.style-1 .main-menu > ul > li ul.sub-menu {
+    display: none;
+    background: #f7f7f7 !important;
+    border-radius: 8px !important;
+    margin: 8px 0 !important;
+    padding: 6px 14px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  }
+
+  header.style-1 .main-menu > ul > li ul.sub-menu.show-submenu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    max-height: 380px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  header.style-1 .main-menu > ul > li ul.sub-menu > li a {
+    padding: 9px 0 !important;
+    font-size: 13.5px !important;
+    display: block !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
+  }
+
+  header.style-1 .main-menu > ul > li > a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 13px 0 !important;
+    font-size: 15px !important;
+  }
 }
+
 .menu-item-has-children:hover > .sub-menu {
-    opacity: 1;
-    visibility: visible;
-}@media (min-width: 992px) {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 992px) {
   .menu-item-has-children > .sub-menu {
     opacity: 0;
     visibility: hidden;
@@ -241,5 +317,221 @@ main .wow.animated {
 @media (max-width: 767px) {
   .not-found-page-container .not-found-main-area {
     padding: 45px 0 60px !important;
+  }
+}
+
+/* =========================================================================
+   Newsletter Subscription Form in Footer
+   ========================================================================= */
+.newsletter-submit-btn {
+  position: absolute;
+  right: 4px;
+  height: 40px;
+  padding: 0 16px;
+  background-color: #cb0000 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+  box-shadow: 0 2px 8px rgba(203, 0, 0, 0.35);
+}
+
+.newsletter-submit-btn:hover:not(:disabled) {
+  background-color: #a80000 !important;
+  box-shadow: 0 4px 12px rgba(168, 0, 0, 0.45);
+}
+
+.newsletter-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.newsletter-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.newsletter-submit-btn span {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  pointer-events: none !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.newsletter-submit-btn svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  pointer-events: none !important;
+}
+
+/* =========================================================================
+   Back To Top Button Enhancement & Mobile Positioning
+   ========================================================================= */
+.progress-wrap {
+  z-index: 9999 !important;
+}
+
+@media (max-width: 767px) {
+  .progress-wrap {
+    right: 16px !important;
+    bottom: 20px !important;
+    height: 42px !important;
+    width: 42px !important;
+  }
+  .progress-wrap svg.arrow {
+    width: 18px !important;
+    height: 20px !important;
+  }
+}
+
+/* =========================================================================
+   Mobile Form Controls & iOS Safari Auto-zoom Prevention
+   ========================================================================= */
+@media (max-width: 767px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* =========================================================================
+   Space Model Table Responsive Horizontal Scroll
+   ========================================================================= */
+.space-model__table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  position: relative !important;
+  scrollbar-width: thin;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .space-model__table {
+    min-width: 600px !important;
+    table-layout: auto !important;
+  }
+  .space-model__table th,
+  .space-model__table td {
+    padding: 12px 8px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+  }
+  .space-model__table th {
+    font-size: 15px !important;
+  }
+}
+
+/* =========================================================================
+   Timeline Mobile Responsiveness (/our-story)
+   ========================================================================= */
+@media (max-width: 767px) {
+  .anjani-timeline {
+    padding-left: 10px !important;
+  }
+  .anjani-timeline-item {
+    margin-left: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .anjani-history {
+    padding: 10px 4px 30px !important;
+  }
+  .anjani-year {
+    margin-left: 0 !important;
+    display: inline-block !important;
+    font-size: 18px !important;
+  }
+  .anjani-timeline-heading {
+    font-size: 17px !important;
+    line-height: 1.35 !important;
+  }
+  .anjani-timeline-description {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* =========================================================================
+   Hero Section & Counter Polish on Mobile (Home Page)
+   ========================================================================= */
+@media (max-width: 767px) {
+  .banner-content h1 {
+    font-size: 24px !important;
+    line-height: 1.28 !important;
+  }
+  .banner-content p {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+  .home1-counter-section .counter-wrap {
+    padding: 20px 15px !important;
+  }
+  .home1-counter-section .counter-wrap .single-countdown .number h2,
+  .home1-counter-section .counter-wrap .single-countdown .number span {
+    font-size: 36px !important;
+  }
+  .home1-counter-section .counter-wrap .single-countdown span {
+    font-size: 14px !important;
+  }
+}
+
+/* =========================================================================
+   Footer Responsive Polish
+   ========================================================================= */
+@media (max-width: 767px) {
+  .footer-top-banner-section .footer-top-banner-wrap {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+  }
+  .footer-top-banner-section .section-title h2 {
+    font-size: 24px !important;
+    line-height: 1.25 !important;
+  }
+  .footer-bottom-wrap .footer-bottom {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 10px !important;
+  }
+  .footer-bottom-wrap .footer-bottom .copyright-area p {
+    font-size: 13.5px !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-widget .form-inner {
+    position: relative !important;
+  }
+  .footer-widget .form-inner input[type="email"] {
+    padding-right: 105px !important;
+    font-size: 14px !important;
+    height: 46px !important;
+  }
+  .newsletter-submit-btn {
+    height: 36px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
   }
 }

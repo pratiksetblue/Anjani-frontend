@@ -184,8 +184,42 @@ export default function Header() {
     setProductsOpen(false);
   };
 
+  // Close mobile drawer and dropdowns whenever pathname changes
+  useEffect(() => {
+    closeMobileMenu();
+    setActiveDropdown(null);
+  }, [pathname]);
+
+  // Lock background body scroll when mobile menu is open & listen for Escape key
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") {
+          closeMobileMenu();
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [mobileMenuOpen]);
+
   return (
     <header className="header-area style-1">
+      {/* Mobile Drawer Backdrop Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-menu-backdrop"
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
+
       <div className="container-fluid d-flex flex-nowrap align-items-center justify-content-between">
         {/* Logo */}
         <div className="company-logo">
@@ -217,7 +251,7 @@ export default function Header() {
             <button
               type="button"
               className="menu-close-btn"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => closeMobileMenu()}
               aria-label="Close menu"
             >
               <i className="bi bi-x" />
@@ -255,9 +289,11 @@ export default function Header() {
               <Link
                 className="drop-down"
                 href="/about-us"
-                onClick={() => {
-                  if (window.innerWidth < 992) {
+                onClick={(e) => {
+                  if (typeof window !== "undefined" && window.innerWidth < 992) {
+                    e.preventDefault();
                     setWhoOpen((prev) => !prev);
+                    setProductsOpen(false);
                   } else {
                     closeMobileMenu();
                   }
@@ -270,7 +306,10 @@ export default function Header() {
               <button
                 type="button"
                 className="dropdown-icon d-lg-none"
-                onClick={() => setWhoOpen((prev) => !prev)}
+                onClick={() => {
+                  setWhoOpen((prev) => !prev);
+                  setProductsOpen(false);
+                }}
                 aria-label="Toggle Who We Are menu"
               >
                 <i className={`bi ${whoOpen ? "bi-dash" : "bi-plus"}`} />

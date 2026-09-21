@@ -17,6 +17,7 @@
     "nodemailer": "^10.0.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-quill-new": "^3.8.3",
     "swiper": "^14.2.0"
   }
 }

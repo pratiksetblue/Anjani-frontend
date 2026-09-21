@@ -24,7 +24,6 @@ export default function ConditionalLayout({ children }) {
 
   return (
     <>
-      <BackToTop />
       <Header />
 
       <main>
@@ -32,6 +31,7 @@ export default function ConditionalLayout({ children }) {
       </main>
 
       <Footer />
+      <BackToTop />
       <LegacyScripts />
       <RouteAnimations />
     </>

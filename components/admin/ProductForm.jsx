@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,50 +13,40 @@ import {
 } from "lucide-react";
 import ImageUploadPreview from "./ImageUploadPreview";
 import PdfUploadPreview from "./PdfUploadPreview";
+import RichTextEditor from "./RichTextEditor";
 
 export default function ProductForm({ initialData = null, isEdit = false }) {
   const router = useRouter();
 
+  const initialDescription = useMemo(() => {
+    if (initialData?.description && typeof initialData.description === "string") {
+      return initialData.description;
+    }
+    if (Array.isArray(initialData?.paragraphs) && initialData.paragraphs.length > 0) {
+      return initialData.paragraphs
+        .map((p) => (p.trim().startsWith("<p>") ? p : `<p>${p}</p>`))
+        .join("");
+    }
+    return "";
+  }, [initialData]);
+
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     slug: initialData?.slug || "",
-    capacity: initialData?.capacity || "From 150 Kg to 2000 Kg.",
-    image: initialData?.image || "/assets/img/product/product1.jpg",
-    brochureUrl: initialData?.brochureUrl || "/assets/pdf/U-TYPE-CATALOGUE.pdf",
-    whatsappNumber: initialData?.whatsappNumber || "917096007670",
-    order: initialData?.order || 1,
+    capacity: initialData?.capacity || "",
+    image: initialData?.image || "",
+    brochureUrl: initialData?.brochureUrl || "",
+    whatsappNumber: initialData?.whatsappNumber || "",
+    order: initialData?.order !== undefined ? initialData.order : 1,
     featured: initialData?.featured !== undefined ? initialData.featured : true,
     metaTitle: initialData?.metaTitle || "",
     metaDescription: initialData?.metaDescription || "",
     metaKeywords: initialData?.metaKeywords || "",
-    highlights: initialData?.highlights?.length
-      ? initialData.highlights
-      : [
-          "Low Liquor Ratio Dyeing",
-          "Automatic Adjustable Nozzle",
-          "PLC Controlled Process",
-          "Reduced Water & Energy Consumption",
-        ],
-    paragraphs: initialData?.paragraphs?.length
-      ? initialData.paragraphs
-      : [
-          "The ANJANI fabric dyeing machine delivers precision engineering, reliable performance, and optimized power and water consumption for modern textile manufacturers.",
-        ],
-    keyAdvantages: initialData?.keyAdvantages?.length
-      ? initialData.keyAdvantages
-      : [
-          "SS 316L Corrosion-Resistant Construction",
-          "Short Liquor Ratio Dyeing",
-          "Efficient Heating & Cooling",
-          "PLC-Based Process Control",
-          "Smooth Fabric Transport",
-        ],
-    spaceModel: initialData?.spaceModel?.length
-      ? initialData.spaceModel
-      : [
-          { model: "UT-150", capacity: "150 KG", length: "3500 MM", breadth: "1500 MM", height: "4000 MM" },
-          { model: "UT-250", capacity: "250 KG", length: "4300 MM", breadth: "1650 MM", height: "4200 MM" },
-        ],
+    highlights: Array.isArray(initialData?.highlights) ? initialData.highlights : [],
+    description: initialDescription,
+    paragraphs: Array.isArray(initialData?.paragraphs) ? initialData.paragraphs : [],
+    keyAdvantages: Array.isArray(initialData?.keyAdvantages) ? initialData.keyAdvantages : [],
+    spaceModel: Array.isArray(initialData?.spaceModel) ? initialData.spaceModel : [],
   });
 
   const [saving, setSaving] = useState(false);
@@ -89,22 +79,6 @@ export default function ProductForm({ initialData = null, isEdit = false }) {
     setFormData({
       ...formData,
       highlights: formData.highlights.filter((_, i) => i !== index),
-    });
-  };
-
-  // Paragraphs handlers
-  const handleParagraphChange = (index, value) => {
-    const updated = [...formData.paragraphs];
-    updated[index] = value;
-    setFormData({ ...formData, paragraphs: updated });
-  };
-  const addParagraph = () => {
-    setFormData({ ...formData, paragraphs: [...formData.paragraphs, ""] });
-  };
-  const removeParagraph = (index) => {
-    setFormData({
-      ...formData,
-      paragraphs: formData.paragraphs.filter((_, i) => i !== index),
     });
   };
 
@@ -160,10 +134,42 @@ export default function ProductForm({ initialData = null, isEdit = false }) {
         : "/api/products";
       const method = isEdit ? "PUT" : "POST";
 
+      // Clean and sanitize description HTML
+      const cleanDesc = (formData.description || "").trim();
+      const isDescEmpty =
+        !cleanDesc ||
+        cleanDesc === "<p><br></p>" ||
+        cleanDesc.replace(/<[^>]*>/g, "").trim().length === 0;
+      const finalDescription = isDescEmpty ? "" : cleanDesc;
+
+      // Sync paragraphs from description HTML for backward compatibility
+      let derivedParagraphs = [];
+      if (finalDescription) {
+        const matches = finalDescription.match(/<p>[\s\S]*?<\/p>/gi);
+        if (matches && matches.length > 0) {
+          derivedParagraphs = matches.filter(
+            (p) => p.replace(/<[^>]*>/g, "").trim().length > 0
+          );
+        } else {
+          derivedParagraphs = [finalDescription];
+        }
+      }
+
+      const payload = {
+        ...formData,
+        description: finalDescription,
+        highlights: formData.highlights.filter((h) => h && h.trim()),
+        paragraphs: derivedParagraphs,
+        keyAdvantages: formData.keyAdvantages.filter((a) => a && a.trim()),
+        spaceModel: formData.spaceModel.filter((r) =>
+          r && Object.values(r).some((v) => v && v.toString().trim())
+        ),
+      };
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const resData = await res.json();
@@ -333,66 +339,73 @@ export default function ProductForm({ initialData = null, isEdit = false }) {
             </button>
           </div>
 
-          {formData.highlights.map((h, i) => (
-            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10 }}>
-              <input
-                type="text"
-                className="admin-input"
-                value={h}
-                placeholder="e.g. Automatic Adjustable Nozzle"
-                onChange={(e) => handleHighlightChange(i, e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={() => removeHighlight(i)}
-                className="admin-btn admin-btn-danger admin-btn-sm"
-              >
-                <Trash2 size={14} />
-              </button>
+          {formData.highlights.length === 0 ? (
+            <div style={{ color: "#94a3b8", fontSize: 13, fontStyle: "italic", padding: "10px 0" }}>
+              No bullet highlights added. Click &quot;Add Bullet&quot; to add one.
             </div>
-          ))}
+          ) : (
+            formData.highlights.map((h, i) => (
+              <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={h}
+                  placeholder="e.g. Automatic Adjustable Nozzle"
+                  onChange={(e) => handleHighlightChange(i, e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeHighlight(i)}
+                  className="admin-btn admin-btn-danger admin-btn-sm"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))
+          )}
         </div>
 
-        {/* Description Paragraphs */}
+        {/* Description Rich Text Editor */}
         <div className="admin-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 16,
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
             <div>
               <h2 className="admin-card-title" style={{ margin: 0 }}>
-                4. Detailed Overview Paragraphs (Product Detail Page)
+                4. Machine Description (Rich Text Editor)
               </h2>
               <div style={{ fontSize: 13, color: "#64748b" }}>
-                Full textual descriptions appearing next to the machine photo on its page.
+                Detailed overview shown next to machine catalog photo on its details page.
               </div>
             </div>
-            <button
-              type="button"
-              onClick={addParagraph}
-              className="admin-btn admin-btn-secondary admin-btn-sm"
-            >
-              <Plus size={14} />
-              <span>Add Paragraph</span>
-            </button>
-          </div>
-
-          {formData.paragraphs.map((p, i) => (
-            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 14 }}>
-              <textarea
-                rows={3}
-                className="admin-textarea"
-                value={p}
-                placeholder="Enter description paragraph..."
-                onChange={(e) => handleParagraphChange(i, e.target.value)}
-              />
+            {formData.description && (
               <button
                 type="button"
-                onClick={() => removeParagraph(i)}
+                onClick={() => setFormData((prev) => ({ ...prev, description: "" }))}
                 className="admin-btn admin-btn-danger admin-btn-sm"
-                style={{ alignSelf: "flex-start" }}
+                title="Clear all description text"
               >
                 <Trash2 size={14} />
+                <span>Clear Description</span>
               </button>
-            </div>
-          ))}
+            )}
+          </div>
+
+          <RichTextEditor
+            value={formData.description}
+            onChange={(content) =>
+              setFormData((prev) => ({ ...prev, description: content }))
+            }
+            placeholder="Enter product description here..."
+            minHeight={220}
+          />
         </div>
 
         {/* Key Advantages */}
@@ -416,26 +429,32 @@ export default function ProductForm({ initialData = null, isEdit = false }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: 12 }}>
-            {formData.keyAdvantages.map((adv, i) => (
-              <div key={i} style={{ display: "flex", gap: 8 }}>
-                <input
-                  type="text"
-                  className="admin-input"
-                  value={adv}
-                  placeholder="e.g. SS 316L Corrosion-Resistant Construction"
-                  onChange={(e) => handleAdvantageChange(i, e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() => removeAdvantage(i)}
-                  className="admin-btn admin-btn-danger admin-btn-sm"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+          {formData.keyAdvantages.length === 0 ? (
+            <div style={{ color: "#94a3b8", fontSize: 13, fontStyle: "italic", padding: "10px 0" }}>
+              No key advantages added. Click &quot;Add Advantage&quot; to add one.
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: 12 }}>
+              {formData.keyAdvantages.map((adv, i) => (
+                <div key={i} style={{ display: "flex", gap: 8 }}>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={adv}
+                    placeholder="e.g. SS 316L Corrosion-Resistant Construction"
+                    onChange={(e) => handleAdvantageChange(i, e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeAdvantage(i)}
+                    className="admin-btn admin-btn-danger admin-btn-sm"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Space Requirement Model Table */}
@@ -459,80 +478,86 @@ export default function ProductForm({ initialData = null, isEdit = false }) {
             </button>
           </div>
 
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Model</th>
-                  <th>Capacity / Width</th>
-                  <th>Length</th>
-                  <th>Breadth</th>
-                  <th>Height</th>
-                  <th style={{ width: 50 }}></th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.spaceModel.map((row, i) => (
-                  <tr key={i}>
-                    <td>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        placeholder="UT-150"
-                        value={row.model || ""}
-                        onChange={(e) => handleRowChange(i, "model", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        placeholder="150 KG or 1500 MM"
-                        value={row.capacity || row.width || ""}
-                        onChange={(e) => handleRowChange(i, "capacity", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        placeholder="3500 MM"
-                        value={row.length || ""}
-                        onChange={(e) => handleRowChange(i, "length", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        placeholder="1500 MM"
-                        value={row.breadth || ""}
-                        onChange={(e) => handleRowChange(i, "breadth", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        placeholder="4000 MM"
-                        value={row.height || ""}
-                        onChange={(e) => handleRowChange(i, "height", e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        onClick={() => removeRow(i)}
-                        className="admin-btn admin-btn-danger admin-btn-sm"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </td>
+          {formData.spaceModel.length === 0 ? (
+            <div style={{ color: "#94a3b8", fontSize: 13, fontStyle: "italic", padding: "12px 0" }}>
+              No specification table rows added. Click &quot;Add Table Row&quot; to add specifications.
+            </div>
+          ) : (
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Capacity / Width</th>
+                    <th>Length</th>
+                    <th>Breadth</th>
+                    <th>Height</th>
+                    <th style={{ width: 50 }}></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {formData.spaceModel.map((row, i) => (
+                    <tr key={i}>
+                      <td>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="UT-150"
+                          value={row.model || ""}
+                          onChange={(e) => handleRowChange(i, "model", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="150 KG or 1500 MM"
+                          value={row.capacity || row.width || ""}
+                          onChange={(e) => handleRowChange(i, "capacity", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="3500 MM"
+                          value={row.length || ""}
+                          onChange={(e) => handleRowChange(i, "length", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="1500 MM"
+                          value={row.breadth || ""}
+                          onChange={(e) => handleRowChange(i, "breadth", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          placeholder="4000 MM"
+                          value={row.height || ""}
+                          onChange={(e) => handleRowChange(i, "height", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          onClick={() => removeRow(i)}
+                          className="admin-btn admin-btn-danger admin-btn-sm"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Machine SEO & Meta Tags */}

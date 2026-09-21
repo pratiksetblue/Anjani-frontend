@@ -379,7 +379,29 @@ main .wow.animated {
    Back To Top Button Enhancement & Mobile Positioning
    ========================================================================= */
 .progress-wrap {
+  position: fixed !important;
+  right: 30px !important;
+  bottom: 30px !important;
+  height: 45px !important;
+  width: 45px !important;
+  max-width: 45px !important;
+  max-height: 45px !important;
+  border-radius: 50% !important;
   z-index: 9999 !important;
+  overflow: hidden !important;
+}
+
+.progress-wrap svg.progress-circle {
+  width: 100% !important;
+  height: 100% !important;
+  fill: none !important;
+}
+
+.progress-wrap svg.progress-circle path {
+  fill: none !important;
+  stroke: var(--primary-color1, #cb0000) !important;
+  stroke-width: 4 !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 767px) {
@@ -388,6 +410,8 @@ main .wow.animated {
     bottom: 20px !important;
     height: 42px !important;
     width: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
   }
   .progress-wrap svg.arrow {
     width: 18px !important;
@@ -534,4 +558,46 @@ main .wow.animated {
     padding: 0 10px !important;
     font-size: 12px !important;
   }
+}
+
+/* =========================================================================
+   Product Rich Description Styling
+   ========================================================================= */
+.product-rich-description {
+  color: var(--text-color, #333333);
+  font-size: 16px;
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+.product-rich-description p {
+  margin-bottom: 16px;
+  line-height: 1.75;
+}
+.product-rich-description p:last-child {
+  margin-bottom: 0;
+}
+.product-rich-description h2,
+.product-rich-description h3,
+.product-rich-description h4 {
+  color: var(--title-color, #0a0a0a);
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.product-rich-description ul,
+.product-rich-description ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+.product-rich-description li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+.product-rich-description a {
+  color: var(--primary-color1, #cb0000);
+  text-decoration: underline;
+}
+.product-rich-description strong,
+.product-rich-description b {
+  font-weight: 600;
 }

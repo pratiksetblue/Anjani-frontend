@@ -387,7 +387,7 @@ export default function Footer() {
                           </div>
                           <p
                             style={{
-                              color: "#94a3b8",
+                              color: "rgba(255, 255, 255, 0.7)",
                               fontSize: "14px",
                               lineHeight: "1.6",
                               marginBottom: "16px",
@@ -426,8 +426,8 @@ export default function Footer() {
                                   width: "100%",
                                   height: "48px",
                                   padding: "0 130px 0 16px",
-                                  backgroundColor: "rgba(255, 255, 255, 0.7)",
                                   border: "1px solid #2d3248",
+                                  backgroundColor: "rgb(255 255 255)",
                                   borderRadius: "6px",
                                   color: "#ffffff",
                                   fontSize: "14px",
@@ -498,7 +498,7 @@ export default function Footer() {
                             <span
                               style={{
                                 fontSize: "12px",
-                                color: "#64748b",
+                                color: "rgba(255, 255, 255, 0.7)",
                                 marginTop: "2px",
                               }}
                             >

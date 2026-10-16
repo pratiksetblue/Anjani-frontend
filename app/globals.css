@@ -600,4 +600,99 @@ main .wow.animated {
 .product-rich-description strong,
 .product-rich-description b {
   font-weight: 600;
-}
+}
+
+.itme-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  background: rgba(12, 16, 24, 0.78);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  overflow-y: auto;
+  animation: itmeOverlayIn 0.25s ease both;
+}
+
+.itme-popup-dialog {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: min(650px, 100%);
+  max-height: calc(100dvh - 60px);
+  padding: 0;
+  overflow: visible;
+  border-radius: 14px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+  animation: itmePopupIn 0.3s ease both;
+}
+
+.itme-popup-image-wrap {
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-height: calc(100dvh - 60px);
+  overflow: hidden;
+  border-radius: 14px;
+  background: transparent;
+}
+
+.itme-popup-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 60px);
+  object-fit: contain;
+  object-position: center;
+}
+
+.itme-popup-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #d71920;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 600px) {
+  .itme-popup-overlay {
+    padding: 20px 12px;
+  }
+
+  .itme-popup-dialog {
+    max-width: 100%;
+    max-height: calc(100dvh - 40px);
+  }
+
+  .itme-popup-image-wrap {
+    max-height: calc(100dvh - 40px);
+    border-radius: 10px;
+  }
+
+  .itme-popup-image {
+    max-height: calc(100dvh - 40px);
+    object-fit: contain;
+  }
+
+  .itme-popup-close {
+    top: -12px;
+    right: -6px;
+    width: 38px;
+    height: 38px;
+  }
+}

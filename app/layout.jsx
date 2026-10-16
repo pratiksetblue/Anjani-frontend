@@ -1,6 +1,7 @@
 import "./globals.css";
 import ConditionalLayout from "../components/ConditionalLayout";
 import SeoAnalyticsHead from "../components/SeoAnalyticsHead";
+import ITMEPopup from "@/components/ITMEPopup";
 
 export const viewport = {
   width: "device-width",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ConditionalLayout>{children}</ConditionalLayout>
+           <ITMEPopup />
       </body>
     </html>
   );

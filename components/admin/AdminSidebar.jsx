@@ -21,11 +21,13 @@ import {
   History,
   X,
   Newspaper,
+  FolderUp,
 } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Products Catalog", href: "/admin/products", icon: Boxes },
+  { label: "Media & Uploads", href: "/admin/uploads", icon: FolderUp },
   { label: "Hero & Videos", href: "/admin/hero", icon: Video },
   { label: "Certifications", href: "/admin/certifications", icon: Award },
   { label: "Counter Statistics", href: "/admin/counters", icon: BarChart3 },

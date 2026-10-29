@@ -8,7 +8,11 @@ function formatDescriptionParagraph(text) {
 
   // If text already contains HTML markup, render directly with brand styling
   if (/<[a-z][\s\S]*>/i.test(text)) {
-    return <span dangerouslySetInnerHTML={{ __html: formatHtmlWithBrandHighlight(text) }} />;
+    return (
+      <span
+        dangerouslySetInnerHTML={{ __html: formatHtmlWithBrandHighlight(text) }}
+      />
+    );
   }
 
   // Highlight ANJANI in bold red color and ECO+ in bold green color as per design
@@ -50,11 +54,11 @@ function formatHtmlWithBrandHighlight(html) {
       return token
         .replace(
           /\b(ANJANI|Anjani)\b/g,
-          '<span class="red fw-semibold" style="color: #cb0000; font-weight: 600;">$1</span>'
+          '<span class="red fw-semibold" style="color: #cb0000; font-weight: 600;">$1</span>',
         )
         .replace(
           /\b(ECO\+|ECO\s*\+)\b/g,
-          '<span class="green fw-semibold" style="color: #00B050; font-weight: 600;">$1</span>'
+          '<span class="green fw-semibold" style="color: #00B050; font-weight: 600;">$1</span>',
         );
     })
     .join("");
@@ -166,7 +170,9 @@ export default function ProductDetailTemplate({ product }) {
                       <div
                         className="product-rich-description"
                         dangerouslySetInnerHTML={{
-                          __html: formatHtmlWithBrandHighlight(product.description),
+                          __html: formatHtmlWithBrandHighlight(
+                            product.description,
+                          ),
                         }}
                       />
                     ) : hasParagraphs ? (
@@ -192,51 +198,50 @@ export default function ProductDetailTemplate({ product }) {
                     {hasCapacity ? <h5>CAPACITY: {product.capacity}</h5> : null}
                   </div>
 
-                  {hasBrochure && (
-                    <div className="btb-pd-details">
-                      <h5>Request Technical Offer</h5>
-                      <div className="btb-pd-btn">
-                        {whatsappNum ? (
-                          <a
-                            className="primary-btn1 whatsapp-btn"
-                            href={`https://wa.me/${whatsappNum}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                  <div className="btb-pd-details">
+                    <h5>Request Technical Offer</h5>
+                    <div className="btb-pd-btn">
+                      {whatsappNum ? (
+                        <a
+                          className="primary-btn1 whatsapp-btn"
+                          href={`https://wa.me/${whatsappNum}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span>
+                            TALK TO OUR TECHNICAL
+                            <br />
+                            ENGINEER ON WHATSAPP
+                          </span>
+                          <span>
+                            TALK TO OUR TECHNICAL
+                            <br />
+                            ENGINEER ON WHATSAPP
+                          </span>
+                          <svg
+                            fill="none"
+                            height="24"
+                            viewBox="0 0 100 100"
+                            width="24"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            <span>
-                              TALK TO OUR TECHNICAL
-                              <br />
-                              ENGINEER ON WHATSAPP
-                            </span>
-                            <span>
-                              TALK TO OUR TECHNICAL
-                              <br />
-                              ENGINEER ON WHATSAPP
-                            </span>
-                            <svg
-                              fill="none"
-                              height="24"
-                              viewBox="0 0 100 100"
-                              width="24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clipPath="url(#clip0_266_2902)">
-                                <path
-                                  clipRule="evenodd"
-                                  d="M61.9375 55.8457C60.0449 56.6191 58.8359 59.582 57.6094 61.0957C56.9805 61.8711 56.2305 61.9922 55.2637 61.6035C48.1602 58.7734 42.7148 54.0332 38.7949 47.4961C38.1309 46.4824 38.25 45.6816 39.0508 44.7402C40.2344 43.3457 41.7227 41.7617 42.043 39.8828C42.7539 35.7266 37.3203 22.834 30.1445 28.6758C9.4961 45.502 64.5898 90.1289 74.5332 65.9922C77.3457 59.1504 65.0742 54.5605 61.9375 55.8457ZM50 91.2656C42.6973 91.2656 35.5117 89.3242 29.2207 85.6484C28.2109 85.0566 26.9902 84.9004 25.8613 85.207L12.1914 88.959L16.9531 78.4688C17.6016 77.041 17.4356 75.3789 16.5195 74.1094C11.4258 67.0488 8.73243 58.7129 8.73243 50C8.73243 27.2441 27.2441 8.73242 50 8.73242C72.7559 8.73242 91.2656 27.2441 91.2656 50C91.2656 72.7539 72.7539 91.2656 50 91.2656ZM50 0C22.4297 0 3.9212e-06 22.4297 3.9212e-06 50C3.9212e-06 59.6992 2.75391 69.0137 7.98633 77.0977L0.390629 93.8262C-0.310543 95.3711 -0.0546835 97.1797 1.04297 98.4668C1.88672 99.4531 3.10743 100 4.36719 100C7.1836 100 22.541 95.1738 26.4492 94.1016C33.6738 97.9668 41.7773 100 50 100C77.5684 100 100 77.5684 100 50C100 22.4297 77.5684 0 50 0Z"
-                                  fill="#39AE41"
-                                  fillRule="evenodd"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_266_2902">
-                                  <rect fill="white" height="100" width="100" />
-                                </clipPath>
-                              </defs>
-                            </svg>
-                          </a>
-                        ) : null}
-
+                            <g clipPath="url(#clip0_266_2902)">
+                              <path
+                                clipRule="evenodd"
+                                d="M61.9375 55.8457C60.0449 56.6191 58.8359 59.582 57.6094 61.0957C56.9805 61.8711 56.2305 61.9922 55.2637 61.6035C48.1602 58.7734 42.7148 54.0332 38.7949 47.4961C38.1309 46.4824 38.25 45.6816 39.0508 44.7402C40.2344 43.3457 41.7227 41.7617 42.043 39.8828C42.7539 35.7266 37.3203 22.834 30.1445 28.6758C9.4961 45.502 64.5898 90.1289 74.5332 65.9922C77.3457 59.1504 65.0742 54.5605 61.9375 55.8457ZM50 91.2656C42.6973 91.2656 35.5117 89.3242 29.2207 85.6484C28.2109 85.0566 26.9902 84.9004 25.8613 85.207L12.1914 88.959L16.9531 78.4688C17.6016 77.041 17.4356 75.3789 16.5195 74.1094C11.4258 67.0488 8.73243 58.7129 8.73243 50C8.73243 27.2441 27.2441 8.73242 50 8.73242C72.7559 8.73242 91.2656 27.2441 91.2656 50C91.2656 72.7539 72.7539 91.2656 50 91.2656ZM50 0C22.4297 0 3.9212e-06 22.4297 3.9212e-06 50C3.9212e-06 59.6992 2.75391 69.0137 7.98633 77.0977L0.390629 93.8262C-0.310543 95.3711 -0.0546835 97.1797 1.04297 98.4668C1.88672 99.4531 3.10743 100 4.36719 100C7.1836 100 22.541 95.1738 26.4492 94.1016C33.6738 97.9668 41.7773 100 50 100C77.5684 100 100 77.5684 100 50C100 22.4297 77.5684 0 50 0Z"
+                                fill="#39AE41"
+                                fillRule="evenodd"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_266_2902">
+                                <rect fill="white" height="100" width="100" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </a>
+                      ) : null}
+                      {hasBrochure && (
                         <a
                           className="primary-btn1 download-brochure-btn"
                           href={product.brochureUrl}
@@ -258,9 +263,9 @@ export default function ProductDetailTemplate({ product }) {
                             />
                           </svg>
                         </a>
-                      </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

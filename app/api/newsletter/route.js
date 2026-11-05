@@ -34,16 +34,21 @@ export async function POST(request) {
       status: "New",
     });
 
-    // Trigger confirmation email and admin notification in background
-    sendNewsletterEmails({ subscriberEmail: cleanEmail, inquiry }).catch((err) => {
+    // Trigger confirmation email and admin notification
+    let emailResult = null;
+    try {
+      emailResult = await sendNewsletterEmails({ subscriberEmail: cleanEmail, inquiry });
+      console.log("[Newsletter API] Email dispatch result:", emailResult);
+    } catch (err) {
       console.error("[Newsletter Email Trigger Error]:", err.message);
-    });
+    }
 
     return NextResponse.json(
       {
         success: true,
         message: "Thank you for subscribing to our newsletter!",
         inquiry,
+        emailResult,
       },
       { status: 201 }
     );

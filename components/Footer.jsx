@@ -429,7 +429,6 @@ export default function Footer() {
                                   border: "1px solid #2d3248",
                                   backgroundColor: "rgb(255 255 255)",
                                   borderRadius: "6px",
-                                  color: "#ffffff",
                                   fontSize: "14px",
                                   outline: "none",
                                   transition: "border-color 0.2s ease",

@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Mail,
+  Send,
   Search,
   Trash2,
   Edit,
   RefreshCw,
-  Calendar,
   X,
   Copy,
   Check,
@@ -16,8 +16,45 @@ import {
   UserPlus,
   Save,
   Download,
+  Eye,
+  CheckCircle2,
+  AlertCircle,
+  ExternalLink,
+  Sparkles,
   Users,
+  SendHorizontal,
+  Settings,
 } from "lucide-react";
+
+const TEMPLATES = [
+  {
+    name: "🚀 Product Launch & Innovation",
+    subject: "Discover Anjani Industries' Latest Textile Dyeing Innovations",
+    heading: "Engineering the Future of Textile Processing",
+    message:
+      "Dear {subscriberName},\n\nWe are pleased to introduce our newest generation of eco-efficient, low-liquor ratio textile dyeing machinery. Engineered to maximize color consistency and fabric quality while cutting water and thermal power consumption by up to 35%.\n\nOur specialized machinery handles everything from delicate knits to heavy woven fabrics. Explore the updated technical specifications and catalog below.",
+    ctaText: "Explore Machinery Catalog",
+    ctaUrl: "https://www.anjaniindustries.in/products",
+  },
+  {
+    name: "🎪 Exhibition / Trade Expo Invitation",
+    subject: "Invitation: Meet Anjani Industries at Upcoming Textile Expo",
+    heading: "Join Us at the Textile Machinery Exhibition",
+    message:
+      "Dear {subscriberName},\n\nWe cordially invite you to visit the Anjani Industries pavilion at the upcoming textile processing exhibition. Experience live demonstrations of our PLC-based soft flow and rapid jet dyeing machines, and consult directly with our senior mechanical engineers for customized plant requirements.",
+    ctaText: "Schedule a Stall Meeting",
+    ctaUrl: "https://www.anjaniindustries.in/contact-us",
+  },
+  {
+    name: "🌟 Company Milestone & Greeting",
+    subject: "Warm Greetings from Anjani Industries",
+    heading: "Celebrating Innovation & Partnership with You",
+    message:
+      "Dear {subscriberName},\n\nAs we celebrate over three decades of manufacturing excellence in Surat, Gujarat, we want to thank you for being a part of our journey.\n\nWe remain committed to supporting your business with dependable machinery, genuine spare parts, and prompt technical support.",
+    ctaText: "Visit Our Website",
+    ctaUrl: "https://www.anjaniindustries.in",
+  },
+];
 
 export default function AdminNewsletterPage() {
   const [subscribers, setSubscribers] = useState([]);
@@ -25,6 +62,16 @@ export default function AdminNewsletterPage() {
   const [countryFilter, setCountryFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [copiedEmails, setCopiedEmails] = useState(false);
+
+  // SMTP status
+  const [smtpStatus, setSmtpStatus] = useState({
+    loaded: false,
+    enabled: false,
+    configured: false,
+    host: "",
+    fromEmail: "",
+    adminNotificationEmail: "",
+  });
 
   // Edit / Add state
   const [editingSub, setEditingSub] = useState(null);
@@ -38,6 +85,23 @@ export default function AdminNewsletterPage() {
     email: "",
     phone: "",
     message: "",
+  });
+
+  // Send Newsletter Modal State
+  const [sendModalOpen, setSendModalOpen] = useState(false);
+  const [sendRecipientMode, setSendRecipientMode] = useState("all"); // 'all' | 'filtered' | 'single' | 'test'
+  const [singleRecipient, setSingleRecipient] = useState(null);
+  const [modalTab, setModalTab] = useState("compose"); // 'compose' | 'preview'
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [sendResult, setSendResult] = useState(null);
+
+  const [emailForm, setEmailForm] = useState({
+    subject: TEMPLATES[0].subject,
+    heading: TEMPLATES[0].heading,
+    message: TEMPLATES[0].message,
+    ctaText: TEMPLATES[0].ctaText,
+    ctaUrl: TEMPLATES[0].ctaUrl,
+    testEmail: "",
   });
 
   const fetchSubscribers = async () => {
@@ -56,8 +120,34 @@ export default function AdminNewsletterPage() {
     }
   };
 
+  const fetchSmtpStatus = async () => {
+    try {
+      const res = await fetch("/api/newsletter/send");
+      if (res.ok) {
+        const data = await res.json();
+        setSmtpStatus({
+          loaded: true,
+          enabled: Boolean(data.smtpEnabled),
+          configured: Boolean(data.smtpConfigured),
+          host: data.host || "",
+          fromEmail: data.fromEmail || "",
+          adminNotificationEmail: data.adminNotificationEmail || "",
+        });
+        if (data.adminNotificationEmail || data.fromEmail) {
+          setEmailForm((prev) => ({
+            ...prev,
+            testEmail: prev.testEmail || data.adminNotificationEmail || data.fromEmail,
+          }));
+        }
+      }
+    } catch (err) {
+      console.warn("SMTP check error:", err);
+    }
+  };
+
   useEffect(() => {
     fetchSubscribers();
+    fetchSmtpStatus();
   }, []);
 
   const handleDelete = async (id) => {
@@ -207,7 +297,11 @@ export default function AdminNewsletterPage() {
       (s.message || "").replace(/\n/g, " "),
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].map(e => e.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers, ...rows]
+        .map((e) => e.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -215,6 +309,120 @@ export default function AdminNewsletterPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  // Open Send Modal for all or single subscriber
+  const openSendModal = (recipient = null) => {
+    setSendResult(null);
+    setModalTab("compose");
+    if (recipient) {
+      setSingleRecipient(recipient);
+      setSendRecipientMode("single");
+    } else {
+      setSingleRecipient(null);
+      setSendRecipientMode(countryFilter !== "ALL" || search ? "filtered" : "all");
+    }
+    setSendModalOpen(true);
+  };
+
+  const applyTemplate = (tpl) => {
+    setEmailForm((prev) => ({
+      ...prev,
+      subject: tpl.subject,
+      heading: tpl.heading,
+      message: tpl.message,
+      ctaText: tpl.ctaText,
+      ctaUrl: tpl.ctaUrl,
+    }));
+  };
+
+  // Send Email API Call
+  const handleSendEmail = async (isTestOnly = false) => {
+    let recipientsList = [];
+
+    if (isTestOnly) {
+      if (!emailForm.testEmail || !emailForm.testEmail.trim()) {
+        alert("Please enter a valid test recipient email address.");
+        return;
+      }
+      recipientsList = [emailForm.testEmail.trim()];
+    } else if (sendRecipientMode === "all") {
+      recipientsList = subscribers.map((s) => ({
+        email: s.email,
+        firstName: s.firstName || s.name || "",
+        lastName: s.lastName || "",
+      }));
+    } else if (sendRecipientMode === "filtered") {
+      recipientsList = filtered.map((s) => ({
+        email: s.email,
+        firstName: s.firstName || s.name || "",
+        lastName: s.lastName || "",
+      }));
+    } else if (sendRecipientMode === "single") {
+      if (!singleRecipient?.email) {
+        alert("No subscriber selected.");
+        return;
+      }
+      recipientsList = [singleRecipient];
+    } else if (sendRecipientMode === "test") {
+      if (!emailForm.testEmail || !emailForm.testEmail.trim()) {
+        alert("Please enter a test email address.");
+        return;
+      }
+      recipientsList = [emailForm.testEmail.trim()];
+    }
+
+    if (recipientsList.length === 0) {
+      alert("No recipients to send to.");
+      return;
+    }
+
+    if (!isTestOnly && recipientsList.length > 1) {
+      const confirmed = confirm(
+        `Are you sure you want to broadcast this newsletter email to ${recipientsList.length} subscriber(s)?`
+      );
+      if (!confirmed) return;
+    }
+
+    setSendingEmail(true);
+    setSendResult(null);
+
+    try {
+      const res = await fetch("/api/newsletter/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recipients: recipientsList,
+          subject: emailForm.subject,
+          heading: emailForm.heading,
+          message: emailForm.message,
+          ctaText: emailForm.ctaText,
+          ctaUrl: emailForm.ctaUrl,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSendResult({
+          type: "success",
+          message: data.message || `Successfully sent to ${data.results?.sent || 0} subscriber(s)!`,
+          details: data.results,
+        });
+      } else {
+        setSendResult({
+          type: "error",
+          message: data.error || "Failed to send newsletter email.",
+        });
+      }
+    } catch (err) {
+      console.error("Send error:", err);
+      setSendResult({
+        type: "error",
+        message: err.message || "Network error while sending email.",
+      });
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const uniqueCountries = Array.from(
@@ -244,7 +452,7 @@ export default function AdminNewsletterPage() {
           justifyContent: "space-between",
           flexWrap: "wrap",
           gap: 16,
-          marginBottom: 24,
+          marginBottom: 20,
         }}
       >
         <div>
@@ -252,11 +460,25 @@ export default function AdminNewsletterPage() {
             Newsletter Leads &amp; Subscribers ({subscribers.length})
           </h1>
           <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            Manage newsletter subscribers with First Name, Last Name, and Country editing.
+            ન્યૂઝલેટર લીડ્સ અને ઈમેઈલ મોકલવાનું મેનેજર — Send branded newsletters directly to subscribers with 1 click.
           </p>
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Main Action: Send Newsletter Email */}
+          <button
+            onClick={() => openSendModal(null)}
+            className="admin-btn admin-btn-primary"
+            style={{
+              gap: 8,
+              boxShadow: "0 2px 10px rgba(203, 0, 0, 0.3)",
+              fontSize: 14,
+            }}
+          >
+            <Send size={16} />
+            <span>Send Mail to Subscribers</span>
+          </button>
+
           <button
             onClick={() => {
               setForm({
@@ -270,7 +492,7 @@ export default function AdminNewsletterPage() {
               });
               setIsAdding(true);
             }}
-            className="admin-btn admin-btn-primary"
+            className="admin-btn admin-btn-secondary"
             style={{ gap: 6 }}
           >
             <UserPlus size={16} />
@@ -294,7 +516,7 @@ export default function AdminNewsletterPage() {
               ) : (
                 <>
                   <Copy size={16} />
-                  <span>Copy Emails ({subscribers.length})</span>
+                  <span>Copy Emails</span>
                 </>
               )}
             </button>
@@ -310,16 +532,94 @@ export default function AdminNewsletterPage() {
             <span>Export CSV</span>
           </button>
 
-          <button onClick={fetchSubscribers} className="admin-btn admin-btn-secondary">
-            <RefreshCw size={16} />
+          <button onClick={fetchSubscribers} className="admin-btn admin-btn-secondary" title="Refresh">
+            <RefreshCw size={16} className={loading ? "spin-animation" : ""} />
             <span>Refresh</span>
           </button>
         </div>
       </div>
 
+      {/* SMTP Status Notification Banner */}
+      {smtpStatus.loaded && !smtpStatus.enabled && (
+        <div
+          style={{
+            backgroundColor: "#fffbeb",
+            border: "1px solid #fde68a",
+            borderRadius: 10,
+            padding: "14px 18px",
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AlertCircle size={22} style={{ color: "#d97706", flexShrink: 0 }} />
+            <div>
+              <div style={{ fontWeight: 600, color: "#92400e", fontSize: 14 }}>
+                SMTP Server is Currently Disabled
+              </div>
+              <div style={{ fontSize: 13, color: "#b45309", marginTop: 2 }}>
+                Emails cannot be delivered until SMTP credentials are enabled in Email &amp; SMTP settings.
+              </div>
+            </div>
+          </div>
+          <Link
+            href="/admin/email"
+            className="admin-btn admin-btn-sm"
+            style={{
+              backgroundColor: "#d97706",
+              color: "#ffffff",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <Settings size={14} /> Configure SMTP Now
+          </Link>
+        </div>
+      )}
+
+      {smtpStatus.loaded && smtpStatus.enabled && (
+        <div
+          style={{
+            backgroundColor: "#ecfdf5",
+            border: "1px solid #a7f3d0",
+            borderRadius: 8,
+            padding: "10px 16px",
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: 13,
+            color: "#065f46",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <CheckCircle2 size={16} style={{ color: "#059669" }} />
+            <span>
+              <strong>SMTP Connected:</strong> Ready to deliver emails via{" "}
+              <code style={{ background: "#d1fae5", padding: "1px 6px", borderRadius: 4 }}>
+                {smtpStatus.host}
+              </code>{" "}
+              as <strong>{smtpStatus.fromEmail || "Anjani Industries"}</strong>
+            </span>
+          </div>
+          <Link
+            href="/admin/email"
+            style={{ color: "#047857", textDecoration: "underline", fontSize: 12, fontWeight: 600 }}
+          >
+            Manage SMTP Settings
+          </Link>
+        </div>
+      )}
+
       {/* KPI Cards */}
       <div className="row g-3" style={{ marginBottom: 20 }}>
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="admin-card" style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
             <div
               style={{
@@ -346,7 +646,7 @@ export default function AdminNewsletterPage() {
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="admin-card" style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
             <div
               style={{
@@ -368,6 +668,33 @@ export default function AdminNewsletterPage() {
               </div>
               <div style={{ fontSize: 22, fontWeight: 700, color: "#0f172a" }}>
                 {uniqueCountries.length}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="admin-card" style={{ padding: 16, display: "flex", alignItems: "center", gap: 14 }}>
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 8,
+                backgroundColor: "#fee2e2",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--admin-primary)",
+              }}
+            >
+              <SendHorizontal size={22} />
+            </div>
+            <div>
+              <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, textTransform: "uppercase" }}>
+                Email Broadcast Ready
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: smtpStatus.enabled ? "#15803d" : "#b91c1c" }}>
+                {smtpStatus.enabled ? "Active & Configured" : "SMTP Disabled"}
               </div>
             </div>
           </div>
@@ -431,7 +758,8 @@ export default function AdminNewsletterPage() {
 
         {loading ? (
           <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>
-            Loading subscribers from MongoDB...
+            <RefreshCw size={24} className="spin-animation" style={{ color: "var(--admin-primary)", marginBottom: 8 }} />
+            <div>Loading subscribers from MongoDB...</div>
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>
@@ -537,6 +865,22 @@ export default function AdminNewsletterPage() {
                       </td>
                       <td style={{ textAlign: "right" }}>
                         <div style={{ display: "inline-flex", gap: 6 }}>
+                          {/* Direct Send Mail to this Subscriber */}
+                          <button
+                            onClick={() => openSendModal(sub)}
+                            className="admin-btn admin-btn-sm"
+                            style={{
+                              backgroundColor: "#ecfdf5",
+                              color: "#059669",
+                              border: "1px solid #a7f3d0",
+                              gap: 4,
+                            }}
+                            title={`Send direct email to ${sub.email}`}
+                          >
+                            <Send size={13} />
+                            <span>Mail</span>
+                          </button>
+
                           <button
                             onClick={() => openEditModal(sub)}
                             className="admin-btn admin-btn-primary admin-btn-sm"
@@ -546,6 +890,7 @@ export default function AdminNewsletterPage() {
                             <Edit size={13} />
                             <span>Edit</span>
                           </button>
+
                           <button
                             onClick={() => handleDelete(sub.id || sub._id)}
                             className="admin-btn admin-btn-danger admin-btn-sm"
@@ -564,11 +909,609 @@ export default function AdminNewsletterPage() {
         )}
       </div>
 
+      {/* =========================================================================
+          SEND NEWSLETTER EMAIL MODAL
+      ========================================================================= */}
+      {sendModalOpen && (
+        <div className="admin-modal-backdrop" onClick={() => !sendingEmail && setSendModalOpen(false)}>
+          <div
+            className="admin-modal"
+            style={{ maxWidth: 780, padding: 0, overflow: "hidden" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                padding: "16px 22px",
+                borderBottom: "1px solid #e2e8f0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                backgroundColor: "#f8fafc",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 8,
+                    backgroundColor: "#fee2e2",
+                    color: "var(--admin-primary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Send size={18} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#0f172a" }}>
+                    Send Newsletter / Broadcast Email
+                  </h3>
+                  <div style={{ fontSize: 12, color: "#64748b" }}>
+                    Compose and dispatch branded emails directly to subscribers
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                {/* Tabs */}
+                <div style={{ display: "flex", backgroundColor: "#e2e8f0", borderRadius: 6, padding: 2 }}>
+                  <button
+                    onClick={() => setModalTab("compose")}
+                    style={{
+                      border: "none",
+                      backgroundColor: modalTab === "compose" ? "#ffffff" : "transparent",
+                      color: modalTab === "compose" ? "#0f172a" : "#64748b",
+                      padding: "5px 12px",
+                      borderRadius: 5,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Compose
+                  </button>
+                  <button
+                    onClick={() => setModalTab("preview")}
+                    style={{
+                      border: "none",
+                      backgroundColor: modalTab === "preview" ? "#ffffff" : "transparent",
+                      color: modalTab === "preview" ? "#0f172a" : "#64748b",
+                      padding: "5px 12px",
+                      borderRadius: 5,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    <Eye size={13} />
+                    Live Preview
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => !sendingEmail && setSendModalOpen(false)}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: 4 }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Notification / Alert in Modal */}
+            {sendResult && (
+              <div
+                style={{
+                  padding: "12px 20px",
+                  backgroundColor: sendResult.type === "success" ? "#ecfdf5" : "#fef2f2",
+                  borderBottom: `1px solid ${sendResult.type === "success" ? "#a7f3d0" : "#fecaca"}`,
+                  color: sendResult.type === "success" ? "#065f46" : "#991b1b",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontSize: 13,
+                  fontWeight: 500,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {sendResult.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                  <span>{sendResult.message}</span>
+                </div>
+                <button
+                  onClick={() => setSendResult(null)}
+                  style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 2 }}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+
+            {/* Modal Body */}
+            <div style={{ padding: 22, maxHeight: "calc(88vh - 140px)", overflowY: "auto" }}>
+              {modalTab === "compose" ? (
+                <div>
+                  {/* Recipient Audience Selection */}
+                  <div style={{ marginBottom: 18 }}>
+                    <label className="admin-label" style={{ marginBottom: 8 }}>
+                      Recipient Audience:
+                    </label>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {singleRecipient ? (
+                        <div
+                          style={{
+                            padding: "8px 14px",
+                            backgroundColor: "#eff6ff",
+                            border: "1px solid #bfdbfe",
+                            borderRadius: 8,
+                            color: "#1d4ed8",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <Mail size={15} />
+                          <span>
+                            Selected Subscriber: <strong>{singleRecipient.email}</strong>{" "}
+                            {singleRecipient.firstName ? `(${singleRecipient.firstName})` : ""}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSingleRecipient(null);
+                              setSendRecipientMode("all");
+                            }}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "#1d4ed8",
+                              cursor: "pointer",
+                              padding: 0,
+                              marginLeft: 6,
+                            }}
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <label
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "8px 14px",
+                              borderRadius: 8,
+                              border: `1px solid ${sendRecipientMode === "all" ? "var(--admin-primary)" : "#cbd5e1"}`,
+                              backgroundColor: sendRecipientMode === "all" ? "#fef2f2" : "#ffffff",
+                              color: sendRecipientMode === "all" ? "var(--admin-primary)" : "#334155",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              cursor: "pointer",
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name="recipientMode"
+                              checked={sendRecipientMode === "all"}
+                              onChange={() => setSendRecipientMode("all")}
+                              style={{ display: "none" }}
+                            />
+                            <Users size={14} />
+                            All Subscribers ({subscribers.length})
+                          </label>
+
+                          {(countryFilter !== "ALL" || search) && (
+                            <label
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 6,
+                                padding: "8px 14px",
+                                borderRadius: 8,
+                                border: `1px solid ${sendRecipientMode === "filtered" ? "var(--admin-primary)" : "#cbd5e1"}`,
+                                backgroundColor: sendRecipientMode === "filtered" ? "#fef2f2" : "#ffffff",
+                                color: sendRecipientMode === "filtered" ? "var(--admin-primary)" : "#334155",
+                                fontSize: 13,
+                                fontWeight: 600,
+                                cursor: "pointer",
+                              }}
+                            >
+                              <input
+                                type="radio"
+                                name="recipientMode"
+                                checked={sendRecipientMode === "filtered"}
+                                onChange={() => setSendRecipientMode("filtered")}
+                                style={{ display: "none" }}
+                              />
+                              <Globe size={14} />
+                              Filtered View ({filtered.length})
+                            </label>
+                          )}
+
+                          <label
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "8px 14px",
+                              borderRadius: 8,
+                              border: `1px solid ${sendRecipientMode === "test" ? "var(--admin-primary)" : "#cbd5e1"}`,
+                              backgroundColor: sendRecipientMode === "test" ? "#fef2f2" : "#ffffff",
+                              color: sendRecipientMode === "test" ? "var(--admin-primary)" : "#334155",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              cursor: "pointer",
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name="recipientMode"
+                              checked={sendRecipientMode === "test"}
+                              onChange={() => setSendRecipientMode("test")}
+                              style={{ display: "none" }}
+                            />
+                            <Mail size={14} />
+                            Send Test Email Only
+                          </label>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Test email input */}
+                    {sendRecipientMode === "test" && (
+                      <div style={{ marginTop: 10 }}>
+                        <input
+                          type="email"
+                          className="admin-input"
+                          placeholder="Enter your personal or test email (e.g. you@example.com)"
+                          value={emailForm.testEmail}
+                          onChange={(e) => setEmailForm((prev) => ({ ...prev, testEmail: e.target.value }))}
+                          style={{ maxWidth: 420 }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pre-made Templates Dropdown / Buttons */}
+                  <div style={{ marginBottom: 18, backgroundColor: "#f8fafc", padding: "12px 14px", borderRadius: 8, border: "1px solid #e2e8f0" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#475569", marginBottom: 8 }}>
+                      <Sparkles size={14} style={{ color: "var(--admin-primary)" }} />
+                      <span>Quick Load Email Template:</span>
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {TEMPLATES.map((tpl, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => applyTemplate(tpl)}
+                          className="admin-btn admin-btn-sm admin-btn-secondary"
+                          style={{ fontSize: 12, backgroundColor: "#ffffff" }}
+                        >
+                          {tpl.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Email Subject Line */}
+                  <div style={{ marginBottom: 14 }}>
+                    <label className="admin-label">Subject Line *</label>
+                    <input
+                      type="text"
+                      required
+                      className="admin-input"
+                      placeholder="e.g. Discover Anjani Industries' Latest Dyeing Machine Innovations"
+                      value={emailForm.subject}
+                      onChange={(e) => setEmailForm((prev) => ({ ...prev, subject: e.target.value }))}
+                    />
+                  </div>
+
+                  {/* Email Banner Heading */}
+                  <div style={{ marginBottom: 14 }}>
+                    <label className="admin-label">Email Banner Heading (Inside Email)</label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      placeholder="e.g. Engineering the Future of Textile Processing"
+                      value={emailForm.heading}
+                      onChange={(e) => setEmailForm((prev) => ({ ...prev, heading: e.target.value }))}
+                    />
+                  </div>
+
+                  {/* Message Body */}
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                      <label className="admin-label" style={{ margin: 0 }}>
+                        Message Body *
+                      </label>
+                      <span style={{ fontSize: 11, color: "#64748b" }}>
+                        Variables: <code>{"{subscriberName}"}</code>, <code>{"{companyName}"}</code>, <code>{"{date}"}</code>
+                      </span>
+                    </div>
+                    <textarea
+                      required
+                      rows={6}
+                      className="admin-textarea"
+                      placeholder="Type your newsletter message here... Use blank lines to create paragraphs."
+                      value={emailForm.message}
+                      onChange={(e) => setEmailForm((prev) => ({ ...prev, message: e.target.value }))}
+                      style={{ fontFamily: "inherit", fontSize: 13.5, lineHeight: 1.6 }}
+                    />
+                  </div>
+
+                  {/* Call to Action Button */}
+                  <div className="row g-3" style={{ marginBottom: 10 }}>
+                    <div className="col-md-5">
+                      <label className="admin-label">CTA Button Label</label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="e.g. Explore Machinery Catalog"
+                        value={emailForm.ctaText}
+                        onChange={(e) => setEmailForm((prev) => ({ ...prev, ctaText: e.target.value }))}
+                      />
+                    </div>
+                    <div className="col-md-7">
+                      <label className="admin-label">CTA Target URL</label>
+                      <input
+                        type="url"
+                        className="admin-input"
+                        placeholder="https://www.anjaniindustries.in/products"
+                        value={emailForm.ctaUrl}
+                        onChange={(e) => setEmailForm((prev) => ({ ...prev, ctaUrl: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* LIVE EMAIL PREVIEW TAB */
+                <div>
+                  <div
+                    style={{
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 10,
+                      overflow: "hidden",
+                      backgroundColor: "#f1f5f9",
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+                    }}
+                  >
+                    {/* Fake Email Client Header */}
+                    <div style={{ backgroundColor: "#ffffff", padding: "12px 18px", borderBottom: "1px solid #e2e8f0" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginBottom: 4 }}>
+                        {emailForm.subject || "(No subject)"}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#64748b" }}>
+                        <strong>From:</strong> &quot;{smtpStatus.fromEmail ? "Anjani Industries" : "Anjani Industries"}&quot; &lt;{smtpStatus.fromEmail || "contact@anjaniindustries.in"}&gt;
+                      </div>
+                      <div style={{ fontSize: 12, color: "#64748b" }}>
+                        <strong>To:</strong>{" "}
+                        {sendRecipientMode === "single" && singleRecipient
+                          ? singleRecipient.email
+                          : sendRecipientMode === "test"
+                          ? emailForm.testEmail || "test@example.com"
+                          : `Newsletter Subscribers (${subscribers.length} recipients)`}
+                      </div>
+                    </div>
+
+                    {/* Email Content Canvas */}
+                    <div style={{ padding: "28px 16px", backgroundColor: "#f1f5f9" }}>
+                      <div
+                        style={{
+                          maxWidth: 580,
+                          margin: "0 auto",
+                          backgroundColor: "#ffffff",
+                          borderRadius: 10,
+                          overflow: "hidden",
+                          border: "1px solid #e2e8f0",
+                          boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+                        }}
+                      >
+                        {/* Branded Header with Logo */}
+                        <div
+                          style={{
+                            backgroundColor: "#0c0d14",
+                            borderTop: "4px solid #cb0000",
+                            padding: "20px 24px",
+                            textAlign: "center",
+                          }}
+                        >
+                          <div
+                            style={{
+                              backgroundColor: "#ffffff",
+                              borderRadius: 8,
+                              padding: "8px 18px",
+                              display: "inline-block",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+                            }}
+                          >
+                            <img
+                              src="/assets/img/logo.png"
+                              alt="Anjani Industries - The Dyeing Machine Company"
+                              style={{
+                                maxHeight: 40,
+                                height: 40,
+                                width: "auto",
+                                display: "block",
+                              }}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              color: "#94a3b8",
+                              fontSize: 11,
+                              marginTop: 8,
+                              letterSpacing: "0.8px",
+                              textTransform: "uppercase",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Fabric Dyeing &amp; Textile Processing Machinery
+                          </div>
+                        </div>
+
+                        {/* Body */}
+                        <div style={{ padding: "30px 26px" }}>
+                          <h2
+                            style={{
+                              margin: "0 0 16px 0",
+                              color: "#0f172a",
+                              fontSize: 19,
+                              fontWeight: 700,
+                            }}
+                          >
+                            {emailForm.heading || emailForm.subject}
+                          </h2>
+
+                          <div style={{ color: "#334155", fontSize: 14, lineHeight: 1.6 }}>
+                            {emailForm.message
+                              .replace(/\{subscriberName\}/g, singleRecipient?.firstName || "Valued Subscriber")
+                              .replace(/\{companyName\}/g, "Anjani Industries")
+                              .split("\n\n")
+                              .map((para, idx) => (
+                                <p key={idx} style={{ margin: "0 0 14px 0" }}>
+                                  {para}
+                                </p>
+                              ))}
+                          </div>
+
+                          {emailForm.ctaText && emailForm.ctaUrl && (
+                            <div style={{ textAlign: "center", margin: "26px 0 10px 0" }}>
+                              <a
+                                href={emailForm.ctaUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{
+                                  backgroundColor: "#cb0000",
+                                  color: "#ffffff",
+                                  padding: "11px 26px",
+                                  borderRadius: 6,
+                                  textDecoration: "none",
+                                  fontWeight: 600,
+                                  fontSize: 13.5,
+                                  display: "inline-block",
+                                }}
+                              >
+                                {emailForm.ctaText}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Footer */}
+                        <div
+                          style={{
+                            backgroundColor: "#f8fafc",
+                            borderTop: "1px solid #e2e8f0",
+                            padding: "18px 24px",
+                            textAlign: "center",
+                          }}
+                        >
+                          <p style={{ margin: "0 0 6px 0", color: "#64748b", fontSize: 11.5, lineHeight: 1.5 }}>
+                            Plot No. 983 &amp; 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in
+                          </p>
+                          <p style={{ margin: 0, color: "#94a3b8", fontSize: 11 }}>
+                            &copy; {new Date().getFullYear()} Anjani Industries. All rights reserved.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div
+              style={{
+                padding: "14px 22px",
+                borderTop: "1px solid #e2e8f0",
+                backgroundColor: "#f8fafc",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 10,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {modalTab === "compose" && (
+                  <button
+                    type="button"
+                    onClick={() => handleSendEmail(true)}
+                    disabled={sendingEmail}
+                    className="admin-btn admin-btn-secondary admin-btn-sm"
+                    title="Send a sample email to verify before broadcasting"
+                  >
+                    <Mail size={13} />
+                    <span>Send Test Email</span>
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <button
+                  type="button"
+                  onClick={() => setSendModalOpen(false)}
+                  disabled={sendingEmail}
+                  className="admin-btn admin-btn-secondary"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSendEmail(false)}
+                  disabled={sendingEmail}
+                  className="admin-btn admin-btn-primary"
+                  style={{ gap: 8 }}
+                >
+                  {sendingEmail ? (
+                    <>
+                      <RefreshCw size={15} className="spin-animation" />
+                      <span>Dispatching Newsletter...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={15} />
+                      <span>
+                        {sendRecipientMode === "single"
+                          ? `Send to ${singleRecipient?.email}`
+                          : sendRecipientMode === "test"
+                          ? "Send Test Mail"
+                          : sendRecipientMode === "filtered"
+                          ? `Broadcast to ${filtered.length} Filtered`
+                          : `Broadcast to All (${subscribers.length})`}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Edit Subscriber Modal */}
       {editingSub && (
         <div className="admin-modal-backdrop" onClick={() => setEditingSub(null)}>
           <div className="admin-modal" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid #e2e8f0", paddingBottom: 12 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 18,
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: 12,
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Edit size={18} style={{ color: "var(--admin-primary)" }} />
                 <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
@@ -584,7 +1527,15 @@ export default function AdminNewsletterPage() {
             </div>
 
             <form onSubmit={handleSaveEdit}>
-              <div style={{ backgroundColor: "#f8fafc", padding: "10px 14px", borderRadius: 6, marginBottom: 16, border: "1px solid #e2e8f0" }}>
+              <div
+                style={{
+                  backgroundColor: "#f8fafc",
+                  padding: "10px 14px",
+                  borderRadius: 6,
+                  marginBottom: 16,
+                  border: "1px solid #e2e8f0",
+                }}
+              >
                 <div style={{ fontSize: 12, color: "#475569" }}>
                   ✨ <strong>Admin Exclusive Fields:</strong> Update the subscriber’s First Name, Last Name, and Country below.
                 </div>
@@ -675,7 +1626,15 @@ export default function AdminNewsletterPage() {
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, borderTop: "1px solid #e2e8f0", paddingTop: 14 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 10,
+                  borderTop: "1px solid #e2e8f0",
+                  paddingTop: 14,
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => setEditingSub(null)}
@@ -702,7 +1661,16 @@ export default function AdminNewsletterPage() {
       {isAdding && (
         <div className="admin-modal-backdrop" onClick={() => setIsAdding(false)}>
           <div className="admin-modal" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, borderBottom: "1px solid #e2e8f0", paddingBottom: 12 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 18,
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: 12,
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <UserPlus size={18} style={{ color: "var(--admin-primary)" }} />
                 <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" }}>
@@ -788,7 +1756,15 @@ export default function AdminNewsletterPage() {
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, borderTop: "1px solid #e2e8f0", paddingTop: 14 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 10,
+                  borderTop: "1px solid #e2e8f0",
+                  paddingTop: 14,
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => setIsAdding(false)}

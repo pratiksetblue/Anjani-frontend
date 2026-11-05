@@ -1023,21 +1023,32 @@ export default function AdminEmailSettingsPage() {
                   >
                     <div
                       style={{
-                        color: "#ffffff",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        letterSpacing: 1,
+                        backgroundColor: "#ffffff",
+                        borderRadius: 8,
+                        padding: "8px 18px",
+                        display: "inline-block",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
                       }}
                     >
-                      <span style={{ color: "#cb0000" }}>ANJANI</span>{" "}
-                      INDUSTRIES
+                      <img
+                        src="/assets/img/logo.png"
+                        alt="Anjani Industries - The Dyeing Machine Company"
+                        style={{
+                          maxHeight: 40,
+                          height: 40,
+                          width: "auto",
+                          display: "block",
+                        }}
+                      />
                     </div>
                     <div
                       style={{
                         color: "#94a3b8",
                         fontSize: 11,
-                        marginTop: 4,
+                        marginTop: 8,
+                        letterSpacing: "0.8px",
                         textTransform: "uppercase",
+                        fontWeight: 600,
                       }}
                     >
                       Fabric Dyeing &amp; Textile Processing Machinery
@@ -1315,16 +1326,33 @@ export default function AdminEmailSettingsPage() {
                   >
                     <div
                       style={{
-                        color: "#ffffff",
-                        fontSize: 18,
-                        fontWeight: 700,
+                        backgroundColor: "#ffffff",
+                        borderRadius: 8,
+                        padding: "8px 18px",
+                        display: "inline-block",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
                       }}
                     >
-                      <span style={{ color: "#cb0000" }}>ANJANI</span>{" "}
-                      INDUSTRIES
+                      <img
+                        src="/assets/img/logo.png"
+                        alt="Anjani Industries - The Dyeing Machine Company"
+                        style={{
+                          maxHeight: 40,
+                          height: 40,
+                          width: "auto",
+                          display: "block",
+                        }}
+                      />
                     </div>
                     <div
-                      style={{ color: "#94a3b8", fontSize: 11, marginTop: 4 }}
+                      style={{
+                        color: "#94a3b8",
+                        fontSize: 11,
+                        marginTop: 8,
+                        letterSpacing: "0.8px",
+                        textTransform: "uppercase",
+                        fontWeight: 600,
+                      }}
                     >
                       NEW SALES INQUIRY CAPTURED
                     </div>
@@ -1711,21 +1739,32 @@ export default function AdminEmailSettingsPage() {
                   >
                     <div
                       style={{
-                        color: "#ffffff",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        letterSpacing: 1,
+                        backgroundColor: "#ffffff",
+                        borderRadius: 8,
+                        padding: "8px 18px",
+                        display: "inline-block",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
                       }}
                     >
-                      <span style={{ color: "#cb0000" }}>ANJANI</span>{" "}
-                      INDUSTRIES
+                      <img
+                        src="/assets/img/logo.png"
+                        alt="Anjani Industries - The Dyeing Machine Company"
+                        style={{
+                          maxHeight: 40,
+                          height: 40,
+                          width: "auto",
+                          display: "block",
+                        }}
+                      />
                     </div>
                     <div
                       style={{
                         color: "#94a3b8",
                         fontSize: 11,
-                        marginTop: 4,
+                        marginTop: 8,
+                        letterSpacing: "0.8px",
                         textTransform: "uppercase",
+                        fontWeight: 600,
                       }}
                     >
                       Official Newsletter Subscription Confirmed

@@ -23,6 +23,7 @@ import {
   CheckSquare,
   Square,
 } from "lucide-react";
+import ExhibitorEmailPreview from "@/components/admin/ExhibitorEmailPreview";
 
 export default function AdminExhibitorsPage() {
   const [exhibitors, setExhibitors] = useState([]);
@@ -64,11 +65,19 @@ export default function AdminExhibitorsPage() {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [modalTab, setModalTab] = useState("compose"); // 'compose' | 'preview'
   const [emailForm, setEmailForm] = useState({
-    subject: "Official Communication from Anjani Industries",
+    subject: "Official Communication & Textile Machinery Solutions from Anjani Industries",
     heading: "",
-    body: "Dear {fullName},\n\nThank you for connecting with {companyName}. We are pleased to reach out regarding our advanced textile dyeing and processing machinery solutions.\n\nShould you need any technical documentation, capacity specifications, or machinery quotation, our engineering team is here to assist you.",
-    ctaText: "Explore Machinery Catalog",
-    ctaUrl: "https://www.anjaniindustries.in/products",
+    body: "Dear {fullName},\n\nWe are pleased to connect with you regarding our advanced textile dyeing and processing machinery solutions. Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.\n\nShould you need any technical documentation, capacity specifications, or customized machinery quotation, our engineering team is here to assist you.",
+    ctaText: "REQUEST A QUOTE",
+    ctaUrl: "https://www.anjaniindustries.in/contact-us",
+    stat1Value: "36+",
+    stat1Label: "Years of Industry Excellence",
+    stat2Value: "45K",
+    stat2Label: "Sq Ft Production Facility",
+    stat3Value: "270",
+    stat3Label: "Pcs Annual Production Capacity",
+    showStats: true,
+    showProducts: true,
   });
 
   // Fetch exhibitors from API
@@ -106,26 +115,36 @@ export default function AdminExhibitorsPage() {
     fetchExhibitors(pagination.page, pagination.limit, search);
   }, [fetchExhibitors, pagination.page, pagination.limit, search]);
 
-  // Load branding info from email settings
+  // Load exhibitor email template and branding info from email settings
   useEffect(() => {
-    async function loadBranding() {
+    async function loadTemplateSettings() {
       try {
         const res = await fetch("/api/email-settings");
         if (res.ok) {
           const data = await res.json();
-          if (data?.branding?.companyName) {
-            setEmailForm((prev) => ({
-              ...prev,
-              subject: `Official Communication from ${data.branding.companyName}`,
-              ctaUrl: data.branding.websiteUrl || prev.ctaUrl,
-            }));
-          }
+          const ext = data?.exhibitorTemplate || {};
+          setEmailForm((prev) => ({
+            ...prev,
+            subject: ext.subject || prev.subject,
+            heading: ext.heading !== undefined ? ext.heading : prev.heading,
+            body: ext.body || prev.body,
+            ctaText: ext.ctaText || prev.ctaText,
+            ctaUrl: ext.ctaUrl || prev.ctaUrl,
+            stat1Value: ext.stat1Value || prev.stat1Value,
+            stat1Label: ext.stat1Label || prev.stat1Label,
+            stat2Value: ext.stat2Value || prev.stat2Value,
+            stat2Label: ext.stat2Label || prev.stat2Label,
+            stat3Value: ext.stat3Value || prev.stat3Value,
+            stat3Label: ext.stat3Label || prev.stat3Label,
+            showStats: ext.showStats !== undefined ? ext.showStats : prev.showStats,
+            showProducts: ext.showProducts !== undefined ? ext.showProducts : prev.showProducts,
+          }));
         }
       } catch (e) {
         console.warn("Could not load email settings", e);
       }
     }
-    loadBranding();
+    loadTemplateSettings();
   }, []);
 
   // Handle live search submission
@@ -1220,132 +1239,27 @@ export default function AdminExhibitorsPage() {
                   /* Live Preview Tab */
                   <div
                     style={{
-                      backgroundColor: "#f1f5f9",
-                      padding: "20px 14px",
-                      borderRadius: 10,
-                      display: "flex",
-                      justifyContent: "center",
+                      maxHeight: 640,
+                      overflowY: "auto",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 8,
                     }}
                   >
-                    <div
-                      style={{
-                        maxWidth: 540,
-                        width: "100%",
-                        backgroundColor: "#ffffff",
-                        borderRadius: 8,
-                        overflow: "hidden",
-                        border: "1px solid #e2e8f0",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                      }}
-                    >
-                      {/* Header */}
-                      <div
-                        style={{
-                          backgroundColor: "#0c0d14",
-                          borderTop: "4px solid #cb0000",
-                          padding: "18px 20px",
-                          textAlign: "center",
-                        }}
-                      >
-                        <div
-                          style={{
-                            backgroundColor: "#ffffff",
-                            borderRadius: 6,
-                            padding: "6px 16px",
-                            display: "inline-block",
-                          }}
-                        >
-                          <img
-                            src="/assets/img/logo.png"
-                            alt="Anjani Industries"
-                            style={{ maxHeight: 36, height: 36, width: "auto", display: "block" }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            color: "#94a3b8",
-                            fontSize: 11,
-                            marginTop: 8,
-                            letterSpacing: "0.8px",
-                            textTransform: "uppercase",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Fabric Dyeing &amp; Textile Processing Machinery
-                        </div>
-                      </div>
-
-                      {/* Body */}
-                      <div style={{ padding: "24px 20px" }}>
-                        {emailForm.heading && emailForm.heading.trim() ? (
-                          <h3
-                            style={{
-                              margin: "0 0 14px 0",
-                              fontSize: 17,
-                              fontWeight: 700,
-                              color: "#0f172a",
-                            }}
-                          >
-                            {emailForm.heading
-                              .replace(/\{fullName\}/g, singleRecipient ? `${singleRecipient.firstName} ${singleRecipient.lastName}` : "Rahul Patel")
-                              .replace(/\{firstName\}/g, singleRecipient ? singleRecipient.firstName : "Rahul")
-                              .replace(/\{lastName\}/g, singleRecipient ? singleRecipient.lastName : "Patel")
-                              .replace(/\{companyName\}/g, singleRecipient?.companyName || "TexFab Industries")
-                              .replace(/\{country\}/g, singleRecipient?.country || "India")}
-                          </h3>
-                        ) : null}
-
-                        <div
-                          style={{
-                            fontSize: 13,
-                            color: "#334155",
-                            lineHeight: 1.6,
-                            whiteSpace: "pre-line",
-                          }}
-                        >
-                          {(emailForm.body || "")
-                            .replace(/\{fullName\}/g, singleRecipient ? `${singleRecipient.firstName} ${singleRecipient.lastName}` : "Rahul Patel")
-                            .replace(/\{firstName\}/g, singleRecipient ? singleRecipient.firstName : "Rahul")
-                            .replace(/\{lastName\}/g, singleRecipient ? singleRecipient.lastName : "Patel")
-                            .replace(/\{companyName\}/g, singleRecipient?.companyName || "TexFab Industries")
-                            .replace(/\{country\}/g, singleRecipient?.country || "India")
-                            .replace(/\{email\}/g, singleRecipient ? singleRecipient.email : "rahul.patel@textilemills.in")
-                            .replace(/\{phone\}/g, singleRecipient ? singleRecipient.phone : "+91 98251 23456")}
-                        </div>
-
-                        {emailForm.ctaText && (
-                          <div style={{ textAlign: "center", marginTop: 22 }}>
-                            <span
-                              style={{
-                                backgroundColor: "#cb0000",
-                                color: "#ffffff",
-                                padding: "10px 22px",
-                                borderRadius: 6,
-                                fontSize: 13,
-                                fontWeight: 600,
-                                display: "inline-block",
-                              }}
-                            >
-                              {emailForm.ctaText}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Footer */}
-                      <div
-                        style={{
-                          backgroundColor: "#f8fafc",
-                          borderTop: "1px solid #e2e8f0",
-                          padding: "14px 18px",
-                          textAlign: "center",
-                          fontSize: 11,
-                          color: "#64748b",
-                        }}
-                      >
-                        Plot No. 983 &amp; 984, Road No. 58, GIDC Sachin, Surat - 394 230 | Phone: +91 8154 888 370
-                      </div>
-                    </div>
+                    <ExhibitorEmailPreview
+                      heading={emailForm.heading}
+                      body={emailForm.body}
+                      ctaText={emailForm.ctaText}
+                      ctaUrl={emailForm.ctaUrl}
+                      recipient={singleRecipient}
+                      stat1Value={emailForm.stat1Value}
+                      stat1Label={emailForm.stat1Label}
+                      stat2Value={emailForm.stat2Value}
+                      stat2Label={emailForm.stat2Label}
+                      stat3Value={emailForm.stat3Value}
+                      stat3Label={emailForm.stat3Label}
+                      showStats={emailForm.showStats}
+                      showProducts={emailForm.showProducts}
+                    />
                   </div>
                 )}
               </div>

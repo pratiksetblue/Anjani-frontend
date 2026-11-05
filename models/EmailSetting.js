@@ -94,6 +94,38 @@ const EmailSettingSchema = new mongoose.Schema(
           "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
       },
     },
+    exhibitorTemplate: {
+      enabled: { type: Boolean, default: true },
+      subject: {
+        type: String,
+        default: "Official Communication & Textile Machinery Solutions from Anjani Industries",
+      },
+      heading: {
+        type: String,
+        default: "",
+      },
+      body: {
+        type: String,
+        default:
+          "Dear {fullName},\n\nWe are pleased to connect with you regarding our advanced textile dyeing and processing machinery solutions. Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.\n\nShould you need any technical documentation, capacity specifications, or customized machinery quotation, our engineering team is here to assist you.",
+      },
+      ctaText: {
+        type: String,
+        default: "REQUEST A QUOTE",
+      },
+      ctaUrl: {
+        type: String,
+        default: "https://www.anjaniindustries.in/contact-us",
+      },
+      stat1Value: { type: String, default: "36+" },
+      stat1Label: { type: String, default: "Years of Industry Excellence" },
+      stat2Value: { type: String, default: "45K" },
+      stat2Label: { type: String, default: "Sq Ft Production Facility" },
+      stat3Value: { type: String, default: "270" },
+      stat3Label: { type: String, default: "Pcs Annual Production Capacity" },
+      showStats: { type: Boolean, default: true },
+      showProducts: { type: Boolean, default: true },
+    },
     branding: {
       logoUrl: { type: String, default: "/assets/img/logo.png" },
       companyName: { type: String, default: "Anjani Industries" },

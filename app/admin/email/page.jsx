@@ -14,7 +14,9 @@ import {
   EyeOff,
   RefreshCw,
   Palette,
+  Users,
 } from "lucide-react";
+import ExhibitorEmailPreview from "@/components/admin/ExhibitorEmailPreview";
 
 export default function AdminEmailSettingsPage() {
   const [activeTab, setActiveTab] = useState("smtp");
@@ -83,6 +85,22 @@ export default function AdminEmailSettingsPage() {
       footerNote:
         "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
     },
+    exhibitorTemplate: {
+      enabled: true,
+      subject: "Official Communication & Textile Machinery Solutions from Anjani Industries",
+      heading: "",
+      body: "Dear {fullName},\n\nWe are pleased to connect with you regarding our advanced textile dyeing and processing machinery solutions. Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.\n\nShould you need any technical documentation, capacity specifications, or customized machinery quotation, our engineering team is here to assist you.",
+      ctaText: "REQUEST A QUOTE",
+      ctaUrl: "https://www.anjaniindustries.in/contact-us",
+      stat1Value: "36+",
+      stat1Label: "Years of Industry Excellence",
+      stat2Value: "45K",
+      stat2Label: "Sq Ft Production Facility",
+      stat3Value: "270",
+      stat3Label: "Pcs Annual Production Capacity",
+      showStats: true,
+      showProducts: true,
+    },
   });
 
   useEffect(() => {
@@ -106,6 +124,10 @@ export default function AdminEmailSettingsPage() {
               newsletterTemplate: {
                 ...prev.newsletterTemplate,
                 ...(data.newsletterTemplate || {}),
+              },
+              exhibitorTemplate: {
+                ...prev.exhibitorTemplate,
+                ...(data.exhibitorTemplate || {}),
               },
             }));
             if (data.smtp?.adminNotificationEmail) {
@@ -260,6 +282,7 @@ export default function AdminEmailSettingsPage() {
     { id: "userTemplate", label: "Customer Confirmation", icon: UserCheck },
     { id: "adminTemplate", label: "Admin Lead Notification", icon: Bell },
     { id: "newsletterTemplate", label: "Newsletter Welcome", icon: Mail },
+    { id: "exhibitorTemplate", label: "Exhibitor Template", icon: Users },
   ];
 
   const brandLogo = settings.branding?.logoUrl || "/assets/img/logo.png";
@@ -2194,6 +2217,517 @@ export default function AdminEmailSettingsPage() {
                     {settings.newsletterTemplate?.footerNote}
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 6: EXHIBITOR CATALOG EMAIL TEMPLATE
+           ========================================================================= */}
+        {activeTab === "exhibitorTemplate" && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(420px, 1fr))",
+              gap: 24,
+            }}
+          >
+            {/* Left Column: Form Controls */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {/* Enable/Disable Card */}
+              <div className="admin-card">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>
+                    <h3
+                      style={{
+                        margin: "0 0 4px 0",
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: "#0f172a",
+                      }}
+                    >
+                      Enable Exhibitor Catalog Email Template
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
+                      When enabled, emails sent to exhibitors use the rich 12-machinery product catalog emailer design.
+                    </p>
+                  </div>
+                  <label
+                    style={{
+                      position: "relative",
+                      display: "inline-block",
+                      width: 48,
+                      height: 26,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={Boolean(settings.exhibitorTemplate?.enabled)}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          exhibitorTemplate: {
+                            ...settings.exhibitorTemplate,
+                            enabled: e.target.checked,
+                          },
+                        })
+                      }
+                      style={{ opacity: 0, width: 0, height: 0 }}
+                    />
+                    <span
+                      style={{
+                        position: "absolute",
+                        cursor: "pointer",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: settings.exhibitorTemplate?.enabled
+                          ? "var(--admin-primary)"
+                          : "#cbd5e1",
+                        transition: "0.2s",
+                        borderRadius: 26,
+                      }}
+                    >
+                      <span
+                        style={{
+                          position: "absolute",
+                          content: '""',
+                          height: 20,
+                          width: 20,
+                          left: settings.exhibitorTemplate?.enabled ? 25 : 3,
+                          bottom: 3,
+                          backgroundColor: "white",
+                          transition: "0.2s",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Main Content Form Card */}
+              <div className="admin-card">
+                <h3
+                  style={{
+                    margin: "0 0 16px 0",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: "#0f172a",
+                  }}
+                >
+                  Exhibitor Email Content
+                </h3>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Email Subject Line</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settings.exhibitorTemplate?.subject || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        exhibitorTemplate: {
+                          ...settings.exhibitorTemplate,
+                          subject: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="admin-form-group" style={{ marginTop: 12 }}>
+                  <label className="admin-label">
+                    Email Heading Banner{" "}
+                    <span style={{ fontSize: 11, fontWeight: "normal", color: "#64748b" }}>
+                      (Optional - leave blank if you do not want a banner heading)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Welcome to Anjani Industries (or leave blank)"
+                    value={settings.exhibitorTemplate?.heading || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        exhibitorTemplate: {
+                          ...settings.exhibitorTemplate,
+                          heading: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Variable Chips */}
+                <div style={{ margin: "14px 0" }}>
+                  <label className="admin-label" style={{ marginBottom: 6 }}>
+                    Insert Recipient Variables
+                  </label>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {[
+                      "fullName",
+                      "firstName",
+                      "lastName",
+                      "companyName",
+                      "country",
+                      "email",
+                      "phone",
+                      "companyPhone",
+                      "date",
+                    ].map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => insertVariable("exhibitorTemplate", v)}
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: 4,
+                          border: "1px solid #cbd5e1",
+                          backgroundColor: "#f8fafc",
+                          fontSize: 12,
+                          cursor: "pointer",
+                          color: "var(--admin-primary)",
+                          fontWeight: 600,
+                        }}
+                      >
+                        +{`{${v}}`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Message Body</label>
+                  <textarea
+                    rows={8}
+                    className="admin-textarea"
+                    value={settings.exhibitorTemplate?.body || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        exhibitorTemplate: {
+                          ...settings.exhibitorTemplate,
+                          body: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                  <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                    Use double line breaks to separate paragraphs.
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                    gap: 16,
+                    marginTop: 12,
+                  }}
+                >
+                  <div className="admin-form-group">
+                    <label className="admin-label">CTA Button Text</label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      placeholder="REQUEST A QUOTE"
+                      value={settings.exhibitorTemplate?.ctaText || ""}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          exhibitorTemplate: {
+                            ...settings.exhibitorTemplate,
+                            ctaText: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label className="admin-label">CTA Button Link URL</label>
+                    <input
+                      type="url"
+                      className="admin-input"
+                      placeholder="https://www.anjaniindustries.in/contact-us"
+                      value={settings.exhibitorTemplate?.ctaUrl || ""}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          exhibitorTemplate: {
+                            ...settings.exhibitorTemplate,
+                            ctaUrl: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics Showcase Configuration */}
+              <div className="admin-card">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 14,
+                  }}
+                >
+                  <div>
+                    <h3
+                      style={{
+                        margin: "0 0 4px 0",
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: "#0f172a",
+                      }}
+                    >
+                      3-Card Statistics Section
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
+                      Highlight your manufacturing capacity, facility size, and years of experience.
+                    </p>
+                  </div>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.exhibitorTemplate?.showStats !== false}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          exhibitorTemplate: {
+                            ...settings.exhibitorTemplate,
+                            showStats: e.target.checked,
+                          },
+                        })
+                      }
+                    />
+                    <span>Show Stats</span>
+                  </label>
+                </div>
+
+                {settings.exhibitorTemplate?.showStats !== false && (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12 }}>
+                    <div style={{ padding: 10, background: "#f8fafc", borderRadius: 6, border: "1px solid #e2e8f0" }}>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", display: "block", marginBottom: 4 }}>
+                        Stat 1 Value & Label
+                      </label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="36+"
+                        style={{ marginBottom: 6, padding: "6px 8px", fontSize: 13 }}
+                        value={settings.exhibitorTemplate?.stat1Value || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat1Value: e.target.value },
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="Years of Industry Excellence"
+                        style={{ padding: "6px 8px", fontSize: 12 }}
+                        value={settings.exhibitorTemplate?.stat1Label || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat1Label: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div style={{ padding: 10, background: "#f8fafc", borderRadius: 6, border: "1px solid #e2e8f0" }}>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", display: "block", marginBottom: 4 }}>
+                        Stat 2 Value & Label
+                      </label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="45K"
+                        style={{ marginBottom: 6, padding: "6px 8px", fontSize: 13 }}
+                        value={settings.exhibitorTemplate?.stat2Value || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat2Value: e.target.value },
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="Sq Ft Production Facility"
+                        style={{ padding: "6px 8px", fontSize: 12 }}
+                        value={settings.exhibitorTemplate?.stat2Label || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat2Label: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div style={{ padding: 10, background: "#f8fafc", borderRadius: 6, border: "1px solid #e2e8f0" }}>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", display: "block", marginBottom: 4 }}>
+                        Stat 3 Value & Label
+                      </label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="270"
+                        style={{ marginBottom: 6, padding: "6px 8px", fontSize: 13 }}
+                        value={settings.exhibitorTemplate?.stat3Value || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat3Value: e.target.value },
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        className="admin-input"
+                        placeholder="Pcs Annual Production Capacity"
+                        style={{ padding: "6px 8px", fontSize: 12 }}
+                        value={settings.exhibitorTemplate?.stat3Label || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            exhibitorTemplate: { ...settings.exhibitorTemplate, stat3Label: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Machinery Products Showcase Toggle */}
+              <div className="admin-card">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>
+                    <h3
+                      style={{
+                        margin: "0 0 4px 0",
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: "#0f172a",
+                      }}
+                    >
+                      12 Featured Machinery Products Grid
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
+                      Show the 12 dyeing and recovery machines from the official catalog template with direct links.
+                    </p>
+                  </div>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={settings.exhibitorTemplate?.showProducts !== false}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          exhibitorTemplate: {
+                            ...settings.exhibitorTemplate,
+                            showProducts: e.target.checked,
+                          },
+                        })
+                      }
+                    />
+                    <span>Show Products</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Live Interactive Email Preview Card */}
+            <div className="admin-card" style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  marginBottom: 14,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Eye size={18} style={{ color: "var(--admin-primary)" }} />
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: "#0f172a",
+                    }}
+                  >
+                    Live Email Preview (600px Responsive Catalog)
+                  </h3>
+                </div>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    padding: "3px 8px",
+                    borderRadius: 4,
+                    backgroundColor: "#e0f2fe",
+                    color: "#0284c7",
+                  }}
+                >
+                  HTML Template
+                </span>
+              </div>
+
+              {/* Live Preview Container */}
+              <div
+                style={{
+                  flex: 1,
+                  maxHeight: 860,
+                  overflowY: "auto",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 8,
+                }}
+              >
+                <ExhibitorEmailPreview
+                  heading={settings.exhibitorTemplate?.heading || ""}
+                  body={settings.exhibitorTemplate?.body || ""}
+                  ctaText={settings.exhibitorTemplate?.ctaText || "REQUEST A QUOTE"}
+                  ctaUrl={settings.exhibitorTemplate?.ctaUrl || "https://www.anjaniindustries.in/contact-us"}
+                  stat1Value={settings.exhibitorTemplate?.stat1Value || "36+"}
+                  stat1Label={settings.exhibitorTemplate?.stat1Label || "Years of Industry Excellence"}
+                  stat2Value={settings.exhibitorTemplate?.stat2Value || "45K"}
+                  stat2Label={settings.exhibitorTemplate?.stat2Label || "Sq Ft Production Facility"}
+                  stat3Value={settings.exhibitorTemplate?.stat3Value || "270"}
+                  stat3Label={settings.exhibitorTemplate?.stat3Label || "Pcs Annual Production Capacity"}
+                  showStats={settings.exhibitorTemplate?.showStats !== false}
+                  showProducts={settings.exhibitorTemplate?.showProducts !== false}
+                />
               </div>
             </div>
           </div>

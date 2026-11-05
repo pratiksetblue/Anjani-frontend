@@ -25,34 +25,17 @@ import {
   SendHorizontal,
   Settings,
 } from "lucide-react";
+import ExhibitorEmailPreview from "@/components/admin/ExhibitorEmailPreview";
 
 const TEMPLATES = [
   {
-    name: "🚀 Product Launch & Innovation",
-    subject: "Discover Anjani Industries' Latest Textile Dyeing Innovations",
-    heading: "Engineering the Future of Textile Processing",
+    name: "🌟 Exhibitor Machinery Catalog Template",
+    subject: "Official Communication & Textile Machinery Solutions from Anjani Industries",
+    heading: "",
     message:
-      "Dear {subscriberName},\n\nWe are pleased to introduce our newest generation of eco-efficient, low-liquor ratio textile dyeing machinery. Engineered to maximize color consistency and fabric quality while cutting water and thermal power consumption by up to 35%.\n\nOur specialized machinery handles everything from delicate knits to heavy woven fabrics. Explore the updated technical specifications and catalog below.",
-    ctaText: "Explore Machinery Catalog",
-    ctaUrl: "https://www.anjaniindustries.in/products",
-  },
-  {
-    name: "🎪 Exhibition / Trade Expo Invitation",
-    subject: "Invitation: Meet Anjani Industries at Upcoming Textile Expo",
-    heading: "Join Us at the Textile Machinery Exhibition",
-    message:
-      "Dear {subscriberName},\n\nWe cordially invite you to visit the Anjani Industries pavilion at the upcoming textile processing exhibition. Experience live demonstrations of our PLC-based soft flow and rapid jet dyeing machines, and consult directly with our senior mechanical engineers for customized plant requirements.",
-    ctaText: "Schedule a Stall Meeting",
+      "Dear {subscriberName},\n\nWe are pleased to connect with you regarding our advanced textile dyeing and processing machinery solutions. Anjani Industries is one of India's leading manufacturers of textile dyeing and processing machinery, backed by over 36 years of engineering excellence.\n\nShould you need any technical documentation, capacity specifications, or customized machinery quotation, our engineering team is here to assist you.",
+    ctaText: "REQUEST A QUOTE",
     ctaUrl: "https://www.anjaniindustries.in/contact-us",
-  },
-  {
-    name: "🌟 Company Milestone & Greeting",
-    subject: "Warm Greetings from Anjani Industries",
-    heading: "Celebrating Innovation & Partnership with You",
-    message:
-      "Dear {subscriberName},\n\nAs we celebrate over three decades of manufacturing excellence in Surat, Gujarat, we want to thank you for being a part of our journey.\n\nWe remain committed to supporting your business with dependable machinery, genuine spare parts, and prompt technical support.",
-    ctaText: "Visit Our Website",
-    ctaUrl: "https://www.anjaniindustries.in",
   },
 ];
 
@@ -148,6 +131,29 @@ export default function AdminNewsletterPage() {
   useEffect(() => {
     fetchSubscribers();
     fetchSmtpStatus();
+
+    async function loadExhibitorTemplateDefaults() {
+      try {
+        const res = await fetch("/api/email-settings");
+        if (res.ok) {
+          const data = await res.json();
+          const ext = data?.exhibitorTemplate;
+          if (ext) {
+            setEmailForm((prev) => ({
+              ...prev,
+              subject: ext.subject || prev.subject,
+              heading: ext.heading !== undefined ? ext.heading : prev.heading,
+              message: ext.body || prev.message,
+              ctaText: ext.ctaText || prev.ctaText,
+              ctaUrl: ext.ctaUrl || prev.ctaUrl,
+            }));
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load exhibitor template defaults", err);
+      }
+    }
+    loadExhibitorTemplateDefaults();
   }, []);
 
   const handleDelete = async (id) => {
@@ -1302,129 +1308,24 @@ export default function AdminNewsletterPage() {
                       </div>
                     </div>
 
-                    {/* Email Content Canvas */}
-                    <div style={{ padding: "28px 16px", backgroundColor: "#f1f5f9" }}>
-                      <div
-                        style={{
-                          maxWidth: 580,
-                          margin: "0 auto",
-                          backgroundColor: "#ffffff",
-                          borderRadius: 10,
-                          overflow: "hidden",
-                          border: "1px solid #e2e8f0",
-                          boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-                        }}
-                      >
-                        {/* Branded Header with Logo */}
-                        <div
-                          style={{
-                            backgroundColor: "#0c0d14",
-                            borderTop: "4px solid #cb0000",
-                            padding: "20px 24px",
-                            textAlign: "center",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundColor: "#ffffff",
-                              borderRadius: 8,
-                              padding: "8px 18px",
-                              display: "inline-block",
-                              boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-                            }}
-                          >
-                            <img
-                              src="/assets/img/logo.png"
-                              alt="Anjani Industries - The Dyeing Machine Company"
-                              style={{
-                                maxHeight: 40,
-                                height: 40,
-                                width: "auto",
-                                display: "block",
-                              }}
-                            />
-                          </div>
-                          <div
-                            style={{
-                              color: "#94a3b8",
-                              fontSize: 11,
-                              marginTop: 8,
-                              letterSpacing: "0.8px",
-                              textTransform: "uppercase",
-                              fontWeight: 600,
-                            }}
-                          >
-                            Fabric Dyeing &amp; Textile Processing Machinery
-                          </div>
-                        </div>
-
-                        {/* Body */}
-                        <div style={{ padding: "30px 26px" }}>
-                          {emailForm.heading && emailForm.heading.trim() ? (
-                            <h2
-                              style={{
-                                margin: "0 0 16px 0",
-                                color: "#0f172a",
-                                fontSize: 19,
-                                fontWeight: 700,
-                              }}
-                            >
-                              {emailForm.heading.trim()}
-                            </h2>
-                          ) : null}
-
-                          <div style={{ color: "#334155", fontSize: 14, lineHeight: 1.6 }}>
-                            {emailForm.message
-                              .replace(/\{subscriberName\}/g, singleRecipient?.firstName || "Valued Subscriber")
-                              .replace(/\{companyName\}/g, "Anjani Industries")
-                              .split("\n\n")
-                              .map((para, idx) => (
-                                <p key={idx} style={{ margin: "0 0 14px 0" }}>
-                                  {para}
-                                </p>
-                              ))}
-                          </div>
-
-                          {emailForm.ctaText && emailForm.ctaUrl && (
-                            <div style={{ textAlign: "center", margin: "26px 0 10px 0" }}>
-                              <a
-                                href={emailForm.ctaUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                style={{
-                                  backgroundColor: "#cb0000",
-                                  color: "#ffffff",
-                                  padding: "11px 26px",
-                                  borderRadius: 6,
-                                  textDecoration: "none",
-                                  fontWeight: 600,
-                                  fontSize: 13.5,
-                                  display: "inline-block",
-                                }}
-                              >
-                                {emailForm.ctaText}
-                              </a>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Footer */}
-                        <div
-                          style={{
-                            backgroundColor: "#f8fafc",
-                            borderTop: "1px solid #e2e8f0",
-                            padding: "18px 24px",
-                            textAlign: "center",
-                          }}
-                        >
-                          <p style={{ margin: "0 0 6px 0", color: "#64748b", fontSize: 11.5, lineHeight: 1.5 }}>
-                            Plot No. 983 &amp; 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in
-                          </p>
-                          <p style={{ margin: 0, color: "#94a3b8", fontSize: 11 }}>
-                            &copy; {new Date().getFullYear()} Anjani Industries. All rights reserved.
-                          </p>
-                        </div>
-                      </div>
+                    {/* Rich Exhibitor Machinery Catalog Template Preview */}
+                    <div style={{ maxHeight: 680, overflowY: "auto" }}>
+                      <ExhibitorEmailPreview
+                        heading={emailForm.heading}
+                        body={emailForm.message}
+                        ctaText={emailForm.ctaText}
+                        ctaUrl={emailForm.ctaUrl}
+                        recipient={
+                          singleRecipient
+                            ? {
+                                firstName: singleRecipient.firstName || (singleRecipient.name ? singleRecipient.name.split(" ")[0] : "Valued"),
+                                lastName: singleRecipient.lastName || (singleRecipient.name ? singleRecipient.name.split(" ").slice(1).join(" ") : "Subscriber"),
+                                email: singleRecipient.email,
+                                country: singleRecipient.country || "India",
+                              }
+                            : null
+                        }
+                      />
                     </div>
                   </div>
                 </div>

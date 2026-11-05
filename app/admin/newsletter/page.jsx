@@ -1215,7 +1215,9 @@ export default function AdminNewsletterPage() {
 
                   {/* Email Banner Heading */}
                   <div style={{ marginBottom: 14 }}>
-                    <label className="admin-label">Email Banner Heading (Inside Email)</label>
+                    <label className="admin-label">
+                      Email Banner Heading (Inside Email) <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400 }}>(Optional - leave blank if not needed)</span>
+                    </label>
                     <input
                       type="text"
                       className="admin-input"
@@ -1358,16 +1360,18 @@ export default function AdminNewsletterPage() {
 
                         {/* Body */}
                         <div style={{ padding: "30px 26px" }}>
-                          <h2
-                            style={{
-                              margin: "0 0 16px 0",
-                              color: "#0f172a",
-                              fontSize: 19,
-                              fontWeight: 700,
-                            }}
-                          >
-                            {emailForm.heading || emailForm.subject}
-                          </h2>
+                          {emailForm.heading && emailForm.heading.trim() ? (
+                            <h2
+                              style={{
+                                margin: "0 0 16px 0",
+                                color: "#0f172a",
+                                fontSize: 19,
+                                fontWeight: 700,
+                              }}
+                            >
+                              {emailForm.heading.trim()}
+                            </h2>
+                          ) : null}
 
                           <div style={{ color: "#334155", fontSize: 14, lineHeight: 1.6 }}>
                             {emailForm.message

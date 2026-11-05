@@ -31,6 +31,14 @@ const EmailSettingSchema = new mongoose.Schema(
         default:
           "Dear {userName},\n\nThank you for reaching out to Anjani Industries. We have received your inquiry regarding our textile dyeing and processing machinery. Our technical sales engineering team will review your specifications and get in touch with you shortly.",
       },
+      ctaText: {
+        type: String,
+        default: "Explore Machinery Catalog",
+      },
+      ctaUrl: {
+        type: String,
+        default: "https://www.anjaniindustries.in/products",
+      },
       footerNote: {
         type: String,
         default:
@@ -46,6 +54,15 @@ const EmailSettingSchema = new mongoose.Schema(
       heading: {
         type: String,
         default: "New Customer Inquiry Received",
+      },
+      body: {
+        type: String,
+        default:
+          "A new customer inquiry has just been submitted on the Anjani Industries website. Please find the lead details below and respond to the customer promptly.",
+      },
+      footerNote: {
+        type: String,
+        default: "Internal Sales Notification - Anjani Industries Machinery Lead Capture",
       },
     },
     newsletterTemplate: {
@@ -63,10 +80,30 @@ const EmailSettingSchema = new mongoose.Schema(
         default:
           "Dear Subscriber,\n\nThank you for subscribing to the Anjani Industries newsletter!\n\nYou are now part of our valued community. You will receive regular updates about our latest fabric dyeing machinery innovations, eco-friendly technological breakthroughs, industry trends, and global exhibition announcements directly in your inbox.\n\nIf you ever need technical advice or customized machinery specifications, our engineering team is here to assist you.",
       },
+      ctaText: {
+        type: String,
+        default: "Explore Machinery Range",
+      },
+      ctaUrl: {
+        type: String,
+        default: "https://www.anjaniindustries.in/products",
+      },
       footerNote: {
         type: String,
         default:
           "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
+      },
+    },
+    branding: {
+      logoUrl: { type: String, default: "/assets/img/logo.png" },
+      companyName: { type: String, default: "Anjani Industries" },
+      tagline: { type: String, default: "Fabric Dyeing & Textile Processing Machinery" },
+      phone: { type: String, default: "+91 8154 888 370" },
+      email: { type: String, default: "info@anjaniindustries.in" },
+      website: { type: String, default: "https://www.anjaniindustries.in" },
+      address: {
+        type: String,
+        default: "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India",
       },
     },
   },

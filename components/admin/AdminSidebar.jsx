@@ -22,6 +22,7 @@ import {
   X,
   Newspaper,
   FolderUp,
+  CalendarRange,
 } from "lucide-react";
 
 const navItems = [
@@ -35,6 +36,7 @@ const navItems = [
   { label: "Story Timeline", href: "/admin/timeline", icon: History },
   { label: "Inquiries (Leads)", href: "/admin/inquiries", icon: MessageSquareQuote },
   { label: "Newsletter Leads", href: "/admin/newsletter", icon: Newspaper },
+  { label: "Exhibitors", href: "/admin/exhibitors", icon: Users },
   { label: "Pages & Sections", href: "/admin/pages", icon: FileText },
   { label: "SEO & Analytics", href: "/admin/seo", icon: Globe },
   { label: "Email & SMTP", href: "/admin/email", icon: Mail },

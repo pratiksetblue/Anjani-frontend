@@ -7,14 +7,13 @@ import {
   Send,
   CheckCircle,
   AlertCircle,
-  Sparkles,
   Server,
   UserCheck,
   Bell,
   Eye,
   EyeOff,
   RefreshCw,
-  HelpCircle,
+  Palette,
 } from "lucide-react";
 
 export default function AdminEmailSettingsPage() {
@@ -31,14 +30,28 @@ export default function AdminEmailSettingsPage() {
 
   const [settings, setSettings] = useState({
     smtp: {
-      enabled: false,
+      enabled: true,
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
       auth: {
-        user: "",
-        pass: "",
+        user: "donotautoreplyback@gmail.com",
+        pass: "sjlrvyctlbdtdgqm",
       },
+      fromName: "Anjani Industries",
+      fromEmail: "info@anjaniindustries.in",
+      replyTo: "info@anjaniindustries.in",
+      adminNotificationEmail: "info@anjaniindustries.in",
+    },
+    branding: {
+      logoUrl: "/assets/img/logo.png",
+      companyName: "Anjani Industries",
+      tagline: "Fabric Dyeing & Textile Processing Machinery",
+      phone: "+91 8154 888 370",
+      email: "info@anjaniindustries.in",
+      website: "https://www.anjaniindustries.in",
+      address:
+        "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India",
     },
     userTemplate: {
       enabled: true,
@@ -46,6 +59,8 @@ export default function AdminEmailSettingsPage() {
         "Thank you for contacting Anjani Industries - Fabric Dyeing Machinery",
       heading: "Inquiry Received Successfully",
       body: "Dear {userName},\n\nThank you for reaching out to Anjani Industries. We have received your inquiry regarding our textile dyeing and processing machinery. Our technical sales engineering team will review your specifications and get in touch with you shortly.",
+      ctaText: "Explore Machinery Catalog",
+      ctaUrl: "https://www.anjaniindustries.in/products",
       footerNote:
         "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370",
     },
@@ -53,12 +68,18 @@ export default function AdminEmailSettingsPage() {
       enabled: true,
       subject: "[New Inquiry Alert] {userName} - {subject}",
       heading: "New Customer Inquiry Received",
+      body: "A new customer inquiry has just been submitted on the Anjani Industries website. Please find the lead details below and respond to the customer promptly.",
+      footerNote:
+        "Internal Sales Notification - Anjani Industries Machinery Lead Capture",
     },
     newsletterTemplate: {
       enabled: true,
-      subject: "Welcome to Anjani Industries Newsletter - Textile Machinery Updates",
+      subject:
+        "Welcome to Anjani Industries Newsletter - Textile Machinery Updates",
       heading: "Thank You for Subscribing!",
-      body: "Dear Subscriber,\n\nThank you for subscribing to the Anjani Industries newsletter!\n\nYou are now part of our valued community. You will receive regular updates about our latest fabric dyeing machinery innovations, eco-friendly technological breakthroughs, industry trends, and global exhibition announcements directly in your inbox.\n\nIf you ever need technical advice or customized machinery specifications, our engineering team is here to assist you.",
+      body: "Dear Subscriber,\n\nThank you for subscribing to the Anjani Industries newsletter!\n\nYou are now part of our valued community. You will receive regular updates about our latest fabric dyeing machinery innovations, eco-friendly technological breakthroughs, and industry trends directly in your inbox.\n\nIf you ever need technical advice or customized machinery specifications, our engineering team is here to assist you.",
+      ctaText: "Explore Machinery Range",
+      ctaUrl: "https://www.anjaniindustries.in/products",
       footerNote:
         "Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India | Phone: +91 8154 888 370 | info@anjaniindustries.in",
     },
@@ -71,21 +92,22 @@ export default function AdminEmailSettingsPage() {
         if (res.ok) {
           const data = await res.json();
           if (data) {
-            setSettings({
-              smtp: { ...settings.smtp, ...(data.smtp || {}) },
+            setSettings((prev) => ({
+              smtp: { ...prev.smtp, ...(data.smtp || {}) },
+              branding: { ...prev.branding, ...(data.branding || {}) },
               userTemplate: {
-                ...settings.userTemplate,
+                ...prev.userTemplate,
                 ...(data.userTemplate || {}),
               },
               adminTemplate: {
-                ...settings.adminTemplate,
+                ...prev.adminTemplate,
                 ...(data.adminTemplate || {}),
               },
               newsletterTemplate: {
-                ...settings.newsletterTemplate,
+                ...prev.newsletterTemplate,
                 ...(data.newsletterTemplate || {}),
               },
-            });
+            }));
             if (data.smtp?.adminNotificationEmail) {
               setTestEmailTo(data.smtp.adminNotificationEmail);
             }
@@ -115,7 +137,7 @@ export default function AdminEmailSettingsPage() {
       if (!res.ok) throw new Error("Failed to save email settings");
 
       setMessage({
-        text: "Email & SMTP configuration saved successfully in MongoDB!",
+        text: "Email templates & SMTP configuration saved successfully in MongoDB!",
         type: "success",
       });
     } catch (err) {
@@ -214,22 +236,12 @@ export default function AdminEmailSettingsPage() {
     }
   };
 
-  const insertVariable = (variable) => {
+  const insertVariable = (templateKey, variable) => {
     setSettings((prev) => ({
       ...prev,
-      userTemplate: {
-        ...prev.userTemplate,
-        body: (prev.userTemplate.body || "") + ` {${variable}}`,
-      },
-    }));
-  };
-
-  const insertNewsletterVariable = (variable) => {
-    setSettings((prev) => ({
-      ...prev,
-      newsletterTemplate: {
-        ...prev.newsletterTemplate,
-        body: (prev.newsletterTemplate?.body || "") + ` {${variable}}`,
+      [templateKey]: {
+        ...prev[templateKey],
+        body: (prev[templateKey]?.body || "") + ` {${variable}}`,
       },
     }));
   };
@@ -243,23 +255,16 @@ export default function AdminEmailSettingsPage() {
   }
 
   const tabs = [
-    { id: "smtp", label: "SMTP Server Settings", icon: Server },
-    {
-      id: "userTemplate",
-      label: "Customer Confirmation Template",
-      icon: UserCheck,
-    },
-    {
-      id: "adminTemplate",
-      label: "Admin Lead Notification Template",
-      icon: Bell,
-    },
-    {
-      id: "newsletterTemplate",
-      label: "Newsletter Welcome Template",
-      icon: Mail,
-    },
+    { id: "smtp", label: "SMTP Server", icon: Server },
+    { id: "branding", label: "Branding & Header/Footer", icon: Palette },
+    { id: "userTemplate", label: "Customer Confirmation", icon: UserCheck },
+    { id: "adminTemplate", label: "Admin Lead Notification", icon: Bell },
+    { id: "newsletterTemplate", label: "Newsletter Welcome", icon: Mail },
   ];
+
+  const brandLogo = settings.branding?.logoUrl || "/assets/img/logo.png";
+  const brandName = settings.branding?.companyName || "Anjani Industries";
+  const brandTagline = settings.branding?.tagline || "Fabric Dyeing & Textile Processing Machinery";
 
   return (
     <div>
@@ -286,8 +291,7 @@ export default function AdminEmailSettingsPage() {
             Email &amp; SMTP Configuration
           </h1>
           <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            Configure SMTP credentials, test mail delivery, and customize email
-            templates sent to customers and sales leads.
+            Configure SMTP credentials, test mail delivery, customize branding, and edit dynamic email templates for inquiries and newsletter subscribers.
           </p>
         </div>
 
@@ -327,7 +331,14 @@ export default function AdminEmailSettingsPage() {
 
       {/* Tabs */}
       <div
-        style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}
+        style={{
+          display: "flex",
+          gap: 8,
+          marginBottom: 24,
+          flexWrap: "wrap",
+          borderBottom: "1px solid #e2e8f0",
+          paddingBottom: 12,
+        }}
       >
         {tabs.map((t) => {
           const Icon = t.icon;
@@ -338,9 +349,9 @@ export default function AdminEmailSettingsPage() {
               type="button"
               onClick={() => setActiveTab(t.id)}
               className={`admin-btn ${isActive ? "admin-btn-primary" : "admin-btn-secondary"}`}
-              style={{ padding: "10px 18px", fontSize: 13 }}
+              style={{ padding: "9px 16px", fontSize: 13 }}
             >
-              <Icon size={16} />
+              <Icon size={15} />
               <span>{t.label}</span>
             </button>
           );
@@ -378,8 +389,7 @@ export default function AdminEmailSettingsPage() {
                   SMTP Automated Email Dispatch
                 </h3>
                 <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
-                  When enabled, inquiries received from customers automatically
-                  trigger confirmation emails and admin sales alerts.
+                  When enabled, inquiries and newsletter welcomes are automatically dispatched via your authenticated SMTP mail server.
                 </p>
               </div>
 
@@ -413,9 +423,7 @@ export default function AdminEmailSettingsPage() {
                     color: settings.smtp.enabled ? "#16a34a" : "#64748b",
                   }}
                 >
-                  {settings.smtp.enabled
-                    ? "Enabled (Active)"
-                    : "Disabled (Off)"}
+                  {settings.smtp.enabled ? "Enabled (Active)" : "Disabled (Off)"}
                 </span>
               </label>
             </div>
@@ -667,7 +675,7 @@ export default function AdminEmailSettingsPage() {
                   <input
                     type="email"
                     className="admin-input"
-                    placeholder="anjani_ind@yahoo.com"
+                    placeholder="info@anjaniindustries.in"
                     value={settings.smtp.replyTo}
                     onChange={(e) =>
                       setSettings({
@@ -686,7 +694,7 @@ export default function AdminEmailSettingsPage() {
                 <input
                   type="email"
                   className="admin-input"
-                  placeholder="anjani_ind@yahoo.com"
+                  placeholder="info@anjaniindustries.in"
                   value={settings.smtp.adminNotificationEmail}
                   onChange={(e) =>
                     setSettings({
@@ -783,7 +791,256 @@ export default function AdminEmailSettingsPage() {
         )}
 
         {/* =========================================================================
-            TAB 2: CUSTOMER CONFIRMATION TEMPLATE
+            TAB 2: BRANDING & HEADER / FOOTER
+        ========================================================================= */}
+        {activeTab === "branding" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="admin-card">
+              <h3 className="admin-card-title" style={{ marginBottom: 18 }}>
+                Global Email Header &amp; Footer Branding
+              </h3>
+              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 20px 0" }}>
+                These brand assets appear at the top header and bottom signature of every email template sent to customers and newsletter subscribers.
+              </p>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: 16,
+                }}
+              >
+                <div className="admin-form-group">
+                  <label className="admin-label">Logo Path or URL</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settings.branding?.logoUrl || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          logoUrl: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="/assets/img/logo.png"
+                  />
+                  <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                    Default: <code>/assets/img/logo.png</code> (embedded with high-res CID inline).
+                  </div>
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Company Brand Name</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settings.branding?.companyName || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          companyName: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Anjani Industries"
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Sub-Header Tagline</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settings.branding?.tagline || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          tagline: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="Fabric Dyeing & Textile Processing Machinery"
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Official Phone</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    value={settings.branding?.phone || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          phone: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="+91 8154 888 370"
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Official Support / Sales Email</label>
+                  <input
+                    type="email"
+                    className="admin-input"
+                    value={settings.branding?.email || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          email: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="info@anjaniindustries.in"
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Website URL</label>
+                  <input
+                    type="url"
+                    className="admin-input"
+                    value={settings.branding?.website || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        branding: {
+                          ...settings.branding,
+                          website: e.target.value,
+                        },
+                      })
+                    }
+                    placeholder="https://www.anjaniindustries.in"
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-group" style={{ marginTop: 16 }}>
+                <label className="admin-label">Official Factory / Office Physical Address</label>
+                <textarea
+                  rows={2}
+                  className="admin-textarea"
+                  value={settings.branding?.address || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      branding: {
+                        ...settings.branding,
+                        address: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="Plot No. 983 & 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India"
+                />
+              </div>
+            </div>
+
+            {/* Header / Footer Preview */}
+            <div className="admin-card">
+              <h3 className="admin-card-title" style={{ marginBottom: 14 }}>
+                Branded Header &amp; Footer Preview
+              </h3>
+              <div
+                style={{
+                  backgroundColor: "#f1f5f9",
+                  padding: "24px 16px",
+                  borderRadius: 10,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: 580,
+                    width: "100%",
+                    backgroundColor: "#ffffff",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#0c0d14",
+                      borderTop: "4px solid #cb0000",
+                      padding: "20px 24px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: "#ffffff",
+                        borderRadius: 8,
+                        padding: "8px 18px",
+                        display: "inline-block",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+                      }}
+                    >
+                      <img
+                        src={brandLogo}
+                        alt={brandName}
+                        style={{ maxHeight: 40, height: 40, width: "auto", display: "block" }}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        color: "#94a3b8",
+                        fontSize: 11,
+                        marginTop: 8,
+                        letterSpacing: "0.8px",
+                        textTransform: "uppercase",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {brandTagline}
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "30px 24px", textAlign: "center", color: "#64748b", fontSize: 14 }}>
+                    <em>[ Email body content will be placed here ]</em>
+                  </div>
+
+                  <div
+                    style={{
+                      backgroundColor: "#f8fafc",
+                      borderTop: "1px solid #e2e8f0",
+                      padding: "16px 20px",
+                      textAlign: "center",
+                      fontSize: 11,
+                      color: "#64748b",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    <div>{settings.branding?.address}</div>
+                    <div style={{ marginTop: 4 }}>
+                      Phone: {settings.branding?.phone} | Email: {settings.branding?.email} | {settings.branding?.website}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 3: CUSTOMER CONFIRMATION TEMPLATE
         ========================================================================= */}
         {activeTab === "userTemplate" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -809,8 +1066,7 @@ export default function AdminEmailSettingsPage() {
                   Customer Auto-Reply Email
                 </h3>
                 <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
-                  Automatically sends a branded confirmation email to the
-                  customer immediately upon submitting an inquiry.
+                  Automatically sends a branded confirmation email to the customer immediately upon submitting an inquiry.
                 </p>
               </div>
 
@@ -871,10 +1127,13 @@ export default function AdminEmailSettingsPage() {
               </div>
 
               <div className="admin-form-group">
-                <label className="admin-label">Email Heading Banner</label>
+                <label className="admin-label">
+                  Email Heading Banner <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400 }}>(Optional - leave blank if not needed)</span>
+                </label>
                 <input
                   type="text"
                   className="admin-input"
+                  placeholder="e.g. Inquiry Received Successfully (Optional)"
                   value={settings.userTemplate.heading}
                   onChange={(e) =>
                     setSettings({
@@ -905,6 +1164,7 @@ export default function AdminEmailSettingsPage() {
                     "userName",
                     "userEmail",
                     "userPhone",
+                    "productName",
                     "subject",
                     "message",
                     "companyName",
@@ -912,7 +1172,7 @@ export default function AdminEmailSettingsPage() {
                     <button
                       key={v}
                       type="button"
-                      onClick={() => insertVariable(v)}
+                      onClick={() => insertVariable("userTemplate", v)}
                       style={{
                         padding: "4px 10px",
                         borderRadius: 4,
@@ -951,7 +1211,54 @@ export default function AdminEmailSettingsPage() {
                 </div>
               </div>
 
-              <div className="admin-form-group">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: 16,
+                  marginTop: 12,
+                }}
+              >
+                <div className="admin-form-group">
+                  <label className="admin-label">Call-to-Action (CTA) Button Text</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="Explore Machinery Catalog"
+                    value={settings.userTemplate.ctaText || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        userTemplate: {
+                          ...settings.userTemplate,
+                          ctaText: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">CTA Button Link URL</label>
+                  <input
+                    type="url"
+                    className="admin-input"
+                    placeholder="https://www.anjaniindustries.in/products"
+                    value={settings.userTemplate.ctaUrl || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        userTemplate: {
+                          ...settings.userTemplate,
+                          ctaUrl: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-group" style={{ marginTop: 12 }}>
                 <label className="admin-label">Footer Contact Note</label>
                 <textarea
                   rows={2}
@@ -985,11 +1292,8 @@ export default function AdminEmailSettingsPage() {
                   Live Customer Email Preview
                 </h3>
               </div>
-              <p
-                style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px 0" }}
-              >
-                This is a live preview showing how your customer will see this
-                confirmation email in their inbox.
+              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px 0" }}>
+                This is a live preview showing how your customer will see this confirmation email in their inbox.
               </p>
 
               <div
@@ -1031,14 +1335,9 @@ export default function AdminEmailSettingsPage() {
                       }}
                     >
                       <img
-                        src="/assets/img/logo.png"
-                        alt="Anjani Industries - The Dyeing Machine Company"
-                        style={{
-                          maxHeight: 40,
-                          height: 40,
-                          width: "auto",
-                          display: "block",
-                        }}
+                        src={brandLogo}
+                        alt={brandName}
+                        style={{ maxHeight: 40, height: 40, width: "auto", display: "block" }}
                       />
                     </div>
                     <div
@@ -1051,23 +1350,24 @@ export default function AdminEmailSettingsPage() {
                         fontWeight: 600,
                       }}
                     >
-                      Fabric Dyeing &amp; Textile Processing Machinery
+                      {brandTagline}
                     </div>
                   </div>
 
                   {/* Email Body */}
                   <div style={{ padding: "28px 24px" }}>
-                    <h2
-                      style={{
-                        margin: "0 0 16px 0",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        color: "#0f172a",
-                      }}
-                    >
-                      {settings.userTemplate.heading ||
-                        "Inquiry Received Successfully"}
-                    </h2>
+                    {settings.userTemplate.heading && settings.userTemplate.heading.trim() ? (
+                      <h2
+                        style={{
+                          margin: "0 0 16px 0",
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "#0f172a",
+                        }}
+                      >
+                        {settings.userTemplate.heading.trim()}
+                      </h2>
+                    ) : null}
 
                     <div
                       style={{
@@ -1081,11 +1381,9 @@ export default function AdminEmailSettingsPage() {
                         .replace(/\{userName\}/g, "Rahul Mehta")
                         .replace(/\{userEmail\}/g, "rahul@example.com")
                         .replace(/\{userPhone\}/g, "+91 98765 43210")
-                        .replace(
-                          /\{subject\}/g,
-                          "PLC Based Eco Soft Flow Dyeing Machine",
-                        )
-                        .replace(/\{companyName\}/g, "Anjani Industries")}
+                        .replace(/\{productName\}/g, "PLC Based Eco Soft Flow Dyeing Machine")
+                        .replace(/\{subject\}/g, "PLC Based Eco Soft Flow Dyeing Machine")
+                        .replace(/\{companyName\}/g, brandName)}
                     </div>
 
                     {/* Inquiry summary box */}
@@ -1118,9 +1416,7 @@ export default function AdminEmailSettingsPage() {
                         }}
                       >
                         <span style={{ color: "#64748b" }}>Customer:</span>
-                        <strong style={{ color: "#0f172a" }}>
-                          Rahul Mehta
-                        </strong>
+                        <strong style={{ color: "#0f172a" }}>Rahul Mehta</strong>
                         <span style={{ color: "#64748b" }}>Product:</span>
                         <strong style={{ color: "#cb0000" }}>
                           PLC Based Eco Soft Flow Dyeing Machine
@@ -1128,21 +1424,27 @@ export default function AdminEmailSettingsPage() {
                       </div>
                     </div>
 
-                    <div style={{ textAlign: "center", marginTop: 24 }}>
-                      <span
-                        style={{
-                          backgroundColor: "#cb0000",
-                          color: "#ffffff",
-                          padding: "10px 24px",
-                          borderRadius: 6,
-                          fontSize: 13,
-                          fontWeight: 600,
-                          display: "inline-block",
-                        }}
-                      >
-                        Explore Machinery Catalog
-                      </span>
-                    </div>
+                    {settings.userTemplate.ctaText && (
+                      <div style={{ textAlign: "center", marginTop: 24 }}>
+                        <a
+                          href={settings.userTemplate.ctaUrl || "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            backgroundColor: "#cb0000",
+                            color: "#ffffff",
+                            padding: "11px 26px",
+                            borderRadius: 6,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            display: "inline-block",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {settings.userTemplate.ctaText}
+                        </a>
+                      </div>
+                    )}
                   </div>
 
                   {/* Email Footer */}
@@ -1166,7 +1468,7 @@ export default function AdminEmailSettingsPage() {
         )}
 
         {/* =========================================================================
-            TAB 3: ADMIN LEAD ALERT TEMPLATE
+            TAB 4: ADMIN LEAD ALERT TEMPLATE
         ========================================================================= */}
         {activeTab === "adminTemplate" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -1192,8 +1494,7 @@ export default function AdminEmailSettingsPage() {
                   Admin Sales Lead Notification
                 </h3>
                 <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
-                  Dispatches an instant notification with full customer details
-                  to your sales team as soon as a lead is captured.
+                  Dispatches an instant notification with full customer details to your sales team as soon as a lead is captured.
                 </p>
               </div>
 
@@ -1236,9 +1537,7 @@ export default function AdminEmailSettingsPage() {
               </h3>
 
               <div className="admin-form-group">
-                <label className="admin-label">
-                  Notification Email Subject Line
-                </label>
+                <label className="admin-label">Notification Email Subject Line</label>
                 <input
                   type="text"
                   className="admin-input"
@@ -1254,18 +1553,18 @@ export default function AdminEmailSettingsPage() {
                   }
                 />
                 <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
-                  Supports placeholders like <code>{"{userName}"}</code>,{" "}
-                  <code>{"{subject}"}</code>, <code>{"{date}"}</code>.
+                  Supports placeholders like <code>{"{userName}"}</code>, <code>{"{subject}"}</code>, <code>{"{date}"}</code>.
                 </div>
               </div>
 
               <div className="admin-form-group">
                 <label className="admin-label">
-                  Notification Heading Banner
+                  Notification Heading Banner <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400 }}>(Optional - leave blank if not needed)</span>
                 </label>
                 <input
                   type="text"
                   className="admin-input"
+                  placeholder="e.g. New Customer Inquiry Received (Optional)"
                   value={settings.adminTemplate.heading}
                   onChange={(e) =>
                     setSettings({
@@ -1276,6 +1575,44 @@ export default function AdminEmailSettingsPage() {
                       },
                     })
                   }
+                />
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Admin Notification Introductory Message</label>
+                <textarea
+                  rows={3}
+                  className="admin-textarea"
+                  value={settings.adminTemplate.body || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      adminTemplate: {
+                        ...settings.adminTemplate,
+                        body: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="A new customer inquiry has just been submitted on the Anjani Industries website..."
+                />
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Notification Footer Note</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={settings.adminTemplate.footerNote || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      adminTemplate: {
+                        ...settings.adminTemplate,
+                        footerNote: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="Internal Sales Notification - Anjani Industries Machinery Lead Capture"
                 />
               </div>
             </div>
@@ -1334,14 +1671,9 @@ export default function AdminEmailSettingsPage() {
                       }}
                     >
                       <img
-                        src="/assets/img/logo.png"
-                        alt="Anjani Industries - The Dyeing Machine Company"
-                        style={{
-                          maxHeight: 40,
-                          height: 40,
-                          width: "auto",
-                          display: "block",
-                        }}
+                        src={brandLogo}
+                        alt={brandName}
+                        style={{ maxHeight: 40, height: 40, width: "auto", display: "block" }}
                       />
                     </div>
                     <div
@@ -1359,27 +1691,21 @@ export default function AdminEmailSettingsPage() {
                   </div>
 
                   <div style={{ padding: "28px 24px" }}>
-                    <h2
-                      style={{
-                        margin: "0 0 16px 0",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        color: "#0f172a",
-                      }}
-                    >
-                      {settings.adminTemplate.heading ||
-                        "New Customer Inquiry Received"}
-                    </h2>
+                    {settings.adminTemplate.heading && settings.adminTemplate.heading.trim() ? (
+                      <h2
+                        style={{
+                          margin: "0 0 16px 0",
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "#0f172a",
+                        }}
+                      >
+                        {settings.adminTemplate.heading.trim()}
+                      </h2>
+                    ) : null}
 
-                    <p
-                      style={{
-                        color: "#475569",
-                        fontSize: 14,
-                        margin: "0 0 20px 0",
-                      }}
-                    >
-                      A new customer inquiry has just been submitted on the
-                      website. Lead details are below:
+                    <p style={{ color: "#475569", fontSize: 14, margin: "0 0 20px 0" }}>
+                      {settings.adminTemplate.body || "A new customer inquiry has just been submitted on the website. Lead details are below:"}
                     </p>
 
                     <div
@@ -1391,88 +1717,28 @@ export default function AdminEmailSettingsPage() {
                         fontSize: 13,
                       }}
                     >
-                      <table
-                        style={{ width: "100%", borderCollapse: "collapse" }}
-                      >
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <tbody>
                           <tr>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#64748b",
-                                width: 120,
-                              }}
-                            >
-                              Name:
-                            </td>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#0f172a",
-                                fontWeight: 600,
-                              }}
-                            >
-                              Rajesh Patel
-                            </td>
+                            <td style={{ padding: "6px 0", color: "#64748b", width: 120 }}>Name:</td>
+                            <td style={{ padding: "6px 0", color: "#0f172a", fontWeight: 600 }}>Rajesh Patel</td>
                           </tr>
                           <tr>
-                            <td style={{ padding: "6px 0", color: "#64748b" }}>
-                              Email:
-                            </td>
-                            <td style={{ padding: "6px 0", color: "#cb0000" }}>
-                              rajesh@textilegroup.in
-                            </td>
+                            <td style={{ padding: "6px 0", color: "#64748b" }}>Email:</td>
+                            <td style={{ padding: "6px 0", color: "#cb0000" }}>rajesh@textilegroup.in</td>
                           </tr>
                           <tr>
-                            <td style={{ padding: "6px 0", color: "#64748b" }}>
-                              Phone:
-                            </td>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#0f172a",
-                                fontWeight: 600,
-                              }}
-                            >
-                              +91 99887 76655
-                            </td>
+                            <td style={{ padding: "6px 0", color: "#64748b" }}>Phone:</td>
+                            <td style={{ padding: "6px 0", color: "#0f172a", fontWeight: 600 }}>+91 99887 76655</td>
                           </tr>
                           <tr>
-                            <td style={{ padding: "6px 0", color: "#64748b" }}>
-                              Machine:
-                            </td>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#0f172a",
-                                fontWeight: 600,
-                              }}
-                            >
-                              U Type Rapid Jet Dyeing
-                            </td>
+                            <td style={{ padding: "6px 0", color: "#64748b" }}>Machine:</td>
+                            <td style={{ padding: "6px 0", color: "#0f172a", fontWeight: 600 }}>U Type Rapid Jet Dyeing</td>
                           </tr>
                           <tr>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#64748b",
-                                verticalAlign: "top",
-                              }}
-                            >
-                              Message:
-                            </td>
-                            <td
-                              style={{
-                                padding: "6px 0",
-                                color: "#334155",
-                                background: "#fff",
-                                padding: "8px 10px",
-                                borderRadius: 4,
-                                border: "1px solid #e2e8f0",
-                              }}
-                            >
-                              Please send price quotation and technical
-                              specifications for 500 KG capacity unit.
+                            <td style={{ padding: "6px 0", color: "#64748b", verticalAlign: "top" }}>Message:</td>
+                            <td style={{ padding: "6px 0", color: "#334155", background: "#fff", padding: "8px 10px", borderRadius: 4, border: "1px solid #e2e8f0" }}>
+                              Please send price quotation and technical specifications for 500 KG capacity unit.
                             </td>
                           </tr>
                         </tbody>
@@ -1495,6 +1761,19 @@ export default function AdminEmailSettingsPage() {
                       </span>
                     </div>
                   </div>
+
+                  <div
+                    style={{
+                      backgroundColor: "#f8fafc",
+                      borderTop: "1px solid #e2e8f0",
+                      padding: "14px 20px",
+                      textAlign: "center",
+                      fontSize: 11,
+                      color: "#64748b",
+                    }}
+                  >
+                    {settings.adminTemplate.footerNote || "Internal Sales Notification - Anjani Industries Machinery Lead Capture"}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1502,7 +1781,7 @@ export default function AdminEmailSettingsPage() {
         )}
 
         {/* =========================================================================
-            TAB 4: NEWSLETTER WELCOME TEMPLATE
+            TAB 5: NEWSLETTER WELCOME TEMPLATE
         ========================================================================= */}
         {activeTab === "newsletterTemplate" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -1589,10 +1868,13 @@ export default function AdminEmailSettingsPage() {
               </div>
 
               <div className="admin-form-group">
-                <label className="admin-label">Email Heading Banner</label>
+                <label className="admin-label">
+                  Email Heading Banner <span style={{ fontSize: 12, color: "#64748b", fontWeight: 400 }}>(Optional - leave blank if not needed)</span>
+                </label>
                 <input
                   type="text"
                   className="admin-input"
+                  placeholder="e.g. Thank You for Subscribing! (Optional)"
                   value={settings.newsletterTemplate?.heading || ""}
                   onChange={(e) =>
                     setSettings({
@@ -1629,7 +1911,7 @@ export default function AdminEmailSettingsPage() {
                     <button
                       key={v}
                       type="button"
-                      onClick={() => insertNewsletterVariable(v)}
+                      onClick={() => insertVariable("newsletterTemplate", v)}
                       style={{
                         padding: "4px 10px",
                         borderRadius: 4,
@@ -1668,7 +1950,54 @@ export default function AdminEmailSettingsPage() {
                 </div>
               </div>
 
-              <div className="admin-form-group">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                  gap: 16,
+                  marginTop: 12,
+                }}
+              >
+                <div className="admin-form-group">
+                  <label className="admin-label">Call-to-Action (CTA) Button Text</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="Explore Machinery Range"
+                    value={settings.newsletterTemplate?.ctaText || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        newsletterTemplate: {
+                          ...settings.newsletterTemplate,
+                          ctaText: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">CTA Button Link URL</label>
+                  <input
+                    type="url"
+                    className="admin-input"
+                    placeholder="https://www.anjaniindustries.in/products"
+                    value={settings.newsletterTemplate?.ctaUrl || ""}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        newsletterTemplate: {
+                          ...settings.newsletterTemplate,
+                          ctaUrl: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-group" style={{ marginTop: 12 }}>
                 <label className="admin-label">Footer Contact Note</label>
                 <textarea
                   rows={2}
@@ -1702,9 +2031,7 @@ export default function AdminEmailSettingsPage() {
                   Live Newsletter Welcome Email Preview
                 </h3>
               </div>
-              <p
-                style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px 0" }}
-              >
+              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px 0" }}>
                 This preview shows exactly how newly registered subscribers will view your welcome email in their inbox.
               </p>
 
@@ -1747,14 +2074,9 @@ export default function AdminEmailSettingsPage() {
                       }}
                     >
                       <img
-                        src="/assets/img/logo.png"
-                        alt="Anjani Industries - The Dyeing Machine Company"
-                        style={{
-                          maxHeight: 40,
-                          height: 40,
-                          width: "auto",
-                          display: "block",
-                        }}
+                        src={brandLogo}
+                        alt={brandName}
+                        style={{ maxHeight: 40, height: 40, width: "auto", display: "block" }}
                       />
                     </div>
                     <div
@@ -1773,16 +2095,18 @@ export default function AdminEmailSettingsPage() {
 
                   {/* Email Body */}
                   <div style={{ padding: "28px 24px" }}>
-                    <h2
-                      style={{
-                        margin: "0 0 16px 0",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        color: "#0f172a",
-                      }}
-                    >
-                      {settings.newsletterTemplate?.heading || "Thank You for Subscribing!"}
-                    </h2>
+                    {settings.newsletterTemplate?.heading && settings.newsletterTemplate.heading.trim() ? (
+                      <h2
+                        style={{
+                          margin: "0 0 16px 0",
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "#0f172a",
+                        }}
+                      >
+                        {settings.newsletterTemplate.heading.trim()}
+                      </h2>
+                    ) : null}
 
                     <div
                       style={{
@@ -1795,10 +2119,9 @@ export default function AdminEmailSettingsPage() {
                       {(settings.newsletterTemplate?.body || "")
                         .replace(/\{subscriberEmail\}/g, "patel.textiles@gmail.com")
                         .replace(/\{userName\}/g, "Valued Subscriber")
-                        .replace(/\{userEmail\}/g, "patel.textiles@gmail.com")
-                        .replace(/\{companyName\}/g, "Anjani Industries")
-                        .replace(/\{companyPhone\}/g, "+91 8154 888 370")
-                        .replace(/\{companyEmail\}/g, "info@anjaniindustries.in")
+                        .replace(/\{companyName\}/g, brandName)
+                        .replace(/\{companyPhone\}/g, settings.branding?.phone || "+91 8154 888 370")
+                        .replace(/\{companyEmail\}/g, settings.branding?.email || "info@anjaniindustries.in")
                         .replace(/\{date\}/g, new Date().toLocaleDateString("en-IN", {
                           year: "numeric",
                           month: "long",
@@ -1833,21 +2156,27 @@ export default function AdminEmailSettingsPage() {
                       </div>
                     </div>
 
-                    <div style={{ textAlign: "center", marginTop: 24 }}>
-                      <span
-                        style={{
-                          backgroundColor: "#cb0000",
-                          color: "#ffffff",
-                          padding: "10px 24px",
-                          borderRadius: 6,
-                          fontSize: 13,
-                          fontWeight: 600,
-                          display: "inline-block",
-                        }}
-                      >
-                        Explore Machinery Range
-                      </span>
-                    </div>
+                    {settings.newsletterTemplate?.ctaText && (
+                      <div style={{ textAlign: "center", marginTop: 24 }}>
+                        <a
+                          href={settings.newsletterTemplate?.ctaUrl || "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            backgroundColor: "#cb0000",
+                            color: "#ffffff",
+                            padding: "11px 26px",
+                            borderRadius: 6,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            display: "inline-block",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {settings.newsletterTemplate.ctaText}
+                        </a>
+                      </div>
+                    )}
                   </div>
 
                   {/* Email Footer */}

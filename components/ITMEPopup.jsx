@@ -1,17 +1,24 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { X } from "lucide-react";
 
 const STORAGE_KEY = "anjani-itme-popup-dismissed";
 
 export default function ITMEPopup() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    if (pathname?.startsWith("/admin") || pathname === "/ecard") {
+      setIsOpen(false);
+      setIsReady(true);
+      return;
+    }
+
     try {
       const dismissed = localStorage.getItem(STORAGE_KEY);
 
@@ -23,7 +30,7 @@ export default function ITMEPopup() {
     }
 
     setIsReady(true);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -82,14 +89,14 @@ export default function ITMEPopup() {
         </button>
 
         <div className="itme-popup-image-wrap">
-  <img
-    src="/assets/img/itme-invitation.jpeg"
-    alt="Anjani Industries - NEXT INDIA ITME 2026 invitation"
-    className="itme-popup-image"
-    width="1080"
-    height="1350"
-  />
-</div>
+          <img
+            src="/assets/img/itme-invitation.jpeg"
+            alt="Anjani Industries - NEXT INDIA ITME 2026 invitation"
+            className="itme-popup-image"
+            width="1080"
+            height="1350"
+          />
+        </div>
       </div>
     </div>
   );

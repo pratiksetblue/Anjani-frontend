@@ -66,7 +66,8 @@ export default function ExhibitorEmailPreview({
       <div
         style={{
           width: 600,
-          maxWidth: "100%",
+          minWidth: 600,
+          maxWidth: 600,
           backgroundColor: "#ffffff",
           borderCollapse: "collapse",
           boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
@@ -75,20 +76,22 @@ export default function ExhibitorEmailPreview({
         }}
       >
         {/* Top Logo */}
-        <div style={{ padding: "16px 20px", textAlign: "center", backgroundColor: "#ffffff" }}>
-          <img
-            src="/emailer-assets/logo.jpg"
-            alt="Anjani Industries"
-            style={{ display: "inline-block", maxWidth: 260, width: "100%", height: "auto" }}
-          />
+        <div style={{ padding: "12px 20px", textAlign: "center", backgroundColor: "#ffffff" }}>
+          <a href="https://www.anjaniindustries.in/" target="_blank" rel="noreferrer">
+            <img
+              src="/emailer-assets/logo.jpg"
+              alt="Anjani Industries"
+              style={{ display: "inline-block", maxWidth: 260, width: "100%", height: "auto", border: 0 }}
+            />
+          </a>
         </div>
 
         {/* Hero Factory Banner */}
         <div>
           <img
             src="/emailer-assets/hero_factory.jpg"
-            alt="Anjani Industries Factory"
-            style={{ display: "block", width: "100%", height: "auto" }}
+            alt="Anjani Industries Textile Dyeing Machinery"
+            style={{ display: "block", width: 600, height: "auto", border: 0 }}
           />
         </div>
 
@@ -96,7 +99,7 @@ export default function ExhibitorEmailPreview({
         {resolvedHeading && resolvedHeading.trim() ? (
           <div
             style={{
-              padding: "22px 30px 0 30px",
+              padding: "20px 24px 0 24px",
               textAlign: "center",
               fontSize: 20,
               fontWeight: 700,
@@ -110,9 +113,9 @@ export default function ExhibitorEmailPreview({
         {/* Message Body */}
         <div
           style={{
-            padding: "22px 34px 18px",
-            fontSize: 15,
-            lineHeight: 1.6,
+            padding: "24px 42px 16px",
+            fontSize: 16,
+            lineHeight: "24px",
             color: "#1e293b",
             whiteSpace: "pre-line",
             textAlign: "center",
@@ -128,38 +131,35 @@ export default function ExhibitorEmailPreview({
 
         {/* Stats Row */}
         {showStats && (
-          <div style={{ padding: "10px 20px 22px" }}>
+          <div style={{ padding: "15px 20px 24px" }}>
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr",
                 textAlign: "center",
-                borderTop: "1px solid #f1f5f9",
-                borderBottom: "1px solid #f1f5f9",
-                padding: "12px 0",
               }}
             >
               <div style={{ borderRight: "1px solid #eee", padding: "4px" }}>
-                <div style={{ fontSize: 28, fontWeight: "bold", color: "#f03b3f" }}>
+                <div style={{ fontSize: 32, fontWeight: "bold", color: "#f03b3f" }}>
                   {stat1Value || "36+"}
                 </div>
-                <div style={{ fontSize: 12, color: "#334155", lineHeight: 1.3, marginTop: 4 }}>
+                <div style={{ fontSize: 13, color: "#334155", lineHeight: "16px", marginTop: 4 }}>
                   {stat1Label || "Years of Industry Excellence"}
                 </div>
               </div>
               <div style={{ borderRight: "1px solid #eee", padding: "4px" }}>
-                <div style={{ fontSize: 28, fontWeight: "bold", color: "#f03b3f" }}>
+                <div style={{ fontSize: 32, fontWeight: "bold", color: "#f03b3f" }}>
                   {stat2Value || "45K"}
                 </div>
-                <div style={{ fontSize: 12, color: "#334155", lineHeight: 1.3, marginTop: 4 }}>
+                <div style={{ fontSize: 13, color: "#334155", lineHeight: "16px", marginTop: 4 }}>
                   {stat2Label || "Sq Ft Production Facility"}
                 </div>
               </div>
               <div style={{ padding: "4px" }}>
-                <div style={{ fontSize: 28, fontWeight: "bold", color: "#f03b3f" }}>
+                <div style={{ fontSize: 32, fontWeight: "bold", color: "#f03b3f" }}>
                   {stat3Value || "270"}
                 </div>
-                <div style={{ fontSize: 12, color: "#334155", lineHeight: 1.3, marginTop: 4 }}>
+                <div style={{ fontSize: 13, color: "#334155", lineHeight: "16px", marginTop: 4 }}>
                   {stat3Label || "Pcs Annual Production Capacity"}
                 </div>
               </div>
@@ -169,22 +169,22 @@ export default function ExhibitorEmailPreview({
 
         {/* Products Showcase */}
         {showProducts && (
-          <div style={{ padding: "10px 18px 20px" }}>
-            <div style={{ textAlign: "center", marginBottom: 18 }}>
-              <div style={{ fontSize: 24, fontWeight: "bold", letterSpacing: 0.5 }}>
+          <div style={{ padding: "0 18px 12px" }}>
+            <div style={{ textAlign: "center", padding: "12px 10px 18px" }}>
+              <div style={{ fontSize: 29, fontWeight: "bold" }}>
                 OUR <span style={{ color: "#ef3339" }}>PRODUCTS</span>
               </div>
               <div
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
+                  fontSize: 12,
+                  fontWeight: "bold",
                   letterSpacing: 1,
-                  lineHeight: 1.4,
-                  color: "#475569",
+                  lineHeight: "17px",
+                  color: "#111",
                   marginTop: 4,
                 }}
               >
-                ADVANCE TEXTILE DYEING &amp; PROCESSING MACHINES
+                ADVANCE TEXTILE<br />DYEING &amp; PROCESSING MACHINES
               </div>
             </div>
 
@@ -195,60 +195,70 @@ export default function ExhibitorEmailPreview({
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: 12,
+                    gap: 14,
                   }}
                 >
                   <div style={{ textAlign: "center" }}>
-                    <img
-                      src={p1.image}
-                      alt={p1.name}
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        height: "auto",
-                        borderRadius: 4,
-                        border: "1px solid #f1f5f9",
-                      }}
-                    />
-                    <div
-                      style={{
-                        fontSize: 13,
-                        lineHeight: 1.4,
-                        padding: "6px 2px",
-                        color: "#0f172a",
-                        fontWeight: 600,
-                        textAlign: "left",
-                      }}
+                    <a
+                      href={`https://www.anjaniindustries.in/${p1.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: "none", color: "#111", display: "block" }}
                     >
-                      {p1.name}
-                    </div>
-                  </div>
-
-                  {p2 ? (
-                    <div style={{ textAlign: "center" }}>
                       <img
-                        src={p2.image}
-                        alt={p2.name}
+                        src={p1.image}
+                        alt={p1.name}
                         style={{
                           display: "block",
                           width: "100%",
                           height: "auto",
-                          borderRadius: 4,
-                          border: "1px solid #f1f5f9",
+                          border: 0,
                         }}
                       />
                       <div
                         style={{
-                          fontSize: 13,
-                          lineHeight: 1.4,
-                          padding: "6px 2px",
-                          color: "#0f172a",
-                          fontWeight: 600,
+                          fontSize: 15,
+                          lineHeight: "20px",
+                          padding: "6px 0 9px",
+                          color: "#111",
                           textAlign: "left",
                         }}
                       >
-                        {p2.name}
+                        {p1.name}
                       </div>
+                    </a>
+                  </div>
+
+                  {p2 ? (
+                    <div style={{ textAlign: "center" }}>
+                      <a
+                        href={`https://www.anjaniindustries.in/${p2.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ textDecoration: "none", color: "#111", display: "block" }}
+                      >
+                        <img
+                          src={p2.image}
+                          alt={p2.name}
+                          style={{
+                            display: "block",
+                            width: "100%",
+                            height: "auto",
+                            border: 0,
+                          }}
+                        />
+                        <div
+                          style={{
+                            fontSize: 15,
+                            lineHeight: "20px",
+                            padding: "6px 0 9px",
+                            color: "#111",
+                            textAlign: "left",
+                          }}
+                        >
+                          {p2.name}
+                        </div>
+                      </a>
                     </div>
                   ) : (
                     <div />
@@ -264,62 +274,67 @@ export default function ExhibitorEmailPreview({
           style={{
             backgroundColor: "#e50000",
             color: "#ffffff",
-            padding: "26px 20px",
+            padding: "28px 15px 25px",
             textAlign: "center",
           }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 2, fontWeight: 700, opacity: 0.9 }}>
-            CONNECT WITH US
-          </div>
-          <div style={{ fontSize: 22, fontWeight: "bold", margin: "6px 0 16px" }}>
+          <div style={{ fontSize: 12, letterSpacing: 2 }}>CONNECT WITH US</div>
+          <div style={{ fontSize: 24, fontWeight: "bold", lineHeight: "30px", margin: "7px 0 16px" }}>
             Need Reliable Dyeing Solutions?
           </div>
-          <span
+          <a
+            href={ctaUrl || "https://www.anjaniindustries.in/contact-us"}
+            target="_blank"
+            rel="noreferrer"
             style={{
               display: "inline-block",
               backgroundColor: "#ffffff",
               color: "#df1111",
-              padding: "10px 24px",
-              fontSize: 12,
+              padding: "12px 24px",
+              fontSize: 13,
               fontWeight: "bold",
+              textDecoration: "none",
               borderRadius: 4,
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
             }}
           >
             {ctaText || "REQUEST A QUOTE"}
-          </span>
+          </a>
         </div>
 
         {/* Dark Footer */}
-        <div style={{ backgroundColor: "#050505", color: "#eee", padding: "24px 22px 16px" }}>
+        <div style={{ backgroundColor: "#050505", color: "#eee", padding: "25px 22px 14px" }}>
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1.4fr 1fr 1fr",
               gap: 12,
-              fontSize: 11,
-              lineHeight: 1.5,
-              borderBottom: "1px solid #333",
-              paddingBottom: 16,
+              fontSize: 12,
+              lineHeight: "17px",
             }}
           >
             <div>
               <b style={{ color: "#fff", display: "block", marginBottom: 3 }}>ADDRESS</b>
-              Plot No. 983 &amp; 984, Road No. 58, GIDC Sachin, Surat – 394230, Gujarat, India
+              Plot No. 983 &amp; 984, Road No. 58, GIDC Sachin, Surat - 394 230, Gujarat, India
             </div>
-            <div style={{ borderLeft: "1px solid #444", paddingLeft: 10 }}>
+            <div style={{ borderLeft: "1px solid #555", paddingLeft: 8 }}>
               <b style={{ color: "#fff", display: "block", marginBottom: 3 }}>PHONE</b>
-              +91-8154888370
+              <a style={{ color: "#fff", textDecoration: "none" }} href="tel:+918154888370">
+                +91-8154888370
+              </a>
               <br />
-              +91-7096007670
+              <a style={{ color: "#fff", textDecoration: "none" }} href="tel:+917096007670">
+                +91-7096007670
+              </a>
             </div>
-            <div style={{ borderLeft: "1px solid #444", paddingLeft: 10 }}>
+            <div style={{ borderLeft: "1px solid #555", paddingLeft: 8 }}>
               <b style={{ color: "#fff", display: "block", marginBottom: 3 }}>EMAIL</b>
-              info@anjaniindustries.in
+              <a href="mailto:info@anjaniindustries.in" style={{ color: "#eee", textDecoration: "none" }}>
+                info@anjaniindustries.in
+              </a>
             </div>
           </div>
 
-          <p style={{ fontSize: 11, lineHeight: 1.6, margin: "16px 0 12px", color: "#94a3b8" }}>
+          <p style={{ fontSize: 12, lineHeight: "20px", margin: "22px 0 14px", color: "#eee" }}>
             <b style={{ color: "#fff" }}>Sales &amp; Service Offices:</b>
             <br />
             India – Surat, Ahmedabad, Mumbai, Ludhiana, Amritsar &amp; Bhilwara.
@@ -329,26 +344,46 @@ export default function ExhibitorEmailPreview({
 
           <div
             style={{
-              borderTop: "1px solid #333",
+              borderTop: "1px solid #444",
               textAlign: "center",
-              padding: "12px 0 8px",
+              padding: "14px 0",
               color: "#fff",
-              fontSize: 12,
+              fontSize: 14,
             }}
           >
-            Facebook &nbsp;|&nbsp; LinkedIn &nbsp;|&nbsp; YouTube &nbsp;|&nbsp; Pinterest
+            <a href="https://www.facebook.com/anjaniindustriess/" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}>
+              Facebook
+            </a>
+            &nbsp; | &nbsp;
+            <a href="https://www.linkedin.com/company/anjaniindustries/" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}>
+              LinkedIn
+            </a>
+            &nbsp; | &nbsp;
+            <a href="https://www.youtube.com/channel/UCQQSNOPZex4BUe7mN87DrIA" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}>
+              YouTube
+            </a>
+            &nbsp; | &nbsp;
+            <a href="https://in.pinterest.com/Anjaniindustries/" target="_blank" rel="noreferrer" style={{ color: "#fff", textDecoration: "none" }}>
+              Pinterest
+            </a>
           </div>
 
           <div
             style={{
-              borderTop: "1px solid #333",
+              borderTop: "1px solid #444",
               textAlign: "center",
-              paddingTop: 10,
-              fontSize: 12,
-              color: "#94a3b8",
+              padding: "12px 0",
+              fontSize: 13,
             }}
           >
-            www.anjaniindustries.in
+            <a
+              href="https://www.anjaniindustries.in/"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: "#ccc", textDecoration: "none" }}
+            >
+              www.anjaniindustries.in
+            </a>
           </div>
         </div>
       </div>

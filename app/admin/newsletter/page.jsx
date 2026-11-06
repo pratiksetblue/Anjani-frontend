@@ -466,7 +466,7 @@ export default function AdminNewsletterPage() {
             Newsletter Leads &amp; Subscribers ({subscribers.length})
           </h1>
           <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            ન્યૂઝલેટર લીડ્સ અને ઈમેઈલ મોકલવાનું મેનેજર — Send branded newsletters directly to subscribers with 1 click.
+            Manage newsletter subscribers and send branded email campaigns directly with 1 click.
           </p>
         </div>
 
